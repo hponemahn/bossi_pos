@@ -1,4 +1,6 @@
+import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/products.dart';
+import 'package:bossi_pos/screens/cart_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(providers: [
       ChangeNotifierProvider.value(value: Products()),
+      ChangeNotifierProvider.value(value: Cart()),
     ],child: MaterialApp(
       theme: ThemeData(
             primaryColor: Colors.purple[800],
@@ -27,6 +30,9 @@ class MyApp extends StatelessWidget {
                 ),
           ),
       home: SellScreen(),
+      routes: {
+        CartScreen.routeName: (ctx) => CartScreen(),
+      },
     ),);
 
   }

@@ -1,3 +1,4 @@
+import 'package:bossi_pos/providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ class SellBody extends StatefulWidget {
 class _SellBodyState extends State<SellBody> {
   String _searchText = "";
 
-  Widget _grid(products) {
+  Widget _grid(products, _cart) {
     if (_searchText.isNotEmpty) {
       List tempList = new List();
       for (int i = 0; i < products.length; i++) {
@@ -45,7 +46,7 @@ class _SellBodyState extends State<SellBody> {
                 child: GridTile(
                   child: GestureDetector(
                     onTap: () {
-                      print(products[index].id);
+                      _cart.add(products[index].id, products[index].name, products[index].price);
                     },
                     child: CircleAvatar(
                         backgroundColor: Colors.blueGrey.shade500,
@@ -96,6 +97,7 @@ class _SellBodyState extends State<SellBody> {
   Widget build(BuildContext context) {
 
     Products _products = Provider.of<Products>(context);
+    Cart _cart = Provider.of<Cart>(context);
 
     return Column(
         children: <Widget>[
@@ -112,7 +114,7 @@ class _SellBodyState extends State<SellBody> {
                   hintText: 'ရောင်းမည့်ပစ္စည်းရှာရန် ...'),
             ),
           ),
-          _grid(_products.products),
+          _grid(_products.products, _cart),
         ],
       );
   }
