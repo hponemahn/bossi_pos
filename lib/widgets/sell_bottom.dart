@@ -19,7 +19,7 @@ class SellBottom extends StatelessWidget {
             Row(
               children: <Widget>[
                 Icon(Icons.money_off),
-                Text("${_cart.totalAmount.toStringAsFixed(2)} ကျပ်",
+                Text("${_cart.totalAmount.toStringAsFixed(2)}",
                     style: TextStyle(fontSize: 17.0, color: Colors.grey[800])),
               ],
             ),
