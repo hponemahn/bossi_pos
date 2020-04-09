@@ -47,6 +47,10 @@ class _SellBodyState extends State<SellBody> {
                   child: GestureDetector(
                     onTap: () {
                       _cart.add(products[index].id, products[index].name, products[index].price);
+                      
+                      setState(() {
+                        products[index].qty += 1;
+                      });
                     },
                     child: CircleAvatar(
                         backgroundColor: Colors.blueGrey.shade500,
@@ -64,6 +68,7 @@ class _SellBodyState extends State<SellBody> {
                 ),
               ),
             ),
+            if(products[index].qty != 0)
             Positioned(
               right: 8,
               top: 8,
@@ -79,7 +84,7 @@ class _SellBodyState extends State<SellBody> {
                   minHeight: 24,
                 ),
                 child: Text(
-                  "12",
+                  products[index].qty.toString(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
