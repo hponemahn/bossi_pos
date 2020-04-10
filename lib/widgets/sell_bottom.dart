@@ -41,9 +41,12 @@ class SellBottom extends StatelessWidget {
                 disabledTextColor: Colors.black,
                 padding: EdgeInsets.all(8.0),
                 splashColor: Colors.blueAccent,
-                onPressed: () {
-                  Navigator.pushNamed(context, CartScreen.routeName);
-                },
+                onPressed: () => {
+                  // _cart.cart.forEach((key, value) {
+                  //   print(value.name);
+                  // })
+                  Navigator.pushNamed(context, CartScreen.routeName)
+                  },
                 icon: Badge(child: Icon(Icons.shopping_cart), value: _cart.totalCount.toString()),
                 label: Text(
                   "ရောင်းမည်",
