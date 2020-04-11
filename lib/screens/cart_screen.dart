@@ -4,6 +4,12 @@ import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = "cart";
+  int _curDay = DateTime.now().day;
+  int _curMon = DateTime.now().month;
+  int _curYear = DateTime.now().year;
+  int _curHr = DateTime.now().hour;
+  int _curMin = DateTime.now().minute;
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class CartScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 new Text('အရောင်းပြေစာ: #A002'),
-                                new Text("20/1/20"),
+                                new Text("$_curDay/$_curMon/$_curYear"),
                               ],
                             ),
                           )
@@ -47,8 +53,8 @@ class CartScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                new Text('အရောင်း၀န်ထမ်း: Owner'),
-                                new Text("3:47 PM"),
+                                new Text('အရောင်း၀န်ထမ်း: -'),
+                                new Text("$_curHr:$_curMin"),
                               ],
                             ),
                           )
@@ -58,8 +64,8 @@ class CartScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                new Text("ကုန်၀ယ်သူ: Mg Phyu"),
-                                new Text("Add, Edit"),
+                                new Text("ကုန်၀ယ်သူ: -"),
+                                // new Text("Add, Edit"),
                               ],
                             ),
                           )
@@ -153,15 +159,13 @@ class CartScreen extends StatelessWidget {
                                 // new Text("10,000"),
                                 Container(
                                   width: 80,
-                                  height: 10,
+                                  height: 20,
                                   // padding: EdgeInsets.all(20),
                                   child: TextField(
                                     onChanged: (val) {
-                                      // setState(() {
-                                      //   _searchText = val;
-                                      // });
-                                      print(val);
+                                      _cart.changeMoney(double.parse(val));
                                     },
+                                    textAlign: TextAlign.right,
                                     keyboardType: TextInputType.number,
                                   ),
                                 ),
@@ -175,7 +179,8 @@ class CartScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 new Text("ပြန်အမ်းငွေ  :"),
-                                new Text("3,799"),
+                                new Text(
+                                    _cart.getChangedMoney.toStringAsFixed(2)),
                               ],
                             ),
                           )

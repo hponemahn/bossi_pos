@@ -11,6 +11,7 @@ class CartItem {
 
 class Cart with ChangeNotifier {
   Map<String, CartItem> _cart = {};
+  double _changedMoney = 0.0;
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -30,6 +31,10 @@ class Cart with ChangeNotifier {
       _total += value.price * value.qty;
     });
     return _total;
+  }
+
+  double get getChangedMoney {
+    return _changedMoney;
   }
 
   void add (String id, String name, double price) {
@@ -52,6 +57,15 @@ class Cart with ChangeNotifier {
 
   void clear () {
     _cart = {};
+    notifyListeners();
+  }
+
+  void changeMoney (double val) {
+    if (val > totalAmount) {
+      _changedMoney = val - totalAmount;  
+    } else {
+      _changedMoney = 0.0;
+    }
     notifyListeners();
   }
 }
