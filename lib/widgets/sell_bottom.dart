@@ -37,7 +37,7 @@ class SellBottom extends StatelessWidget {
                               return AlertDialog(
                                 title: Text('အသိပေးခြင်း'),
                                 content: Text(
-                                  'အပေါ်တွင်ပြထားသော ရောင်းမည့်ပစ္စည်းများကို ဦးစာရွေးချယ်ပြီးမှ နှိပ်ပါ။​',
+                                  'အပေါ်တွင်ပြထားသော ရောင်းမည့်ပစ္စည်းများကို ဦးစွာရွေးချယ်ပြီးမှ နှိပ်ပါ။​',
                                 ),
                                 actions: <Widget>[
                                   FlatButton(

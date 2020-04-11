@@ -1,4 +1,5 @@
 import 'package:bossi_pos/providers/cart.dart';
+import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -191,7 +192,7 @@ class CartScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(100, 30, 100, 0),
             child: RaisedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/sell_success');
+                Navigator.pushNamed(context, OrderScreen.routeName);
               },
               textColor: Colors.white,
               color: Theme.of(context).accentColor,
