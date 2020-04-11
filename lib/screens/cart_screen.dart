@@ -4,11 +4,12 @@ import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = "cart";
-  int _curDay = DateTime.now().day;
-  int _curMon = DateTime.now().month;
-  int _curYear = DateTime.now().year;
-  int _curHr = DateTime.now().hour;
-  int _curMin = DateTime.now().minute;
+  
+  final int _curDay = DateTime.now().day;
+  final int _curMon = DateTime.now().month;
+  final int _curYear = DateTime.now().year;
+  final int _curHr = DateTime.now().hour;
+  final int _curMin = DateTime.now().minute;
 
 
   @override
