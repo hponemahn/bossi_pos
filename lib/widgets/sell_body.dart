@@ -100,7 +100,15 @@ class _SellBodyState extends State<SellBody> {
     Products _products = Provider.of<Products>(context);
     Cart _cart = Provider.of<Cart>(context);
 
-    return Column(
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },child: 
+    Column(
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(20),
@@ -117,6 +125,7 @@ class _SellBodyState extends State<SellBody> {
           ),
           _grid(_products.products, _cart),
         ],
-      );
+      ),
+    );
   }
 }

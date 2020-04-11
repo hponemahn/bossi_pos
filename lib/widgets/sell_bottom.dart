@@ -29,18 +29,6 @@ class SellBottom extends StatelessWidget {
                 disabledTextColor: Colors.black,
                 padding: EdgeInsets.all(8.0),
                 splashColor: Colors.blueAccent,
-                onPressed: () => _cart.clear(),
-                icon: Icon(Icons.cancel),
-                label: Text(
-                  "ဖျက်မည်",
-                  style: TextStyle(fontSize: 17.0),
-                )),
-              FlatButton.icon(
-                textColor: Colors.grey[800],
-                disabledColor: Colors.grey,
-                disabledTextColor: Colors.black,
-                padding: EdgeInsets.all(8.0),
-                splashColor: Colors.blueAccent,
                 onPressed: () => {
                   // _cart.cart.forEach((key, value) {
                   //   print(value.name);
@@ -50,6 +38,18 @@ class SellBottom extends StatelessWidget {
                 icon: Badge(child: Icon(Icons.shopping_cart), value: _cart.totalCount.toString()),
                 label: Text(
                   "ရောင်းမည်",
+                  style: TextStyle(fontSize: 17.0),
+                )),
+            FlatButton.icon(
+                textColor: Colors.grey[800],
+                disabledColor: Colors.grey,
+                disabledTextColor: Colors.black,
+                padding: EdgeInsets.all(8.0),
+                splashColor: Colors.blueAccent,
+                onPressed: () => _cart.clear(),
+                icon: Icon(Icons.cancel),
+                label: Text(
+                  "ဖျက်မည်",
                   style: TextStyle(fontSize: 17.0),
                 )),
           ],
