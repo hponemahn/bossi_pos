@@ -1,4 +1,3 @@
-import 'package:bossi_pos/print/print_screen.dart';
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
@@ -35,7 +34,6 @@ class MyApp extends StatelessWidget {
       routes: {
         CartScreen.routeName: (ctx) => CartScreen(),
         OrderScreen.routeName: (ctx) => OrderScreen(),
-        PrintScreen.routeName: (ctx) => PrintScreen(),
       },
     ),);
 

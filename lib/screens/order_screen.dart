@@ -1,25 +1,16 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:bossi_pos/screens/document.dart';
+import 'package:bossi_pos/providers/cart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:markdown/markdown.dart' as markdown;
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
-import '../screens/image_viewer.dart';
-import '../screens/viewer.dart';
-
-import 'package:bossi_pos/print/print_screen.dart';
-import 'package:bossi_pos/providers/cart.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import '../print/document.dart';
 
 class OrderScreen extends StatefulWidget {
+
   static const routeName = "order";
 
   @override
@@ -27,19 +18,14 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-
   final GlobalKey<State<StatefulWidget>> shareWidget = GlobalKey();
-  final GlobalKey<State<StatefulWidget>> pickWidget = GlobalKey();
-  final GlobalKey<State<StatefulWidget>> previewContainer = GlobalKey();
-
-  Printer selectedPrinter;
-  PrintingInfo printingInfo;
-  
   final int _curDay = DateTime.now().day;
   final int _curMon = DateTime.now().month;
   final int _curYear = DateTime.now().year;
   final int _curHr = DateTime.now().hour;
   final int _curMin = DateTime.now().minute;
+
+  PrintingInfo printingInfo;
 
   @override
   void initState() {
@@ -66,7 +52,6 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   Future<void> _printPdf() async {
-    print('Print ...');
     try {
       final bool result = await Printing.layoutPdf(
           onLayout: (PdfPageFormat format) async =>
@@ -78,68 +63,6 @@ class _OrderScreenState extends State<OrderScreen> {
         content: Text('Error: ${e.toString()}'),
       ));
     }
-  }
-
-  Future<void> _saveAsFile() async {
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String appDocPath = appDocDir.path;
-    final File file = File(appDocPath + '/' + 'document.pdf');
-    print('Save as file ${file.path} ...');
-    await file.writeAsBytes((await generateDocument(PdfPageFormat.a4)).save());
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-          builder: (BuildContext context) => PdfViewer(file: file)),
-    );
-  }
-
-  Future<void> _rasterToImage() async {
-    final List<int> doc = (await generateDocument(PdfPageFormat.a4)).save();
-
-    final List<ImageProvider> images = <ImageProvider>[];
-
-    await for (PdfRaster page in Printing.raster(doc)) {
-      images.add(PdfRasterImage(page));
-    }
-
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-          builder: (BuildContext context) => ImageViewer(images: images)),
-    );
-  }
-
-  Future<void> _pickPrinter() async {
-    print('Pick printer ...');
-
-    // Calculate the widget center for iPad sharing popup position
-    final RenderBox referenceBox = pickWidget.currentContext.findRenderObject();
-    final Offset topLeft =
-        referenceBox.localToGlobal(referenceBox.paintBounds.topLeft);
-    final Offset bottomRight =
-        referenceBox.localToGlobal(referenceBox.paintBounds.bottomRight);
-    final Rect bounds = Rect.fromPoints(topLeft, bottomRight);
-
-    try {
-      final Printer printer = await Printing.pickPrinter(bounds: bounds);
-      print('Selected printer: $selectedPrinter');
-
-      setState(() {
-        selectedPrinter = printer;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _directPrintPdf() async {
-    print('Direct print ...');
-    final bool result = await Printing.directPrintPdf(
-        printer: selectedPrinter,
-        onLayout: (PdfPageFormat format) async =>
-            (await generateDocument(PdfPageFormat.letter)).save());
-
-    _showPrintedToast(result);
   }
 
   Future<void> _sharePdf() async {
@@ -156,69 +79,15 @@ class _OrderScreenState extends State<OrderScreen> {
     final Rect bounds = Rect.fromPoints(topLeft, bottomRight);
 
     await Printing.sharePdf(
-        bytes: document.save(), filename: 'my-résumé.pdf', bounds: bounds);
-  }
-  
-  Future<void> _printScreen() async {
-    final bool result =
-        await Printing.layoutPdf(onLayout: (PdfPageFormat format) async {
-      final pw.Document document = pw.Document();
-
-      final PdfImage image = await wrapWidget(
-        document.document,
-        key: previewContainer,
-        pixelRatio: 2.0,
-      );
-
-      print('Print Screen ${image.width}x${image.height}...');
-
-      document.addPage(pw.Page(
-          pageFormat: format,
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pw.Expanded(
-                child: pw.Image(image),
-              ),
-            ); // Center
-          })); // Page
-
-      return document.save();
-    });
-
-    _showPrintedToast(result);
-  }
-
-  Future<void> _printHtml() async {
-    print('Print html ...');
-    final bool result =
-        await Printing.layoutPdf(onLayout: (PdfPageFormat format) async {
-      final String html = await rootBundle.loadString('assets/example.html');
-      return await Printing.convertHtml(format: format, html: html);
-    });
-
-    _showPrintedToast(result);
-  }
-  
-  Future<void> _printMarkdown() async {
-    print('Print Markdown ...');
-    final bool result =
-        await Printing.layoutPdf(onLayout: (PdfPageFormat format) async {
-      final String md = await rootBundle.loadString('assets/example.md');
-      final String html = markdown.markdownToHtml(md,
-          extensionSet: markdown.ExtensionSet.gitHubWeb);
-      return await Printing.convertHtml(format: format, html: html);
-    });
-
-    _showPrintedToast(result);
+        bytes: document.save(), filename: 'receipt.pdf', bounds: bounds);
   }
 
   @override
   Widget build(BuildContext context) {
-    Cart _cart = Provider.of<Cart>(context);
 
-    return RepaintBoundary(
-        key: previewContainer,
-        child: Scaffold(
+    Cart _cart = Provider.of<Cart>(context);
+    
+    return Scaffold(
         appBar: AppBar(
           title: Text("အရောင်းပြေစာ"),
         ),
@@ -401,7 +270,7 @@ class _OrderScreenState extends State<OrderScreen> {
               child: Text("၀ယ်ယူအားပေးမှုကို ကျေးဇူးတင်ပါသည်။"),
             ),
             SizedBox(
-              height: 60.0,
+              height: 20.0,
             ),
             Wrap(
               // spacing: 8.0,
@@ -409,45 +278,18 @@ class _OrderScreenState extends State<OrderScreen> {
               alignment: WrapAlignment.center,
               children: <Widget>[
                 FlatButton(
-                  onPressed: () {
-                    print("print");
-                    Navigator.pushNamed(context, PrintScreen.routeName);
-                  },
-                  child: Image.asset(
-                    "assets/sms.png",
-                    width: 60,
-                    height: 60,
-                  ),
-                ),
-                FlatButton(
-                  // onPressed: () {
-                  //   print("sms");
-                  // },
+                  key: shareWidget,
                   onPressed: printingInfo?.canShare ?? false ? _sharePdf : null,
                   child: Image.asset(
-                    "assets/viber.png",
+                    "assets/share.png",
                     width: 60,
                     height: 60,
                   ),
                 ),
                 FlatButton(
-                  // onPressed: () {
-                  //   print("print");
-                  //   Navigator.pushNamed(context, PrintScreen.routeName);
-                  // },
                   onPressed: printingInfo?.canPrint ?? false ? _printPdf : null,
                   child: Image.asset(
                     "assets/print.png",
-                    width: 60,
-                    height: 60,
-                  ),
-                ),
-                FlatButton(
-                  onPressed: () {
-                    print("sms");
-                  },
-                  child: Image.asset(
-                    "assets/mail.png",
                     width: 60,
                     height: 60,
                   ),
@@ -466,6 +308,6 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ],
-        )),);
+        ))    ;
   }
 }

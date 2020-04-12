@@ -1,17 +1,33 @@
 import 'dart:async';
 
+// import 'package:bossi_pos/providers/cart.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+// import 'package:provider/provider.dart';
 
 import 'example_widgets.dart';
 
+// class Document extends StatelessWidget {
+//   const Document({Key key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: c,
+//     );
+//   }
+// }
+
+
+
 Future<pw.Document> generateDocument(PdfPageFormat format) async {
+
   final pw.Document doc =
-      pw.Document(title: 'My Résumé', author: 'David PHAM-VAN');
+      pw.Document(title: 'receipt', author: 'David PHAM-VAN');
 
   final font = await rootBundle.load("assets/Pyidaungsu-2.5.3_Regular.ttf");
   final ttf = pw.Font.ttf(font);
@@ -145,6 +161,7 @@ Future<pw.Document> generateDocument(PdfPageFormat format) async {
               pw.Center(
               child: pw.Text("Thank You Come Again!"),
             ),
+            // pw.Center(child: pw.Text(_cart.totalAmount.toString()),),
             ],
           ),
         )

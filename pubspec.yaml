@@ -55,10 +55,8 @@ flutter:
     # - images/a_dot_ham.jpeg
 
     - assets/shop_logo.png
-    - assets/mail.png
     - assets/print.png
-    - assets/sms.png
-    - assets/viber.png
+    - assets/share.png
     - assets/Pyidaungsu-2.5.3_Regular.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
