@@ -55,6 +55,7 @@ flutter:
     # - images/a_dot_ham.jpeg
 
     - assets/shop_logo.png
+    - assets/drawer.jpg
     - assets/print.png
     - assets/share.png
     - assets/Pyidaungsu-2.5.3_Regular.ttf

@@ -6,12 +6,6 @@ import 'package:provider/provider.dart';
 class CartScreen extends StatelessWidget {
   static const routeName = "cart";
 
-  final int _curDay = DateTime.now().day;
-  final int _curMon = DateTime.now().month;
-  final int _curYear = DateTime.now().year;
-  final int _curHr = DateTime.now().hour;
-  final int _curMin = DateTime.now().minute;
-
   @override
   Widget build(BuildContext context) {
     Cart _cart = Provider.of<Cart>(context);
