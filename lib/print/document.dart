@@ -1,7 +1,6 @@
 import 'dart:async';
 
-// import 'package:bossi_pos/providers/cart.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:bossi_pos/providers/cart.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pdf/pdf.dart';
@@ -11,36 +10,17 @@ import 'package:printing/printing.dart';
 
 import 'example_widgets.dart';
 
-// class Document extends StatelessWidget {
-//   const Document({Key key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: c,
-//     );
-//   }
-// }
-
-
-
-Future<pw.Document> generateDocument(PdfPageFormat format) async {
-
+Future<pw.Document> generateDocument(
+    PdfPageFormat format, Cart _cartForPrint) async {
   final pw.Document doc =
       pw.Document(title: 'receipt', author: 'David PHAM-VAN');
 
   final font = await rootBundle.load("assets/Pyidaungsu-2.5.3_Regular.ttf");
   final ttf = pw.Font.ttf(font);
 
-  final PdfImage profileImage = kIsWeb
-      ? null
-      : await pdfImageFromImageProvider(
-          pdf: doc.document,
-          image: const NetworkImage(
-              'https://lh3.googleusercontent.com/proxy/oooL1sf95bIcE3EUm6VrAt2k_y2cKahVj7Jmeme6xpH9gfjcz8_GdzdHgufDPxt3bWMKjQh3t1exG01_oG4eKiPSyV0P8jF4BiOpDYzpwmBmPoxBvcZijJg0kzocan5RjeY'),
-          onError: (dynamic exception, StackTrace stackTrace) {
-            print('Unable to download image');
-          });
+  const imageProvider = const AssetImage('assets/shop_logo.png');
+  final PdfImage _shopLogo =
+      await pdfImageFromImageProvider(pdf: doc.document, image: imageProvider);
 
   final pw.PageTheme pageTheme = myPageTheme(format);
 
@@ -52,22 +32,16 @@ Future<pw.Document> generateDocument(PdfPageFormat format) async {
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: <pw.Widget>[
-            //   pw.Container(
-            //   padding: pw.EdgeInsets.fromLTRB(20, 20, 20, 10),
-            //   child: profileImage,
-            // ),
-            pw.Center(
-              child: 
-            pw.ClipOval(
-              child: pw.Container(
-                  padding: pw.EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  width: 100,
-                  height: 100,
-                  color: lightGreen,
-                  child: profileImage == null
-                      ? pw.Container()
-                      : pw.Image(profileImage)))
-            ),
+              pw.Center(
+                  child: pw.ClipOval(
+                      child: pw.Container(
+                          padding: pw.EdgeInsets.fromLTRB(20, 20, 20, 10),
+                          width: 100,
+                          height: 100,
+                          color: lightGreen,
+                          child: _shopLogo == null
+                              ? pw.Container()
+                              : pw.Image(_shopLogo)))),
               pw.Center(
                 child: pw.Text("Get Ready Fitness Club",
                     style: pw.TextStyle(
@@ -87,81 +61,85 @@ Future<pw.Document> generateDocument(PdfPageFormat format) async {
               ),
               pw.SizedBox(height: 20),
               pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("No: #A002"),
-                      pw.Text("20/1/20, 3:47 PM"),
-                    ],
-                  ),
-                  pw.SizedBox(height: 20),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("ပန်းသီး", style: pw.TextStyle(font: ttf)),
-                      pw.Text("4"),
-                      pw.Text("500"),
-                      pw.Text("2000"),
-                    ],
-                  ),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("apple"),
-                      pw.Text("4"),
-                      pw.Text("500"),
-                      pw.Text("2000"),
-                    ],
-                  ),
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("apple"),
-                      pw.Text("4"),
-                      pw.Text("500"),
-                      pw.Text("2000"),
-                    ],
-                  ),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("No: #A002"),
+                  pw.Text("20/1/20, 3:47 PM"),
+                ],
+              ),
+              pw.SizedBox(height: 20),
+              pw.ListView(
+                children: _cartForPrint.cart.entries
+                    .map(
+                      (cart) => pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          // flex: 4,
+                          pw.Text(cart.value.name,
+                              style: pw.TextStyle(font: ttf)),
+
+                          // flex: 2,
+                          pw.Text(cart.value.qty.toString(),
+                              textAlign: pw.TextAlign.center),
+
+                          // flex: 2,
+                          pw.Text(
+                            cart.value.price.toString(),
+                          ),
+
+                          // flex: 2,
+                          pw.Text("${cart.value.qty * cart.value.price}",
+                              textAlign: pw.TextAlign.right),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
               pw.SizedBox(height: 20),
               pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("Total  :"),
-                      pw.Text("2000"),
-                    ],
-                  ),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Total  :"),
+                  pw.Text(_cartForPrint.totalAmount.toString()),
+                ],
+              ),
               pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("Discount  :"),
-                      pw.Text("-"),
-                    ],
-                  ),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Discount  :"),
+                  pw.Text("-"),
+                ],
+              ),
               pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("Grand Total  :", style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 14)),
-                      pw.Text("2000", style: pw.TextStyle(fontWeight: pw.FontWeight.bold,fontSize: 14)),
-                    ],
-                  ),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Grand Total  :",
+                      style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold, fontSize: 14)),
+                  pw.Text(_cartForPrint.totalAmount.toString(),
+                      style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold, fontSize: 14)),
+                ],
+              ),
               pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("Paid Amount  :"),
-                      pw.Text("2000"),
-                    ],
-                  ),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Paid Amount  :"),
+                  pw.Text(
+                      "${_cartForPrint.totalAmount + _cartForPrint.getChangedMoney}"),
+                ],
+              ),
               pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text("Change  :"),
-                      pw.Text("2000"),
-                    ],
-                  ),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Change  :"),
+                  pw.Text(_cartForPrint.getChangedMoney.toString()),
+                ],
+              ),
               pw.SizedBox(height: 40),
               pw.Center(
-              child: pw.Text("Thank You Come Again!"),
-            ),
-            // pw.Center(child: pw.Text(_cart.totalAmount.toString()),),
+                child: pw.Text("Thank You Come Again!"),
+              ),
             ],
           ),
         )

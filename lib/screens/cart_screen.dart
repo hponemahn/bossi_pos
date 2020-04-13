@@ -5,13 +5,12 @@ import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = "cart";
-  
+
   final int _curDay = DateTime.now().day;
   final int _curMon = DateTime.now().month;
   final int _curYear = DateTime.now().year;
   final int _curHr = DateTime.now().hour;
   final int _curMin = DateTime.now().minute;
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,27 +80,57 @@ class CartScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             children: _cart.cart.entries
                 .map(
-                  (cart) => Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  (cart) => Card(
+                    child: SizedBox(
+                      height: 60,
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(cart.value.name),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(Icons.add_circle_outline),
-                        onPressed: () => _cart.add(
-                            cart.value.id, cart.value.name, cart.value.price),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cart.value.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
-                      Text(cart.value.qty.toString()),
-                      IconButton(
-                        icon: Icon(Icons.remove_circle_outline),
-                        onPressed: () => _cart.remove(
-                            cart.value.id, cart.value.name, cart.value.price),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                height: 25.0,
+                                width: 25.0,
+                                child: new IconButton(
+                                  padding: new EdgeInsets.all(0.0),
+                                  icon: new Icon(Icons.add_circle_outline,
+                                      size: 25.0),
+                                  onPressed: () => _cart.add(cart.value.id,
+                                      cart.value.name, cart.value.price),
+                                )),
+                            Text(cart.value.qty.toString(),
+                                style: TextStyle(fontSize: 18)),
+                            SizedBox(
+                                height: 25.0,
+                                width: 25.0,
+                                child: new IconButton(
+                                  padding: new EdgeInsets.all(0.0),
+                                  icon: new Icon(Icons.remove_circle_outline,
+                                      size: 25.0),
+                                  onPressed: () => _cart.remove(cart.value.id,
+                                      cart.value.name, cart.value.price),
+                                )),
+                          ],
+                        ),
                       ),
-                      Spacer(),
-                      Text(cart.value.price.toString()),
-                      Spacer(),
-                      Text("${cart.value.qty * cart.value.price}"),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cart.value.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text("${cart.value.qty * cart.value.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
                     ],
+                  ),
+                    ),
                   ),
                 )
                 .toList(),

@@ -27,6 +27,8 @@ class _OrderScreenState extends State<OrderScreen> {
 
   PrintingInfo printingInfo;
 
+  Cart _cartForPrint;
+
   @override
   void initState() {
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
@@ -55,7 +57,7 @@ class _OrderScreenState extends State<OrderScreen> {
     try {
       final bool result = await Printing.layoutPdf(
           onLayout: (PdfPageFormat format) async =>
-              (await generateDocument(format)).save());
+              (await generateDocument(format, _cartForPrint)).save());
       _showPrintedToast(result);
     } catch (e) {
       final ScaffoldState scaffold = Scaffold.of(shareWidget.currentContext);
@@ -67,7 +69,7 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> _sharePdf() async {
     print('Share ...');
-    final pw.Document document = await generateDocument(PdfPageFormat.a4);
+    final pw.Document document = await generateDocument(PdfPageFormat.a4, _cartForPrint);
 
     // Calculate the widget center for iPad sharing popup position
     final RenderBox referenceBox =
@@ -86,7 +88,11 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
 
     Cart _cart = Provider.of<Cart>(context);
-    
+
+    setState(() {
+      _cartForPrint = _cart;
+    });
+
     return Scaffold(
         appBar: AppBar(
           title: Text("အရောင်းပြေစာ"),
@@ -138,58 +144,43 @@ class _OrderScreenState extends State<OrderScreen> {
                           ]),
                         ]))),
                         SizedBox(height: 20.0,),
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              child: Table(
-                  border: TableBorder.all(width: 0.1, color: Colors.black),
-                  children: _cart.cart.entries
-                      .map(
-                        (cart) => TableRow(children: [
-                          TableCell(
-                            verticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text(cart.value.name),
-                              ],
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Text(cart.value.qty.toString()),
-                              ],
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text(cart.value.price.toString()),
-                              ],
-                            ),
-                          ),
-                          TableCell(
-                            verticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                new Text("${cart.value.qty * cart.value.price}"),
-                              ],
-                            ),
-                          )
-                        ]),
-                      )
-                      .toList()),
-            ),
+            
+            ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            children: _cart.cart.entries
+                .map(
+                  (cart) => Card(
+                    child: SizedBox(
+                      height: 60,
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cart.value.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cart.value.qty.toString(),
+                                style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cart.value.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text("${cart.value.qty * cart.value.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                    ],
+                  ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+
             Container(
                 // height: MediaQuery.of(context).size.height,
                 child: Padding(
@@ -288,6 +279,12 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 FlatButton(
                   onPressed: printingInfo?.canPrint ?? false ? _printPdf : null,
+                    // setState(() {
+                    //   _cartForPrint = _cart;
+                    // });
+                    // printingInfo?.canPrint ?? false ? _printPdf : null;
+                    // printingInfo.canPrint ? _printPdf : null;
+                  // },
                   child: Image.asset(
                     "assets/print.png",
                     width: 60,
