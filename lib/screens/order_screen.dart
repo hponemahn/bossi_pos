@@ -144,13 +144,10 @@ class _OrderScreenState extends State<OrderScreen> {
                           ]),
                         ]))),
                         SizedBox(height: 20.0,),
-            
-            ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-            children: _cart.cart.entries
-                .map(
-                  (cart) => Card(
+
+            ..._cart.cart.values.toList().map((cartItem) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              child: Card(
                     child: SizedBox(
                       height: 60,
                       child: Row(
@@ -158,29 +155,28 @@ class _OrderScreenState extends State<OrderScreen> {
                     children: [
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text(cart.value.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text(cartItem.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text(cart.value.qty.toString(),
+                        child: Text(cartItem.qty.toString(),
                                 style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text(cart.value.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text(cartItem.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text("${cart.value.qty * cart.value.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text("${cartItem.qty * cartItem.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                     ],
                   ),
                     ),
                   ),
-                )
-                .toList(),
+            ),
           ),
-
+            
             Container(
                 // height: MediaQuery.of(context).size.height,
                 child: Padding(

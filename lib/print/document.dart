@@ -68,6 +68,7 @@ Future<pw.Document> generateDocument(
                 ],
               ),
               pw.SizedBox(height: 20),
+              
               pw.ListView(
                 children: _cartForPrint.cart.entries
                     .map(
@@ -95,6 +96,7 @@ Future<pw.Document> generateDocument(
                     )
                     .toList(),
               ),
+
               pw.SizedBox(height: 20),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,

@@ -28,59 +28,54 @@ class CartScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text("အရောင်းစာရင်း"),
         ),
-        body: SafeArea(
-            child: SingleChildScrollView(
-                child: Column(children: [
-          Container(
-              // height: MediaQuery.of(context).size.height,
-              child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Table(
-                      // border: TableBorder.all(width: 1.0, color: Colors.black),
-                      children: [
-                        TableRow(children: [
-                          TableCell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                new Text('အရောင်းပြေစာ: #A002'),
-                                new Text("$_curDay/$_curMon/$_curYear"),
-                              ],
-                            ),
-                          )
-                        ]),
-                        TableRow(children: [
-                          TableCell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                new Text('အရောင်း၀န်ထမ်း: -'),
-                                new Text("$_curHr:$_curMin"),
-                              ],
-                            ),
-                          )
-                        ]),
-                        TableRow(children: [
-                          TableCell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                new Text("ကုန်၀ယ်သူ: -"),
-                                // new Text("Add, Edit"),
-                              ],
-                            ),
-                          )
-                        ]),
-                      ]))),
+        body: ListView(children: [
+          // Container(
+          //     // height: MediaQuery.of(context).size.height,
+          //     child: Padding(
+          //         padding: const EdgeInsets.all(20.0),
+          //         child: Table(
+          //             // border: TableBorder.all(width: 1.0, color: Colors.black),
+          //             children: [
+          //               TableRow(children: [
+          //                 TableCell(
+          //                   child: Row(
+          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                     children: <Widget>[
+          //                       new Text('အရောင်းပြေစာ: #A002'),
+          //                       new Text("$_curDay/$_curMon/$_curYear"),
+          //                     ],
+          //                   ),
+          //                 )
+          //               ]),
+          //               TableRow(children: [
+          //                 TableCell(
+          //                   child: Row(
+          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                     children: <Widget>[
+          //                       new Text('အရောင်း၀န်ထမ်း: -'),
+          //                       new Text("$_curHr:$_curMin"),
+          //                     ],
+          //                   ),
+          //                 )
+          //               ]),
+          //               TableRow(children: [
+          //                 TableCell(
+          //                   child: Row(
+          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //                     children: <Widget>[
+          //                       new Text("ကုန်၀ယ်သူ: -"),
+          //                       // new Text("Add, Edit"),
+          //                     ],
+          //                   ),
+          //                 )
+          //               ]),
+          //             ]))),
           SizedBox(
             height: 20,
           ),
-          ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-            children: _cart.cart.entries
-                .map(
-                  (cart) => Card(
+          ..._cart.cart.values.toList().map((cartItem) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              child: Card(
                     child: SizedBox(
                       height: 60,
                       child: Row(
@@ -88,7 +83,7 @@ class CartScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text(cart.value.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text(cartItem.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
@@ -102,10 +97,10 @@ class CartScreen extends StatelessWidget {
                                   padding: new EdgeInsets.all(0.0),
                                   icon: new Icon(Icons.add_circle_outline,
                                       size: 25.0),
-                                  onPressed: () => _cart.add(cart.value.id,
-                                      cart.value.name, cart.value.price),
+                                  onPressed: () => _cart.add(cartItem.id,
+                                      cartItem.name, cartItem.price),
                                 )),
-                            Text(cart.value.qty.toString(),
+                            Text(cartItem.qty.toString(),
                                 style: TextStyle(fontSize: 18)),
                             SizedBox(
                                 height: 25.0,
@@ -114,26 +109,25 @@ class CartScreen extends StatelessWidget {
                                   padding: new EdgeInsets.all(0.0),
                                   icon: new Icon(Icons.remove_circle_outline,
                                       size: 25.0),
-                                  onPressed: () => _cart.remove(cart.value.id,
-                                      cart.value.name, cart.value.price),
+                                  onPressed: () => _cart.remove(cartItem.id,
+                                      cartItem.name, cartItem.price),
                                 )),
                           ],
                         ),
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text(cart.value.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text(cartItem.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text("${cart.value.qty * cart.value.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text("${cartItem.qty * cartItem.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                     ],
                   ),
                     ),
                   ),
-                )
-                .toList(),
+            ),
           ),
           Container(
               // height: MediaQuery.of(context).size.height,
@@ -218,7 +212,7 @@ class CartScreen extends StatelessWidget {
                         ]),
                       ]))),
           Container(
-            padding: EdgeInsets.fromLTRB(100, 30, 100, 0),
+            padding: EdgeInsets.fromLTRB(100, 30, 100, 30),
             child: RaisedButton(
               onPressed: () {
                 Navigator.pushNamed(context, OrderScreen.routeName);
@@ -229,8 +223,6 @@ class CartScreen extends StatelessWidget {
                   Text("အတည်ပြုမည်", style: Theme.of(context).textTheme.button),
             ),
           ),
-        ]))),
-      ),
-    );
+        ])));
   }
 }
