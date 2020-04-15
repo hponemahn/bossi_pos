@@ -1,5 +1,6 @@
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
+import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/widgets/drawlet.dart';
 import 'package:bossi_pos/widgets/manage_product_item.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
       products = tempList;
     }
 
-    return ListView.builder(shrinkWrap: true,itemCount: products.length, itemBuilder: (ctx, i) => ManageProductItem(products[i].id, products[i].name, products[i].price)
+    return ListView.builder(shrinkWrap: true,itemCount: products.length, itemBuilder: (ctx, i) => ManageProductItem(products[i].id, products[i].name, products[i].qty, products[i].price)
     );
   }
 
@@ -38,9 +39,9 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
     List<Product> _products = Provider.of<Products>(context).products;
     return Scaffold(
       appBar: AppBar(
-        title: Text("ကုန်ပစ္စည်းစာရင်း"),
+        title: const Text("ကုန်ပစ္စည်းစာရင်း"),
       ),
-      drawer: Drawlet(),
+      drawer: const Drawlet(),
       body: GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -74,7 +75,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: null,
+        onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName),
       ),
     );
   }
