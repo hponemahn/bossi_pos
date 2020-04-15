@@ -16,7 +16,7 @@ class ManageProductsScreen extends StatefulWidget {
 class _ManageProductsScreenState extends State<ManageProductsScreen> {
   String _searchText = "";
 
-  Widget _productListView (products) {
+  Widget _productListView(products) {
     if (_searchText.isNotEmpty) {
       List tempList = new List();
       for (int i = 0; i < products.length; i++) {
@@ -30,7 +30,13 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
       products = tempList;
     }
 
-    return ListView.builder(shrinkWrap: true,itemCount: products.length, itemBuilder: (ctx, i) => ManageProductItem(products[i].id, products[i].name, products[i].qty, products[i].price)
+    return Expanded(
+      child: ListView.builder(
+          padding: EdgeInsets.all(10),
+          shrinkWrap: true,
+          itemCount: products.length,
+          itemBuilder: (ctx, i) => ManageProductItem(products[i].id,
+              products[i].name, products[i].qty, products[i].price)),
     );
   }
 
@@ -50,11 +56,10 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
             currentFocus.unfocus();
           }
         },
-        child: ListView(
-          padding: EdgeInsets.all(10),
+        child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: TextField(
                 onChanged: (val) {
                   setState(() {
@@ -75,7 +80,8 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName),
+        onPressed: () =>
+            Navigator.pushNamed(context, ProductEditScreen.routeName),
       ),
     );
   }
