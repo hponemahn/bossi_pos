@@ -1,3 +1,4 @@
+import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:flutter/material.dart';
 
 class Drawlet extends StatelessWidget {
@@ -51,13 +52,13 @@ class Drawlet extends StatelessWidget {
           //     Navigator.pushNamed(context, '/dashboard');
           //   },
           // ),
-          // ListTile(
-          //   leading: Icon(Icons.store),
-          //   title: Text("ကုန်ပစ္စည်းများ"),
-          //   onTap: () {
-          //     Navigator.pushNamed(context, '/product');
-          //   },
-          // ),
+          ListTile(
+            leading: Icon(Icons.store),
+            title: Text("ကုန်ပစ္စည်းများ"),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, ManageProductsScreen.routeName);
+            },
+          ),
           // ListTile(
           //   leading: Icon(Icons.category),
           //   title: Text("အမျိုးအစားများ"),

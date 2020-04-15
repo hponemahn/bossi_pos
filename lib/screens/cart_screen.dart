@@ -23,47 +23,6 @@ class CartScreen extends StatelessWidget {
           title: Text("အရောင်းစာရင်း"),
         ),
         body: ListView(children: [
-          // Container(
-          //     // height: MediaQuery.of(context).size.height,
-          //     child: Padding(
-          //         padding: const EdgeInsets.all(20.0),
-          //         child: Table(
-          //             // border: TableBorder.all(width: 1.0, color: Colors.black),
-          //             children: [
-          //               TableRow(children: [
-          //                 TableCell(
-          //                   child: Row(
-          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                     children: <Widget>[
-          //                       new Text('အရောင်းပြေစာ: #A002'),
-          //                       new Text("$_curDay/$_curMon/$_curYear"),
-          //                     ],
-          //                   ),
-          //                 )
-          //               ]),
-          //               TableRow(children: [
-          //                 TableCell(
-          //                   child: Row(
-          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                     children: <Widget>[
-          //                       new Text('အရောင်း၀န်ထမ်း: -'),
-          //                       new Text("$_curHr:$_curMin"),
-          //                     ],
-          //                   ),
-          //                 )
-          //               ]),
-          //               TableRow(children: [
-          //                 TableCell(
-          //                   child: Row(
-          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                     children: <Widget>[
-          //                       new Text("ကုန်၀ယ်သူ: -"),
-          //                       // new Text("Add, Edit"),
-          //                     ],
-          //                   ),
-          //                 )
-          //               ]),
-          //             ]))),
           SizedBox(
             height: 20,
           ),

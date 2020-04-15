@@ -1,6 +1,7 @@
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
+import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       routes: {
         CartScreen.routeName: (ctx) => CartScreen(),
         OrderScreen.routeName: (ctx) => OrderScreen(),
+        ManageProductsScreen.routeName: (ctx) => ManageProductsScreen(),
       },
     ),);
 
