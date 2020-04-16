@@ -1,3 +1,4 @@
+import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   Product _newProduct = Product(
       id: null,
       name: null,
-      catId: null,
+      category: null,
       price: null,
       qty: null,
       buyPrice: null,
@@ -25,9 +26,10 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       discountPrice: null,
       barcode: null,
       isDamage: null);
-  List<String> _categories = <String>['', 'red', 'yellow', 'white', 'blue'];
-  String _category = "";
+
   bool isSwitched = false;
+  
+  String dropdownValue = 'Food';
 
   final _buyPriceFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
@@ -40,7 +42,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   Map<String, dynamic> _initVal = {
     "id": null,
     "name": null,
-    "catId": 0,
+    "category": 0,
     "price": 0,
     "qty": 0,
     "buyPrice": 0,
@@ -52,18 +54,23 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   };
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     if (_isInit) {
       String id = ModalRoute.of(context).settings.arguments as String;
 
       if (id != null) {
         Product _product =
-          Provider.of<Products>(context, listen: false).findById(id);
-          _newProduct = _product;
+            Provider.of<Products>(context, listen: false).findById(id);
+        _newProduct = _product;
         _initVal = {
           "id": _product.id,
           "name": _product.name,
-          "catId": _product.catId,
+          "category": _product.category,
           "price": _product.price,
           "qty": _product.qty,
           "buyPrice": _product.buyPrice,
@@ -73,6 +80,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           "barcode": _product.barcode,
           "isDamage": _product.isDamage
         };
+        setState(() {
+          dropdownValue = _product.category;
+        });
       }
     }
     _isInit = false;
@@ -102,7 +112,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
       print(_newProduct.id);
       print(_newProduct.name);
-      print(_newProduct.catId);
+      print(_newProduct.category);
       print(_newProduct.price);
       print(_newProduct.qty);
       print(_newProduct.buyPrice);
@@ -113,7 +123,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       print(_newProduct.isDamage);
 
       if (_initVal['id'] == null) {
-        Provider.of<Products>(context, listen: false).add(_newProduct);  
+        Provider.of<Products>(context, listen: false).add(_newProduct);
       } else {
         Provider.of<Products>(context, listen: false).edit(_newProduct);
       }
@@ -124,6 +134,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Categories _cats = Provider.of<Categories>(context);
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -164,7 +176,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   SizedBox(
                     height: 20,
@@ -176,12 +188,17 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                           icon: const Icon(Icons.category),
                           labelText: 'အမျိုးအစားများ',
                         ),
-                        isEmpty: _category == '',
+                        // isEmpty: _selectedCat == '',
                         child: new DropdownButtonHideUnderline(
-                          child: new DropdownButton(
-                            value: _category,
+                          child: DropdownButton<String>(
+                            value: dropdownValue,
                             isDense: true,
-                            onChanged: (String newValue) {
+                            items: _cats.categories.map((Category cat) {
+                              return new DropdownMenuItem<String>(
+                                  value: cat.category,
+                                  child: new Text(cat.category));
+                            }).toList(),
+                            onChanged: (val) {
                               setState(() {
                                 _newProduct = Product(
                                     id: _newProduct.id,
@@ -194,17 +211,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                     discountPrice: _newProduct.discountPrice,
                                     barcode: _newProduct.barcode,
                                     isDamage: _newProduct.isDamage,
-                                    catId: 1);
-                                _category = newValue;
-                                state.didChange(newValue);
+                                    category: val);
+                                dropdownValue = val;
+                                state.didChange(val);
                               });
+                              print(dropdownValue);
                             },
-                            items: _categories.map((String value) {
-                              return new DropdownMenuItem(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList(),
                           ),
                         ),
                       );
@@ -255,7 +267,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   TextFormField(
                     initialValue: _initVal['buyPrice'].toString(),
@@ -292,7 +304,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   TextFormField(
                     initialValue: _initVal['price'].toString(),
@@ -329,7 +341,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   TextFormField(
                     initialValue: _initVal['discountPrice'].toString(),
@@ -351,10 +363,10 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         buyPrice: _newProduct.buyPrice,
                         sku: _newProduct.sku,
                         desc: _newProduct.desc,
-                        discountPrice: val == '' ? 0 : double.parse(val),
+                        discountPrice: double.parse(val),
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   TextFormField(
                     initialValue: _initVal['sku'],
@@ -377,7 +389,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   // SizedBox(
                   //   height: 20,
@@ -403,7 +415,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: val,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   SizedBox(
                     height: 20,
@@ -426,7 +438,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                 discountPrice: _newProduct.discountPrice,
                                 barcode: _newProduct.barcode,
                                 isDamage: isSwitched,
-                                catId: _newProduct.catId);
+                                category: _newProduct.category);
                           });
                         },
                       ),
@@ -457,7 +469,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        catId: _newProduct.catId),
+                        category: _newProduct.category),
                   ),
                   SizedBox(
                     height: 20,

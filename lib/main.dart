@@ -1,4 +1,5 @@
 import 'package:bossi_pos/providers/cart.dart';
+import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider.value(value: Products()),
       ChangeNotifierProvider.value(value: Cart()),
+      ChangeNotifierProvider.value(value: Categories()),
     ],child: MaterialApp(
       theme: ThemeData(
             primaryColor: Colors.purple[800],
