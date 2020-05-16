@@ -1,11 +1,20 @@
+import 'package:bossi_pos/page/login.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:bossi_pos/graphql/utils.dart' as utils;
 
 class Drawlet extends StatelessWidget {
   const Drawlet({Key key}) : super(key: key);
 
   @override
+  
   Widget build(BuildContext context) {
+   final FacebookLogin facebookSignIn = new FacebookLogin();
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  bool _isLoggedIn;
     Widget _createHeader() {
       return DrawerHeader(
           margin: EdgeInsets.zero,
@@ -67,6 +76,24 @@ class Drawlet extends StatelessWidget {
           //     Navigator.pushNamed(context, '/category');
           //   },
           // ),
+
+          ListTile(
+            leading: Icon(Icons.lock_open),
+            title: Text("Logout"),
+            onTap: () async{
+               _googleSignIn.signOut();
+                await facebookSignIn.logOut();
+                _isLoggedIn = false;
+                utils.name = "";
+                utils.accessToken = "";
+                utils.email = "";
+              // Navigator.pushReplacementNamed(context, ManageProductsScreen.routeName);
+              Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      LoginPage()));
+            },
+          ),
         
         ],
       ),

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "218709257446",
+    "firebase_url": "https://omega-iterator-253104.firebaseio.com",
+    "project_id": "omega-iterator-253104",
+    "storage_bucket": "omega-iterator-253104.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218709257446:android:dcb720b6b35d730ab2df27",
+        "android_client_info": {
+          "package_name": "com.example.bossi_pos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218709257446-54o0ig54s20ehbgml2nckgdqehorj4jm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bossi_pos",
+            "certificate_hash": "43799f5bf6d5e150e8efb8b02428211cd951202f"
+          }
+        },
+        {
+          "client_id": "218709257446-ascskt3ui835r2drghm5s68tohmbnjeb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKRjR2E04cb5PCV2H6OYD8X3UhkOKg5gA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218709257446-ascskt3ui835r2drghm5s68tohmbnjeb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
