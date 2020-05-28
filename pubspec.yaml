@@ -31,9 +31,9 @@ dependencies:
   provider: ^4.0.4
   printing: ^3.3.1
   graphql_flutter: ^3.0.0
-  image_picker: ^0.6.6+1
   google_sign_in: ^4.4.4
   flutter_facebook_login: ^3.0.0
+  fluttertoast: ^4.0.1
   path_provider:
   flutter_full_pdf_viewer:
   markdown:

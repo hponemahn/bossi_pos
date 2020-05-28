@@ -1,6 +1,6 @@
+import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
 import 'package:bossi_pos/graphql/graphql_string.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,38 +10,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   void initState() {
     super.initState();
   }
 
+//  QueryResult resultData = await graphQLClient.query(
+//               QueryOptions(documentNode: gql(userInfo)
+//               ),
+//             );
+ 
+    // var result = await graphQl.query(q);
+      // var result =
+      //    graphQLClient.query(QueryOptions(
+      //           documentNode: gql(userInfo),
+      //         ));
+
+  Future<String> asyncFunc1() async {
+   QueryResult result =await graphQLClient.query(QueryOptions(
+                documentNode: gql(userInfo),
+              ));
+              return result.toString();
+
+}
+
   @override
   Widget build(BuildContext context) {
+ 
     return Scaffold(
-        body: Query(
-      options: QueryOptions(
-        documentNode:
-            gql(userInfo), // this is the query string you just created
-      ),
-      builder: (QueryResult result,
-          {VoidCallback refetch, FetchMore fetchMore}) {
-        if (result.hasException) {
-          return Text(result.exception.toString());
-        }
-
-        if (result.loading) {
-          return Text('Loading');
-        }
-        List repositories = result.data['users'];
-
-        return ListView.builder(
-            itemCount: repositories.length,
-            itemBuilder: (context, index) {
-              final repository = repositories[index];
-
-              return Text(repository['name']);
-            });
-      },
-    ));
+        body: Center(
+          
+        child: Text(asyncFunc1().toString())));
   }
 }

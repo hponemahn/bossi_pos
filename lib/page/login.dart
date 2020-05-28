@@ -13,6 +13,7 @@ import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/graphql/utils.dart' as utils;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = '/';
@@ -32,17 +33,17 @@ class _LoginPageState extends State<LoginPage> {
   GoogleSignInAccount googleAccount;
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
-  
   // login fb
   String _message;
   Map userProfile;
   static final FacebookLogin facebookSignIn = new FacebookLogin();
 
+  String msg;
+
   @override
   void initState() {
     super.initState();
   }
-
 
   _googlelogin() async {
     print("1");
@@ -56,32 +57,32 @@ class _LoginPageState extends State<LoginPage> {
         utils.accessToken = authentication.accessToken;
         utils.email = _googleSignIn.currentUser.email;
       });
-      QueryResult resultData = await graphQLClient.mutate(
-        MutationOptions(documentNode: gql(gmailSingup), variables: {
-          "name":_googleSignIn.currentUser.displayName,
-          "email": _googleSignIn.currentUser.email,
-          "api_token": authentication.accessToken
-        }
-        ),
-      );
-      //  Navigator.of(context).pushReplacement(
-      //                         MaterialPageRoute(
-      //                             builder: (BuildContext context) =>
-      //                                 HomePage()));
-      Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      SellScreen()));
+      // QueryResult resultData = await graphQLClient.mutate(
+      //   MutationOptions(documentNode: gql(gmailSingup), variables: {
+      //     "name":_googleSignIn.currentUser.displayName,
+      //     "email": _googleSignIn.currentUser.email,
+      //     "api_token": authentication.accessToken
+      //   }
+      //   ),
+      // );
 
-        // Navigator.pushNamed(context, '/home');
-      print("2");
+      QueryResult emailCheck = await graphQLClient.query(QueryOptions(
+          documentNode: gql(checkEmail),
+          variables: {"email": _googleSignIn.currentUser.email}));
+
+      if (emailCheck.data['emailuser'] != null) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (BuildContext context) => SellScreen()));
+      } else {
+        Navigator.pushNamed(context, '/register');
+      }
     } catch (err) {
       print(err);
       print("6");
     }
   }
 
-   // fb login
+  // fb login
   Future<Null> _fblogin() async {
     final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
 
@@ -98,22 +99,17 @@ class _LoginPageState extends State<LoginPage> {
         utils.email = userProfile["email"];
         utils.accessToken = accessToken.token;
 
-          QueryResult resultData = await graphQLClient.mutate(
-              MutationOptions(documentNode: gql(gmailSingup), variables: {
-                "name":userProfile["name"].toString(),
-                "email": userProfile["email"].toString(),
-                "api_token": accessToken.token.toString()
-              }
-              ),
-            );
+        QueryResult emailCheck = await graphQLClient.query(QueryOptions(
+            documentNode: gql(checkEmail),
+            variables: {"email": userProfile["email"]}));
 
-              // Navigator.pushNamed(context, '/home');
-               Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      SellScreen()));
+        if (emailCheck.data['emailuser'] != null) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => SellScreen()));
+        } else {
+          Navigator.pushNamed(context, '/register');
+        }
 
-      
         break;
       case FacebookLoginStatus.cancelledByUser:
         _showMessage('Login cancelled by the user.');
@@ -164,25 +160,21 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: Mutation(
         options: MutationOptions(
-          documentNode:
-              gql(systemLogin), // this is the mutation string you just created
-          // you can update the cache based on results
+          documentNode: gql(systemLogin),
           update: (Cache cache, QueryResult result) {
             return cache;
           },
-          // or do something with the result.data on completion
           onCompleted: (dynamic resultData) {
             if (resultData.data['login'] == null) {
               print("error");
-            }else{
+            } else {
               print(resultData.data['login']['name']);
               var result = resultData.data['login'];
               utils.accessToken = result['api_token'];
-              // Navigator.pushNamed(context, '/home');
-              Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      HomePage()));
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) => SellScreen()));
+              msg = "login Sccess";
+              showLongToast(msg);
             }
           },
         ),
@@ -215,17 +207,26 @@ class _LoginPageState extends State<LoginPage> {
                       Material(
                         elevation: 5.0,
                         borderRadius: new BorderRadius.circular(12.0),
-                        color: Colors.purple[800],
+                        color: Colors.blue,
                         child: MaterialButton(
                           minWidth: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                           onPressed: () {
-                            showLoading(context);
-                            runMutation(<String, dynamic>{
-                                  "email": _emailController.text,
-                                  "password": _passwordController.text,
-                                });
-                                print("9");
+                            String password = _passwordController.text.trim();
+                            if (_emailController.text == '') {
+                              msg = "Email or phone no required.";
+                              showLongToast(msg);
+                            } else if (password.length < 6) {
+                              msg =
+                                  "Invalid Password, Password must be at least 6 characters long.";
+                              showLongToast(msg);
+                            } else {
+                              showLoading(context);
+                              runMutation(<String, dynamic>{
+                                "email": _emailController.text,
+                                "password": _passwordController.text,
+                              });
+                            }
                           },
                           child: Text('Login',
                               textAlign: TextAlign.center,
@@ -266,13 +267,11 @@ class _LoginPageState extends State<LoginPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          
                           FlatButton(
                             onPressed: () async {
-                               showLoading(context);
-                               _fblogin();
-                             
-                               },
+                              showLoading(context);
+                              _fblogin();
+                            },
                             child: ClipOval(
                               child: Image.asset('assets/img/fb.png',
                                   width: 50, height: 50, fit: BoxFit.cover),
@@ -282,9 +281,8 @@ class _LoginPageState extends State<LoginPage> {
                           FlatButton(
                             onPressed: () async {
                               showLoading(context);
-                              _googlelogin(); 
-                                        
-                              },
+                              _googlelogin();
+                            },
                             child: ClipOval(
                               child: Image.asset('assets/img/g.png',
                                   width: 50, height: 50, fit: BoxFit.cover),
