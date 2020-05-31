@@ -4,7 +4,7 @@ String userInfo = r"""
                           id
                           name
                           email
-                          api_token
+                          remember_token
                         }
                       }
                   """;
@@ -21,7 +21,7 @@ String checkEmail = r"""
 
 String category = r"""
                       query category{
-                        cateories{
+                        businesscat{
                           id
                           name
                         }
@@ -53,20 +53,20 @@ String systemLogin = r"""
                             {
                             id
                             name
-                            api_token
+                            remember_token
 
                           }
                         }
                     """; 
 
 String simpleSingup=r"""
-                        mutation simpleSingup($name:String,$shop_name:String,$cat_id: String,
-                        $ph: String,$email:String,$password:String,$township_id: Int,$state_id: Int,$address: String){
+                        mutation simpleSingup($name:String,$business_name:String,$business_cat_id: String,
+                        $phone: String,$email:String,$password:String,$township_id: Int,$state_id: Int,$address: String){
                           signup(
                             name:$name
-                            shop_name:$shop_name
-                            cat_id: $cat_id
-                            ph:$ph
+                            business_name:$business_name
+                            business_cat_id: $business_cat_id
+                            phone:$phone
                             email:$email
                             password : $password 
                             township_id: $township_id
@@ -83,24 +83,24 @@ String simpleSingup=r"""
                       """; 
 
 String gmailSingup=r"""
-                        mutation gmailSingup($name:String,$shop_name:String,$cat_id: String,
-                        $ph: String,$email:String,$township_id: Int,$state_id: Int,$address: String,$api_token:String){
+                        mutation gmailSingup($name:String,$business_name:String,$business_cat_id: String,
+                        $phone: String,$email:String,$township_id: Int,$state_id: Int,$address: String,$remember_token:String){
                           gmail_signup(
                             name:$name
-                            shop_name:$shop_name
-                            cat_id: $cat_id
-                            ph:$ph
+                            business_name:$business_name
+                            business_cat_id: $business_cat_id
+                            phone:$phone
                             email:$email
                             township_id: $township_id
                             state_id: $state_id
                             address: $address
-                            api_token : $api_token 
+                            remember_token : $remember_token 
                            
                           ){
                             id
                             name
                             email
-                            api_token
+                            remember_token
                           }
                         }
                       """; 

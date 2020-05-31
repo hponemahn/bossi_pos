@@ -1,3 +1,4 @@
+import 'package:bossi_pos/page/auth.dart';
 import 'package:bossi_pos/page/home.dart';
 import 'package:bossi_pos/page/login.dart';
 import 'package:bossi_pos/page/register.dart';
@@ -15,7 +16,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'graphql/client_provider.dart';
 
-final String graphQLEndpoint = 'http://192.168.43.89:8080/graphql';
+final String graphQLEndpoint = 'http://192.168.43.89:8000/graphql';
 
 void main() {
   runApp(MyApp());
@@ -74,13 +75,15 @@ class MyApp extends StatelessWidget {
               ),
             ),
             home: LoginPage(),
-            // routes: routes,
             routes: {
               CartScreen.routeName: (ctx) => CartScreen(),
               OrderScreen.routeName: (ctx) => OrderScreen(),
               ManageProductsScreen.routeName: (ctx) => ManageProductsScreen(),
               ProductEditScreen.routeName: (ctx) => ProductEditScreen(),
+              '/login': (context) => LoginPage(),
               '/register': (context) => RegisterPage(),
+              '/sellscreen': (context) => SellScreen(),
+              '/auth': (context) => AuthPage(),
               '/home': (context) => HomePage(),
             },
           ),

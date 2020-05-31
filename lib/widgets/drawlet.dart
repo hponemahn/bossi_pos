@@ -87,11 +87,7 @@ class Drawlet extends StatelessWidget {
                 utils.name = "";
                 utils.accessToken = "";
                 utils.email = "";
-              // Navigator.pushReplacementNamed(context, ManageProductsScreen.routeName);
-              Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      LoginPage()));
+              Navigator.of(context).pushReplacementNamed('/login');
             },
           ),
         

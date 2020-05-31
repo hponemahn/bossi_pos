@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:bossi_pos/page/home.dart';
 import 'package:bossi_pos/widgets/showe-dialog.dart';
 
 import 'package:bossi_pos/graphql/graphql_string.dart';
@@ -13,10 +12,9 @@ import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/graphql/utils.dart' as utils;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
-  static const String routeName = '/';
+  static const String routeName = '/login';
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -51,31 +49,14 @@ class _LoginPageState extends State<LoginPage> {
       GoogleSignInAccount account = await _googleSignIn.signIn();
       GoogleSignInAuthentication authentication = await account.authentication;
 
+       Navigator.of(context).pushReplacementNamed('/auth');
+
       setState(() {
         _isLoggedIn = true;
         utils.name = _googleSignIn.currentUser.displayName;
         utils.accessToken = authentication.accessToken;
         utils.email = _googleSignIn.currentUser.email;
       });
-      // QueryResult resultData = await graphQLClient.mutate(
-      //   MutationOptions(documentNode: gql(gmailSingup), variables: {
-      //     "name":_googleSignIn.currentUser.displayName,
-      //     "email": _googleSignIn.currentUser.email,
-      //     "api_token": authentication.accessToken
-      //   }
-      //   ),
-      // );
-
-      QueryResult emailCheck = await graphQLClient.query(QueryOptions(
-          documentNode: gql(checkEmail),
-          variables: {"email": _googleSignIn.currentUser.email}));
-
-      if (emailCheck.data['emailuser'] != null) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => SellScreen()));
-      } else {
-        Navigator.pushNamed(context, '/register');
-      }
     } catch (err) {
       print(err);
       print("6");
@@ -99,16 +80,7 @@ class _LoginPageState extends State<LoginPage> {
         utils.email = userProfile["email"];
         utils.accessToken = accessToken.token;
 
-        QueryResult emailCheck = await graphQLClient.query(QueryOptions(
-            documentNode: gql(checkEmail),
-            variables: {"email": userProfile["email"]}));
-
-        if (emailCheck.data['emailuser'] != null) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => SellScreen()));
-        } else {
-          Navigator.pushNamed(context, '/register');
-        }
+          Navigator.of(context).pushReplacementNamed('/auth');
 
         break;
       case FacebookLoginStatus.cancelledByUser:
@@ -170,11 +142,10 @@ class _LoginPageState extends State<LoginPage> {
             } else {
               print(resultData.data['login']['name']);
               var result = resultData.data['login'];
-              utils.accessToken = result['api_token'];
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => SellScreen()));
+              utils.accessToken = result['remember_token'];
               msg = "login Sccess";
               showLongToast(msg);
+              Navigator.of(context).pushReplacementNamed('/sellscreen');
             }
           },
         ),
@@ -221,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                                   "Invalid Password, Password must be at least 6 characters long.";
                               showLongToast(msg);
                             } else {
-                              showLoading(context);
+                              // showLoading(context);
                               runMutation(<String, dynamic>{
                                 "email": _emailController.text,
                                 "password": _passwordController.text,
@@ -269,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: <Widget>[
                           FlatButton(
                             onPressed: () async {
-                              showLoading(context);
+                              // showLoading(context);
                               _fblogin();
                             },
                             child: ClipOval(
@@ -280,7 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           FlatButton(
                             onPressed: () async {
-                              showLoading(context);
+                              // showLoading(context);
                               _googlelogin();
                             },
                             child: ClipOval(

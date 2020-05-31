@@ -42,7 +42,7 @@ class _RegisterState extends State<RegisterPage> {
 
     var jsonString = utils.getPrettyJSONString(resultCat.data);
     final temp = jsonDecode(jsonString);
-    List catLists = temp["cateories"];
+    List catLists = temp["businesscat"];
 
     showDialog<Null>(
       context: context,
@@ -287,7 +287,7 @@ class _RegisterState extends State<RegisterPage> {
                   print("error");
                 } else {
                   print(resultData.data['signup']['name']);
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => SellScreen()));
                 }
               },
@@ -307,8 +307,7 @@ class _RegisterState extends State<RegisterPage> {
                         print("error");
                       } else {
                         print(resultfbData.data['gmail_signup']['name']);
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) => SellScreen()));
+                          Navigator.of(context).pushReplacementNamed('/sellscreen');
                       }
                     },
                   ),
@@ -421,12 +420,12 @@ class _RegisterState extends State<RegisterPage> {
                                           msg = "choose state, Please state";
                                           showLongToast(msg);
                                         } else {
-                                          showLoading(context);
+                                          // showLoading(context);
                                           runMutation(<String, dynamic>{
                                             "name": _nameController.text,
-                                            "shop_name": _shopController.text,
-                                            "cat_id": idCheckList,
-                                            "ph": _phoneController.text,
+                                            "business_name": _shopController.text,
+                                            "business_cat_id": idCheckList,
+                                            "phone": _phoneController.text,
                                             "email": _emailController.text,
                                             "password": _password.text,
                                             "township_id": droptownshipValue,
@@ -488,17 +487,17 @@ class _RegisterState extends State<RegisterPage> {
                                           msg = "choose state, Please state";
                                           showLongToast(msg);
                                         } else {
-                                          showLoading(context);
+                                          // showLoading(context);
                                           runFbMutation(<String, dynamic>{
                                             "name": utils.name,
-                                            "shop_name": _shopController.text,
-                                            "cat_id": idCheckList,
-                                            "ph": _phoneController.text,
+                                            "business_name": _shopController.text,
+                                            "business_cat_id": idCheckList,
+                                            "phone": _phoneController.text,
                                             "email": utils.email,
                                             "township_id": droptownshipValue,
                                             "state_id": dropdownValue,
                                             "address": _addController.text,
-                                            "api_token": utils.accessToken
+                                            "remember_token": utils.accessToken
                                           });
                                         }
                                       },
