@@ -35,6 +35,13 @@ class Categories with ChangeNotifier {
     notifyListeners();
   }
 
+  String addAndGetID (Category _pr) {
+    var category = Category(id: DateTime.now().toString(), category: _pr.category);
+    _categories.add(category);
+    notifyListeners();
+    return category.id;
+  }
+
   void edit (Category _pr) {
     print("update id ${_pr.id}");
     int index = _categories.indexWhere((pr) => pr.id == _pr.id);

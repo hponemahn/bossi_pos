@@ -12,10 +12,9 @@ class ProductEditScreen extends StatefulWidget {
 }
 
 class _ProductEditScreenState extends State<ProductEditScreen> {
-  
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   Product _newProduct = Product(
       id: null,
       name: null,
@@ -30,8 +29,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       isDamage: null);
 
   bool isSwitched = false;
-  
-  String dropdownValue = 'Food';
 
   final _buyPriceFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
@@ -54,6 +51,89 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     "barcode": null,
     "isDamage": null
   };
+
+  String dropdownValue;
+
+  Category _newCat = Category(
+    id: null,
+    category: null,
+  );
+  TextEditingController _textFieldController = TextEditingController();
+  bool _isValid = false;
+
+  TextField textField() {
+    return TextField(
+      controller: _textFieldController,
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.name,
+      decoration: InputDecoration(
+        hintText: "အမျိုးအစားအမည် ထည့်သွင်းပါ",
+        labelText: "အမျိုးအစားအမည်",
+        errorText: _isValid ? "အမျိုးအစားအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်" : null,
+      ),
+    );
+  }
+
+  void _showDialog(BuildContext context) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text("အမျိုးအစားအသစ် ထည့်ရန်"),
+          content: textField(),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text("မလုပ်ပါ"),
+              onPressed: () {
+                _textFieldController.text = '';
+                Navigator.of(context).pop();
+              },
+            ),
+
+            FlatButton(
+              child: Text("ထည့်မည်"),
+              onPressed: () {
+                if (_textFieldController.text.isNotEmpty) {
+                  setState(() {
+                    _isValid = false;
+
+                    _newCat = Category(
+                        id: _newCat.id, category: _textFieldController.text);
+
+                    String _newCatId = Provider.of<Categories>(context, listen: false)
+                        .addAndGetID(_newCat);
+
+                    dropdownValue = _newCatId;
+
+                    _newProduct = Product(
+                        id: _newProduct.id,
+                        name: _newProduct.name,
+                        price: _newProduct.price,
+                        qty: _newProduct.qty,
+                        buyPrice: _newProduct.buyPrice,
+                        sku: _newProduct.sku,
+                        desc: _newProduct.desc,
+                        discountPrice: _newProduct.discountPrice,
+                        barcode: _newProduct.barcode,
+                        isDamage: _newProduct.isDamage,
+                        category: _newCatId);
+                  });
+
+                  _textFieldController.text = '';
+                  Navigator.of(context).pop();
+                } else {
+                  setState(() => _isValid = true);
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -99,6 +179,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     _skuFocusNode.dispose();
     _barFocusNode.dispose();
     _descFocusNode.dispose();
+
+    _textFieldController.dispose();
 
     super.dispose();
   }
@@ -193,12 +275,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         // isEmpty: _selectedCat == '',
                         child: new DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
+                            hint: Text('အမျိုးအစား ရွေးချယ်ပါ'),
                             value: dropdownValue,
                             isDense: true,
                             items: _cats.categories.map((Category cat) {
                               return new DropdownMenuItem<String>(
-                                  value: cat.category,
-                                  child: new Text(cat.category));
+                                  value: cat.id, child: new Text(cat.category));
                             }).toList(),
                             onChanged: (val) {
                               setState(() {
@@ -213,10 +295,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                     discountPrice: _newProduct.discountPrice,
                                     barcode: _newProduct.barcode,
                                     isDamage: _newProduct.isDamage,
-                                    category: val);
-                                dropdownValue = val;
+                                    category: val.toString());
+
+                                dropdownValue = val.toString();
                                 state.didChange(val);
                               });
+                              print("id: $val");
                               print(dropdownValue);
                             },
                           ),
@@ -227,7 +311,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   FlatButton(
                     padding: EdgeInsets.fromLTRB(0, 0, 180, 0),
                     onPressed: () =>
-                        Navigator.pushNamed(context, '/category_ce'),
+                        // Navigator.pushNamed(context, '/category_ce'),
+                        _showDialog(context),
                     child: Text(
                       "အမျိုးအစား အသစ် ?",
                       style: TextStyle(color: Colors.blue, fontSize: 13),
