@@ -18,6 +18,7 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
     category: null,
   );
   TextEditingController _textFieldController = TextEditingController();
+  bool _isValid = false;
 
   Widget _productListView(cats) {
     if (_searchText.isNotEmpty) {
@@ -52,6 +53,7 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
       decoration: InputDecoration(
         hintText: "အမျိုးအစားအမည် ထည့်သွင်းပါ",
         labelText: "အမျိုးအစားအမည်",
+        errorText: _isValid ? "အမျိုးအစားအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်" : null,
       ),
     );
   }
@@ -78,20 +80,32 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
             FlatButton(
               child: Text("ထည့်မည်"),
               onPressed: () {
-                
-                _newEditCat = Category(id: _newEditCat.id, category: _textFieldController.text);
+                if (_textFieldController.text.isNotEmpty) {
+                  
+                  setState(() => _isValid = false);
 
-                Provider.of<Categories>(context, listen: false)
-                    .add(_newEditCat);
-                _textFieldController.text = '';
-                Navigator.of(context).pop();
-                // Navigator.pop(context, true);
+                  _newEditCat = Category(
+                      id: _newEditCat.id, category: _textFieldController.text);
+
+                  Provider.of<Categories>(context, listen: false)
+                      .add(_newEditCat);
+                  _textFieldController.text = '';
+                  Navigator.of(context).pop();
+                } else {
+                  setState(() => _isValid = true);
+                }
               },
             ),
           ],
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
   }
 
   @override

@@ -20,6 +20,7 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
     category: null,
   );
   TextEditingController _textFieldController = TextEditingController();
+  bool _isValid = false;
 
   TextField textField() {
     return TextField(
@@ -29,6 +30,7 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
       decoration: InputDecoration(
         hintText: "အမျိုးအစားအမည် ထည့်သွင်းပါ",
         labelText: "အမျိုးအစားအမည်",
+        errorText: _isValid ? "အမျိုးအစားအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်" : null,
       ),
     );
   }
@@ -55,12 +57,17 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
             FlatButton(
               child: Text("ပြင်မည်"),
               onPressed: () {
-                
-                _newEditCat = Category(id: id, category: _textFieldController.text);
+                if (_textFieldController.text.isNotEmpty) {
+                  setState(() => _isValid = false);
+                  _newEditCat =
+                      Category(id: id, category: _textFieldController.text);
 
-                Provider.of<Categories>(context, listen: false).edit(_newEditCat);
-                Navigator.of(context).pop();
-                // Navigator.pop(context, true);
+                  Provider.of<Categories>(context, listen: false)
+                      .edit(_newEditCat);
+                  Navigator.of(context).pop();
+                } else {
+                  setState(() => _isValid = true);
+                }
               },
             ),
           ],
@@ -68,7 +75,6 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
       },
     );
   }
-
 
   void _showDialog(BuildContext context, String id) {
     // flutter defined function
@@ -78,7 +84,8 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
         // return object of type Dialog
         return AlertDialog(
           title: Text("ဖျက်မှာ သေချာပါသလား?"),
-          content: Text("ဤကုန်ပစ္စည်း အမျိုးအစားကို ဖျက်လိုက်မည်ဆိုပါက ပြန်ရနိုင်တော့မည် မဟုတ်ပါ။​"),
+          content: Text(
+              "ဤကုန်ပစ္စည်း အမျိုးအစားကို ဖျက်လိုက်မည်ဆိုပါက ပြန်ရနိုင်တော့မည် မဟုတ်ပါ။​"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
@@ -103,29 +110,36 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    _textFieldController.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text(widget.category),
-        // subtitle: Text("$qty Qty  -  $price MMK"),
-        // subtitle: Text("အရေအတွက်: 25 | စျေးနှုန်း: 2,500"),
-        trailing: Container(
-          width: 100,
-          child: Row(
-          children: [
-            IconButton(icon: Icon(Icons.edit),onPressed: () { 
-            // Navigator.pushNamed(context, CategoryEditScreen.routeName, arguments: id),
-            // print(id),
-            _textFieldController.text = widget.category;
-            _showEditDialog(context, widget.id);
-            }),
-            IconButton(icon: Icon(Icons.delete),onPressed: () => _showDialog(context, widget.id)),
-          ],
-        ),
-        )
-      ),
+          title: Text(widget.category),
+          // subtitle: Text("$qty Qty  -  $price MMK"),
+          // subtitle: Text("အရေအတွက်: 25 | စျေးနှုန်း: 2,500"),
+          trailing: Container(
+            width: 100,
+            child: Row(
+              children: [
+                IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      // Navigator.pushNamed(context, CategoryEditScreen.routeName, arguments: id),
+                      // print(id),
+                      _textFieldController.text = widget.category;
+                      _showEditDialog(context, widget.id);
+                    }),
+                IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => _showDialog(context, widget.id)),
+              ],
+            ),
+          )),
     );
   }
 }
-
