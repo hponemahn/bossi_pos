@@ -1,8 +1,13 @@
+import 'package:bossi_pos/graphql/graphql_string.dart';
+import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
+import 'package:bossi_pos/widgets/cat_wid.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class ProductEditScreen extends StatefulWidget {
   static const routeName = "product_edit";
@@ -101,7 +106,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async{
     if (!_formKey.currentState.validate()) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         backgroundColor: Colors.red,
@@ -123,6 +128,21 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       print(_newProduct.isDamage);
 
       if (_initVal['id'] == null) {
+         QueryResult resultData = await graphQLClient.mutate(
+                MutationOptions(documentNode:gql(createProduct),variables:{
+                  "name":_newProduct.name,
+                  "category_id": _newProduct.category,
+                  "stock": _newProduct.qty,
+                  "buy_price": _newProduct.buyPrice,
+                  "sell_price": _newProduct.price,
+                  "discount_price": _newProduct.discountPrice,
+                  "sku": _newProduct.sku,
+                  "barcode": _newProduct.barcode,
+                  "is_damaged": _newProduct.isDamage,
+                  "remark": _newProduct.desc
+                }),
+              );
+
         Provider.of<Products>(context, listen: false).add(_newProduct);
       } else {
         Provider.of<Products>(context, listen: false).edit(_newProduct);
@@ -224,8 +244,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   ),
                   FlatButton(
                     padding: EdgeInsets.fromLTRB(0, 0, 180, 0),
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/category_ce'),
+                    // onPressed: () =>
+                    //     Navigator.pushNamed(context, '/category_ce'),
+                    onPressed: ()=>asyncInputDialog(context),
                     child: Text(
                       "အမျိုးအစား အသစ် ?",
                       style: TextStyle(color: Colors.blue, fontSize: 13),

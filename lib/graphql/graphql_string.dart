@@ -103,4 +103,45 @@ String gmailSingup=r"""
                             remember_token
                           }
                         }
-                      """; 
+                      """;
+
+String categoryInsert = r""" 
+                        mutation categoryInsert($name:String){
+                          createCategory(name:$name){
+                            id
+                            name
+                          }
+                        }
+"""; 
+
+String createProduct = r""" 
+                          mutation createProduct($name:String, $category_id:Int, $stock:Int, $buy_price:Int,
+                          $sell_price:Int, $discount_price:Int, $sku:String, $barcode:String, $is_damaged:Int, $remark:String){
+                            createProduct(name:$name, category_id:$category_id, stock:$stock, buy_price:$buy_price,
+                            sell_price:$sell_price, discount_price:$discount_price, sku:$sku, barcode:$barcode, is_damaged:$is_damaged, remark:$remark){
+                              id
+                              name
+                              category_id
+                            }
+                          }
+""";
+
+String createOrder = r""" 
+                      mutation createOrder($total:Int, $order_date:String, $product_id:Int, $price:Int, $qty:Int){
+                        createOrder(input: {
+                              total:$total,
+                             order_date:$order_date,
+                             orderdetails:{
+                               create:[
+                                 {product_id:$product_id,
+                                   price:$price,
+                                   qty:$qty
+                                   }
+                               ]
+                             }
+                            }){
+                          id
+                          total
+                        }
+                      }
+""";

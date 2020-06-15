@@ -44,7 +44,7 @@ class Drawlet extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text("မူလ"),
             onTap: () {
-              Navigator.pushNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/sellscreen');
             },
           ),
           Divider(),

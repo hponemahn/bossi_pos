@@ -24,6 +24,9 @@ class _RegisterState extends State<RegisterPage> {
   var _addController = new TextEditingController();
   var _password = new TextEditingController();
 
+Color selected_color = Colors.green;
+  Color default_color = Colors.transparent ;
+
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
   @override
@@ -58,11 +61,13 @@ class _RegisterState extends State<RegisterPage> {
                   .map((cat) => CheckboxListTile(
                         title: Text(cat['name'].toString()),
                         value: _isChecked.contains(cat['name']),
-                        activeColor: Colors.blue,
+                        activeColor: default_color,
                         checkColor: Colors.white,
-                        onChanged: (bool value) {
+                        onChanged: (value) {
                           if (!_isChecked.contains(cat['name'])) {
                             setState(() {
+                              default_color = Colors.blue;
+                            
                               _isChecked.add(cat['name']);
                               _idChecked.add(cat['id']);
                               strCheckList = _isChecked.reduce(

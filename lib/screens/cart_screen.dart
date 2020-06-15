@@ -50,8 +50,9 @@ class CartScreen extends StatelessWidget {
                                   padding: new EdgeInsets.all(0.0),
                                   icon: new Icon(Icons.add_circle_outline,
                                       size: 25.0),
-                                  onPressed: () => _cart.add(cartItem.id,
-                                      cartItem.name, cartItem.price),
+                                  onPressed: (){_cart.add(cartItem.id,
+                                      cartItem.name, cartItem.price);
+                                      print(cartItem.id +" "+ cartItem.name +" "+ cartItem.price.toString());}
                                 )),
                             Text(cartItem.qty.toString(),
                                 style: TextStyle(fontSize: 18)),
@@ -168,6 +169,7 @@ class CartScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(100, 30, 100, 30),
             child: RaisedButton(
               onPressed: () {
+                print(_cart);
                 Navigator.pushNamed(context, OrderScreen.routeName);
               },
               textColor: Colors.white,

@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:bossi_pos/graphql/graphql_string.dart';
+import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -10,7 +14,6 @@ import 'package:provider/provider.dart';
 import '../print/document.dart';
 
 class OrderScreen extends StatefulWidget {
-
   static const routeName = "order";
 
   @override
@@ -24,6 +27,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final int _curYear = DateTime.now().year;
   final int _curHr = DateTime.now().hour;
   final int _curMin = DateTime.now().minute;
+  DateTime now = DateTime.now();
 
   PrintingInfo printingInfo;
 
@@ -69,7 +73,8 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> _sharePdf() async {
     print('Share ...');
-    final pw.Document document = await generateDocument(PdfPageFormat.a4, _cartForPrint);
+    final pw.Document document =
+        await generateDocument(PdfPageFormat.a4, _cartForPrint);
 
     // Calculate the widget center for iPad sharing popup position
     final RenderBox referenceBox =
@@ -86,7 +91,6 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     Cart _cart = Provider.of<Cart>(context);
 
     setState(() {
@@ -137,46 +141,55 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text('အရောင်းပြေစာ: #A002'),
-                                  new Text("$_curDay/$_curMon/$_curYear - $_curHr:$_curMin"),
+                                  new Text(
+                                      "$_curDay/$_curMon/$_curYear - $_curHr:$_curMin"),
                                 ],
                               ),
                             )
                           ]),
                         ]))),
-                        SizedBox(height: 20.0,),
-
-            ..._cart.cart.values.toList().map((cartItem) => Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              child: Card(
-                    child: SizedBox(
-                      height: 60,
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text(cartItem.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+            SizedBox(
+              height: 20.0,
+            ),
+            ..._cart.cart.values.toList().map(
+                  (cartItem) => Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                    child: Card(
+                      child: SizedBox(
+                        height: 60,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 2.5.toInt(),
+                              child: Text(cartItem.name,
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center),
+                            ),
+                            Expanded(
+                              flex: 2.5.toInt(),
+                              child: Text(cartItem.qty.toString(),
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center),
+                            ),
+                            Expanded(
+                              flex: 2.5.toInt(),
+                              child: Text(cartItem.price.toString(),
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center),
+                            ),
+                            Expanded(
+                              flex: 2.5.toInt(),
+                              child: Text("${cartItem.qty * cartItem.price}",
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center),
+                            ),
+                          ],
+                        ),
                       ),
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text(cartItem.qty.toString(),
-                                style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                      ),
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text(cartItem.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                      ),
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text("${cartItem.qty * cartItem.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                      ),
-                    ],
-                  ),
                     ),
                   ),
-            ),
-          ),
-            
+                ),
             Container(
                 // height: MediaQuery.of(context).size.height,
                 child: Padding(
@@ -191,7 +204,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text('စုစုပေါင်း  :'),
-                                  new Text(_cart.totalAmount.toStringAsFixed(2)),
+                                  new Text(
+                                      _cart.totalAmount.toStringAsFixed(2)),
                                 ],
                               ),
                             )
@@ -235,7 +249,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text("ပေးငွေ  :"),
-                                  new Text("${_cart.totalAmount + _cart.getChangedMoney}"),
+                                  new Text(
+                                      "${_cart.totalAmount + _cart.getChangedMoney}"),
                                 ],
                               ),
                             )
@@ -275,11 +290,11 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 FlatButton(
                   onPressed: printingInfo?.canPrint ?? false ? _printPdf : null,
-                    // setState(() {
-                    //   _cartForPrint = _cart;
-                    // });
-                    // printingInfo?.canPrint ?? false ? _printPdf : null;
-                    // printingInfo.canPrint ? _printPdf : null;
+                  // setState(() {
+                  //   _cartForPrint = _cart;
+                  // });
+                  // printingInfo?.canPrint ?? false ? _printPdf : null;
+                  // printingInfo.canPrint ? _printPdf : null;
                   // },
                   child: Image.asset(
                     "assets/print.png",
@@ -292,15 +307,31 @@ class _OrderScreenState extends State<OrderScreen> {
             Container(
               padding: EdgeInsets.fromLTRB(140, 50, 140, 40),
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
+                  // print(_cart.cart.values);
+                  QueryResult resultData = await graphQLClient.mutate(
+                    MutationOptions(documentNode: gql(createOrder), variables: {
+                      "total": _cart.totalAmount,
+                      "order_date": DateTime.now().toString(),
+                       "orderdetails":{
+                         "create":
+                           [{
+                             "product_id": 10,
+                              "price": 100,
+                              "qty": 10
+                           }]
+                         
+                       }
+                    }),
+                  );
                   _cart.clear();
-                  Navigator.pushNamed(context, '/');
+                  Navigator.pushReplacementNamed(context, '/sellscreen');
                 },
                 color: Theme.of(context).accentColor,
                 child: Text("Done", style: Theme.of(context).textTheme.button),
               ),
             ),
           ],
-        ))    ;
+        ));
   }
 }
