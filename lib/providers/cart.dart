@@ -12,6 +12,7 @@ class CartItem {
 class Cart with ChangeNotifier {
   Map<String, CartItem> _cart = {};
   double _changedMoney = 0.0;
+  double _debit = 0.0;
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -33,6 +34,10 @@ class Cart with ChangeNotifier {
     return _total;
   }
 
+  double get debit {
+    return _debit;
+  }
+
   double get getChangedMoney {
     return _changedMoney;
   }
@@ -52,6 +57,7 @@ class Cart with ChangeNotifier {
     } else {
       _cart.update(id, (exitVal) => CartItem(id: exitVal.id, name: exitVal.name, qty: exitVal.qty - 1, price: exitVal.price));
     } 
+
     notifyListeners();
   }
 
@@ -61,6 +67,9 @@ class Cart with ChangeNotifier {
   }
 
   void changeMoney (double val) {
+    
+    _debit = val;
+
     if (val > totalAmount) {
       _changedMoney = val - totalAmount;  
     } else {
@@ -68,4 +77,20 @@ class Cart with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void qtyChangeMoney () {
+
+    if (_debit > totalAmount) {
+      _changedMoney = _debit - totalAmount; 
+    } else {
+      _changedMoney = 0.0;
+    }
+
+    if (_cart.isEmpty) {
+      _changedMoney = 0.0;
+    }
+
+    notifyListeners();
+  }
+
 }

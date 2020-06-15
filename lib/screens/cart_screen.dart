@@ -1,10 +1,12 @@
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = "cart";
+  final _debitController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +52,11 @@ class CartScreen extends StatelessWidget {
                                   padding: new EdgeInsets.all(0.0),
                                   icon: new Icon(Icons.add_circle_outline,
                                       size: 25.0),
-                                  onPressed: (){_cart.add(cartItem.id,
+                                  onPressed: () {
+                                    _cart.add(cartItem.id,
                                       cartItem.name, cartItem.price);
-                                      print(cartItem.id +" "+ cartItem.name +" "+ cartItem.price.toString());}
+                                      _cart.qtyChangeMoney();
+                                  },
                                 )),
                             Text(cartItem.qty.toString(),
                                 style: TextStyle(fontSize: 18)),
@@ -63,8 +67,11 @@ class CartScreen extends StatelessWidget {
                                   padding: new EdgeInsets.all(0.0),
                                   icon: new Icon(Icons.remove_circle_outline,
                                       size: 25.0),
-                                  onPressed: () => _cart.remove(cartItem.id,
-                                      cartItem.name, cartItem.price),
+                                  onPressed: () {
+                                    _cart.remove(cartItem.id,
+                                      cartItem.name, cartItem.price);
+                                    _cart.qtyChangeMoney();
+                                  }
                                 )),
                           ],
                         ),
@@ -135,17 +142,23 @@ class CartScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 new Text("ပေးငွေ  :"),
-                                // new Text("10,000"),
                                 Container(
                                   width: 80,
                                   height: 20,
                                   // padding: EdgeInsets.all(20),
                                   child: TextField(
+                                    controller: _debitController,
                                     onChanged: (val) {
                                       _cart.changeMoney(double.parse(val));
                                     },
                                     textAlign: TextAlign.right,
-                                    keyboardType: TextInputType.number,
+                                    // keyboardType: TextInputType.number,
+                                    keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
+                                    inputFormatters: <TextInputFormatter>[
+    WhitelistingTextInputFormatter.digitsOnly
+], 
+                                    textInputAction: TextInputAction.done,
+                                    // inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                   ),
                                 ),
                               ],
@@ -159,7 +172,7 @@ class CartScreen extends StatelessWidget {
                               children: <Widget>[
                                 new Text("ပြန်အမ်းငွေ  :"),
                                 new Text(
-                                    _cart.getChangedMoney.toStringAsFixed(2)),
+                                  _cart.totalAmount != 0 ? _cart.getChangedMoney.toStringAsFixed(2) : ''),
                               ],
                             ),
                           )
@@ -169,8 +182,11 @@ class CartScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(100, 30, 100, 30),
             child: RaisedButton(
               onPressed: () {
-                print(_cart);
-                Navigator.pushNamed(context, OrderScreen.routeName);
+                if (_cart.totalAmount == 0) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pushNamed(context, OrderScreen.routeName);
+                }
               },
               textColor: Colors.white,
               color: Theme.of(context).accentColor,

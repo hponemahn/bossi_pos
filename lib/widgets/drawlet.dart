@@ -1,4 +1,5 @@
 import 'package:bossi_pos/page/login.dart';
+import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -69,14 +70,15 @@ class Drawlet extends StatelessWidget {
               Navigator.pushReplacementNamed(context, ManageProductsScreen.routeName);
             },
           ),
-          // ListTile(
-          //   leading: Icon(Icons.category),
-          //   title: Text("အမျိုးအစားများ"),
-          //   onTap: () {
-          //     Navigator.pushNamed(context, '/category');
-          //   },
-          // ),
-
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.category),
+            title: Text("အမျိုးအစားများ"),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, ManageCategoryScreen.routeName);
+            },
+          ),
+          Divider(),
           ListTile(
             leading: Icon(Icons.lock_open),
             title: Text("Logout"),
@@ -90,7 +92,6 @@ class Drawlet extends StatelessWidget {
               Navigator.of(context).pushReplacementNamed('/login');
             },
           ),
-        
         ],
       ),
     );
