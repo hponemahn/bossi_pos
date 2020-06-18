@@ -2,6 +2,7 @@ import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
+import 'package:bossi_pos/screens/dashboard_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
       routes: {
         CartScreen.routeName: (ctx) => CartScreen(),
         OrderScreen.routeName: (ctx) => OrderScreen(),
+        DashboardScreen.routeName: (ctx) => DashboardScreen(),
         ManageProductsScreen.routeName: (ctx) => ManageProductsScreen(),
         ProductEditScreen.routeName: (ctx) => ProductEditScreen(),
         ManageCategoryScreen.routeName: (ctx) => ManageCategoryScreen(),

@@ -1,3 +1,4 @@
+import 'package:bossi_pos/screens/dashboard_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:flutter/material.dart';
@@ -47,13 +48,14 @@ class Drawlet extends StatelessWidget {
           //     Navigator.pushNamed(context, '/transaction');
           //   },
           // ),
-          // ListTile(
-          //   leading: Icon(Icons.report),
-          //   title: Text("အစီရင်ခံစာ"),
-          //   onTap: () {
-          //     Navigator.pushNamed(context, '/dashboard');
-          //   },
-          // ),
+          ListTile(
+            leading: Icon(Icons.report),
+            title: Text("အစီရင်ခံစာ"),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
+            },
+          ),
+          Divider(),
           ListTile(
             leading: Icon(Icons.store),
             title: Text("ကုန်ပစ္စည်းများ"),
