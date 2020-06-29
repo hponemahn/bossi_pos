@@ -1,8 +1,12 @@
+import 'package:bossi_pos/graphql/graphql_string.dart';
+import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/widgets/drawlet.dart';
 import 'package:bossi_pos/widgets/manage_category_item.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
 class ManageCategoryScreen extends StatefulWidget {
   static const routeName = "manage_category";
@@ -19,37 +23,71 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
   );
   TextEditingController _textFieldController = TextEditingController();
   bool _isValid = false;
+  QueryResult resultData;
 
-  Widget _productListView(cats) {
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < cats.length; i++) {
-        if (cats[i]
-            .category
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(cats[i]);
-        }
-      }
-      cats = tempList;
-    }
+  Future<QueryResult> getdata() async {
+    return resultData = await graphQLClient.query(QueryOptions(
+      documentNode: gql(categories),
+    ));
+    // return resultData.data['categories']['name'].toString();
+  }
 
-    return Expanded(
-      child: ListView.builder(
-          padding: EdgeInsets.all(10),
-          shrinkWrap: true,
-          itemCount: cats.length,
-          itemBuilder: (ctx, i) =>
-              // Text(cats[i].category),
-              ManageCategoryItem(cats[i].id, cats[i].category)),
-    );
+  // Widget _productListView(cats) {
+  //   if (_searchText.isNotEmpty) {
+  //     List tempList = new List();
+  //     for (int i = 0; i < cats.length; i++) {
+  //       if (cats[i]
+  //           .category
+  //           .toLowerCase()
+  //           .contains(_searchText.toLowerCase())) {
+  //         tempList.add(cats[i]);
+  //       }
+  //     }
+  //     cats = tempList;
+  //   }
+
+  //   return Expanded(
+  //     child: ListView.builder(
+  //         padding: EdgeInsets.all(10),
+  //         shrinkWrap: true,
+  //         itemCount: cats.length,
+  //         itemBuilder: (ctx, i) =>
+  //             // Text(cats[i].category),
+  //             ManageCategoryItem(cats[i].id, cats[i].category)),
+  //   );
+  // }
+
+  Widget _productListView() {
+    return Query(
+        options: QueryOptions(
+          documentNode:
+              gql(categories), // this is the query string you just created
+        ),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          if (result.hasException) {
+            return Text(result.exception.toString());
+          }
+
+          if (result.loading) {
+            return Text('Loading');
+          }
+          List repositories = result.data['categories'];
+          return Expanded(
+            child: ListView.builder(
+                itemCount: repositories.length,
+                itemBuilder: (contex, index) => ManageCategoryItem(
+                    result.data['categories'][index]['id'],
+                    result.data['categories'][index]['name'])),
+          );
+        });
   }
 
   TextField textField() {
     return TextField(
       controller: _textFieldController,
       textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.name,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
         hintText: "အမျိုးအစားအမည် ထည့်သွင်းပါ",
         labelText: "အမျိုးအစားအမည်",
@@ -79,10 +117,17 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
 
             FlatButton(
               child: Text("ထည့်မည်"),
-              onPressed: () {
+              onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
-                  
-                  setState(() => _isValid = false);
+                  QueryResult resultData = await graphQLClient.mutate(
+                    MutationOptions(
+                        documentNode: gql(categoryInsert),
+                        variables: {
+                          "name": _textFieldController.text,
+                        }),
+                  );
+
+                  // setState(() => _isValid = false);
 
                   _newEditCat = Category(
                       id: _newEditCat.id, category: _textFieldController.text);
@@ -90,7 +135,13 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
                   Provider.of<Categories>(context, listen: false)
                       .add(_newEditCat);
                   _textFieldController.text = '';
-                  Navigator.of(context).pop();
+
+                  if (resultData.data != null) {
+                    setState(() => _isValid = false);
+                    Navigator.of(context).pop();
+                  } else {
+                    setState(() => _isValid = true);
+                  }
                 } else {
                   setState(() => _isValid = true);
                 }
@@ -143,16 +194,16 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
             SizedBox(
               height: 30,
             ),
-            _productListView(_cats),
+            _productListView(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () =>
+          child: Icon(Icons.add),
+          onPressed: () {
             // Navigator.pushNamed(context, CategoryEditScreen.routeName),
-            _showDialog(context),
-      ),
+            _showDialog(context);
+          }),
     );
   }
 }

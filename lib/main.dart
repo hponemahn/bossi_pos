@@ -17,7 +17,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'graphql/client_provider.dart';
 
-final String graphQLEndpoint = 'http://172.10.0.195:8000/graphql';
+final String graphQLEndpoint = 'http://192.168.43.89:8000/graphql';
 
 void main() {
   runApp(MyApp());

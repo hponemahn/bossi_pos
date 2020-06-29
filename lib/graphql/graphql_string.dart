@@ -46,6 +46,73 @@ String townships = r"""
                       }
                   """;
 
+String categories = r"""
+                      query categories{
+                        categories{
+                          id
+                          name
+                        }
+                      }
+                  """;
+
+String productID = r"""
+                      query productID($id:ID){
+                        product(id:$id){
+                          id
+                          name
+                          category_id
+                          stock
+                          buy_price
+                          sell_price
+                          discount_price
+                          sku
+                          barcode
+                          is_damaged
+                          remark
+                          category{
+                            id
+                            name
+                          }
+                        }
+                      }
+                  """;
+
+String deleteCategory = r"""
+                      mutation deleteCategory($id:ID!){
+                        deleteCategory(id:$id){
+                          id
+                          name
+                        }
+                      }
+                  """;
+
+String updateCategory = r"""
+                      mutation updateCategory($id:ID,$name:String){
+                        updateCategory(id:$id,name:$name){
+                          id
+                          name
+                        }
+                      }
+                  """;
+
+String products = r"""
+                      query products{
+                        products{
+                          id
+                          name
+                          category_id
+                          stock
+                          buy_price
+                          sell_price
+                          discount_price
+                          sku
+                          barcode
+                          is_damaged
+                          remark
+                        }
+                      }
+                  """;
+
 String systemLogin = r"""
                         mutation systemLogin($email:String,$password:String){
                           login (email :$email
@@ -118,6 +185,18 @@ String createProduct = r"""
                           mutation createProduct($name:String, $category_id:Int, $stock:Int, $buy_price:Int,
                           $sell_price:Int, $discount_price:Int, $sku:String, $barcode:String, $is_damaged:Int, $remark:String){
                             createProduct(name:$name, category_id:$category_id, stock:$stock, buy_price:$buy_price,
+                            sell_price:$sell_price, discount_price:$discount_price, sku:$sku, barcode:$barcode, is_damaged:$is_damaged, remark:$remark){
+                              id
+                              name
+                              category_id
+                            }
+                          }
+""";
+
+String updateProduct = r""" 
+                          mutation updateProduct($id:ID,$name:String, $category_id:Int, $stock:Int, $buy_price:Int,
+                          $sell_price:Int, $discount_price:Int, $sku:String, $barcode:String, $is_damaged:Int, $remark:String){
+                            updateProduct(id:$id,name:$name, category_id:$category_id, stock:$stock, buy_price:$buy_price,
                             sell_price:$sell_price, discount_price:$discount_price, sku:$sku, barcode:$barcode, is_damaged:$is_damaged, remark:$remark){
                               id
                               name

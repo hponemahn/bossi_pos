@@ -1,9 +1,11 @@
+import 'package:bossi_pos/graphql/graphql_string.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/widgets/drawlet.dart';
 import 'package:bossi_pos/widgets/manage_product_item.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ManageProductsScreen extends StatefulWidget {
@@ -16,28 +18,54 @@ class ManageProductsScreen extends StatefulWidget {
 class _ManageProductsScreenState extends State<ManageProductsScreen> {
   String _searchText = "";
 
-  Widget _productListView(products) {
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < products.length; i++) {
-        if (products[i]
-            .name
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(products[i]);
-        }
-      }
-      products = tempList;
-    }
+  // Widget _productListView(products) {
+  //   if (_searchText.isNotEmpty) {
+  //     List tempList = new List();
+  //     for (int i = 0; i < products.length; i++) {
+  //       if (products[i]
+  //           .name
+  //           .toLowerCase()
+  //           .contains(_searchText.toLowerCase())) {
+  //         tempList.add(products[i]);
+  //       }
+  //     }
+  //     products = tempList;
+  //   }
 
-    return Expanded(
-      child: ListView.builder(
-          padding: EdgeInsets.all(10),
-          shrinkWrap: true,
-          itemCount: products.length,
-          itemBuilder: (ctx, i) => ManageProductItem(products[i].id,
-              products[i].name, products[i].qty, products[i].price)),
-    );
+  //   return Expanded(
+  //     child: ListView.builder(
+  //         padding: EdgeInsets.all(10),
+  //         shrinkWrap: true,
+  //         itemCount: products.length,
+  //         itemBuilder: (ctx, i) => ManageProductItem(products[i].id,
+  //             products[i].name, products[i].qty, products[i].price)),
+  //   );
+  // }
+
+    Widget _productListView() {
+    return Query(
+        options: QueryOptions(
+          documentNode:
+              gql(products), // this is the query string you just created
+        ),
+        builder: (QueryResult result,
+            {VoidCallback refetch, FetchMore fetchMore}) {
+          if (result.hasException) {
+            return Text(result.exception.toString());
+          }
+
+          if (result.loading) {
+            return Text('Loading');
+          }
+          List repositories = result.data['products'];
+          return Expanded(
+            child: ListView.builder(
+                itemCount: repositories.length,
+                itemBuilder: (contex, index) => ManageProductItem(
+                    repositories[index]['id'].toString(),
+                    repositories[index]['name'],repositories[index]['stock'],repositories[index]['buy_price'].toDouble())),
+          );
+        });
   }
 
   @override
@@ -74,7 +102,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
             SizedBox(
               height: 30,
             ),
-            _productListView(_products),
+            _productListView(),
           ],
         ),
       ),

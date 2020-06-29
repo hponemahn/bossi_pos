@@ -1,6 +1,10 @@
+import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/providers/categories.dart';
+import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:bossi_pos/graphql/graphql_string.dart';
 
 class ManageCategoryItem extends StatefulWidget {
   final String id;
@@ -26,7 +30,7 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
     return TextField(
       controller: _textFieldController,
       textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.name,
+      keyboardType: TextInputType.text,
       decoration: InputDecoration(
         hintText: "အမျိုးအစားအမည် ထည့်သွင်းပါ",
         labelText: "အမျိုးအစားအမည်",
@@ -56,15 +60,26 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
 
             FlatButton(
               child: Text("ပြင်မည်"),
-              onPressed: () {
+              onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
                   setState(() => _isValid = false);
-                  _newEditCat =
-                      Category(id: id, category: _textFieldController.text);
 
-                  Provider.of<Categories>(context, listen: false)
-                      .edit(_newEditCat);
-                  Navigator.of(context).pop();
+                  QueryResult resultData = await graphQLClient.mutate(
+                  MutationOptions(
+                      documentNode: gql(updateCategory),
+                      variables: {
+                        "id": id,
+                        "name":_textFieldController.text.toString()
+                      }),
+                );
+
+                  // _newEditCat =
+                  //     Category(id: id, category: _textFieldController.text);
+
+                  // Provider.of<Categories>(context, listen: false)
+                  //     .edit(_newEditCat);
+                  Navigator.pushReplacementNamed(context, ManageCategoryScreen.routeName);
+                  // Navigator.of(context).pop(context);
                 } else {
                   setState(() => _isValid = true);
                 }
@@ -97,10 +112,20 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
 
             FlatButton(
               child: Text("ဖျက်မည်"),
-              onPressed: () {
-                Provider.of<Categories>(context, listen: false).delete(id);
-                Navigator.of(context).pop();
-                // Navigator.pop(context, true);
+              onPressed: () async {
+                print(id);
+                QueryResult resultData = await graphQLClient.mutate(
+                  MutationOptions(
+                      documentNode: gql(deleteCategory),
+                      variables: {
+                        "id": int.parse(id),
+                      }),
+                );
+                // Provider.of<Categories>(context, listen: false).delete(id);
+                if (resultData.data != null) {
+                  Navigator.pushReplacementNamed(context, ManageCategoryScreen.routeName);
+                  // Navigator.of(context).pop();
+                }
               },
             ),
           ],

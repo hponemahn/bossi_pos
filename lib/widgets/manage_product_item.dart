@@ -1,7 +1,10 @@
+import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:bossi_pos/graphql/graphql_string.dart';
 
 class ManageProductItem extends StatelessWidget {
   final String id;
@@ -56,6 +59,18 @@ class ManageProductItem extends StatelessWidget {
           child: Row(
           children: [
             IconButton(icon: Icon(Icons.edit),onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id),),
+            // IconButton(icon: Icon(Icons.edit),onPressed: () async{
+            //   print(id);
+            //    QueryResult resultData = await graphQLClient.query(
+            //       QueryOptions(
+            //           documentNode: gql(productID),
+            //           variables: {
+            //             "id": int.parse(id),
+            //           }),
+            //     );
+
+            //     print(resultData.data);
+            // },),
             IconButton(icon: Icon(Icons.delete),onPressed: () => _showDialog(context, id)),
           ],
         ),
