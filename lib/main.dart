@@ -9,11 +9,19 @@ import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import 'graphql/graphQLConf.dart';
+
+GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+
+void main() => runApp(
+      GraphQLProvider(
+        client: graphQLConfiguration.client,
+        child: CacheProvider(child: MyApp()),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
   @override
@@ -37,6 +45,7 @@ class MyApp extends StatelessWidget {
                 ),
           ),
       home: SellScreen(),
+      debugShowCheckedModeBanner: false,
       routes: {
         CartScreen.routeName: (ctx) => CartScreen(),
         OrderScreen.routeName: (ctx) => OrderScreen(),
