@@ -6,7 +6,7 @@ import 'package:bossi_pos/screens/dashboard_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
-import 'package:bossi_pos/screens/principal.dart';
+// import 'package:bossi_pos/screens/principal.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +44,8 @@ class MyApp extends StatelessWidget {
                 button: TextStyle(color: Colors.black, fontSize: 17),
                 ),
           ),
-      home: Principal(),
-      // home: SellScreen(),
+      // home: Principal(),
+      home: SellScreen(),
       debugShowCheckedModeBanner: false,
       routes: {
         CartScreen.routeName: (ctx) => CartScreen(),
