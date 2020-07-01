@@ -6,6 +6,7 @@ import 'package:bossi_pos/screens/dashboard_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
+import 'package:bossi_pos/screens/principal.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,18 +17,17 @@ import 'graphql/graphQLConf.dart';
 
 GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
-void main() => runApp(
-      GraphQLProvider(
-        client: graphQLConfiguration.client,
-        child: CacheProvider(child: MyApp()),
-      ),
-    );
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MultiProvider(providers: [
+    return GraphQLProvider(
+        client: graphQLConfiguration.client,
+        child: CacheProvider(child: 
+    
+    MultiProvider(providers: [
       ChangeNotifierProvider.value(value: Products()),
       ChangeNotifierProvider.value(value: Cart()),
       ChangeNotifierProvider.value(value: Categories()),
@@ -44,7 +44,8 @@ class MyApp extends StatelessWidget {
                 button: TextStyle(color: Colors.black, fontSize: 17),
                 ),
           ),
-      home: SellScreen(),
+      home: Principal(),
+      // home: SellScreen(),
       debugShowCheckedModeBanner: false,
       routes: {
         CartScreen.routeName: (ctx) => CartScreen(),
@@ -54,7 +55,10 @@ class MyApp extends StatelessWidget {
         ProductEditScreen.routeName: (ctx) => ProductEditScreen(),
         ManageCategoryScreen.routeName: (ctx) => ManageCategoryScreen(),
       },
-    ),);
+    ),),
+
+    ),
+      );
 
   }
 }
