@@ -41,7 +41,7 @@ class Products with ChangeNotifier {
     _products.add(product);
     notifyListeners();
 
-    addGraphQL(_pr);
+    _addGraphQL(_pr);
   }
 
   void delete(String id) {
@@ -60,13 +60,14 @@ class Products with ChangeNotifier {
     if (index >= 0) {
       _products[index] = _pr;
       notifyListeners();
+
+      _editGraphQL(_pr);
     } else {
       print("...");
     }
   }
 
-  Future<void> addGraphQL(Product _pr) async {
-    
+  Future<void> _addGraphQL(Product _pr) async {
     try {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.mutate(
@@ -92,6 +93,41 @@ class Products with ChangeNotifier {
     }
   }
 
+  Future<void> _editGraphQL(Product _pr) async {
+    try {
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.mutate(
+        MutationOptions(
+          documentNode: gql(addMutation.editProduct(
+              _pr.id,
+              _pr.name,
+              int.parse(_pr.category),
+              _pr.qty,
+              _pr.buyPrice,
+              _pr.price,
+              _pr.discountPrice,
+              _pr.sku,
+              _pr.barcode,
+              _pr.isDamage == true ? 1 : 0,
+              _pr.desc
+          )),
+          // document: addMutation.editPerson(
+          //   txtId.text,
+          //   txtName.text,
+          //   txtLastName.text,
+          //   int.parse(txtAge.text),
+          // ),
+        ),
+      );
+
+      print(result.exception);
+
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
   Future<void> fetchProducts() async {
     try {
       final List<Product> loadedProducts = [];
@@ -111,15 +147,20 @@ class Products with ChangeNotifier {
         print('no exception');
 
         for (var i = 0; i < result.data["products"].length; i++) {
-
           loadedProducts.add(Product(
             id: result.data["products"][i]['id'],
             name: result.data["products"][i]['name'],
             category: result.data["products"][i]['category_id'],
             qty: result.data["products"][i]['stock'],
-            buyPrice: result.data["products"][i]['buy_price'] is int ? result.data["products"][i]['buy_price'].toDouble() : result.data["products"][i]['buy_price'],
-            price: result.data["products"][i]['sell_price'] is int ? result.data["products"][i]['sell_price'].toDouble() : result.data["products"][i]['sell_price'],
-            discountPrice: result.data["products"][i]['discount_price'] is int ? result.data["products"][i]['discount_price'].toDouble() : result.data["products"][i]['discount_price'],
+            buyPrice: result.data["products"][i]['buy_price'] is int
+                ? result.data["products"][i]['buy_price'].toDouble()
+                : result.data["products"][i]['buy_price'],
+            price: result.data["products"][i]['sell_price'] is int
+                ? result.data["products"][i]['sell_price'].toDouble()
+                : result.data["products"][i]['sell_price'],
+            discountPrice: result.data["products"][i]['discount_price'] is int
+                ? result.data["products"][i]['discount_price'].toDouble()
+                : result.data["products"][i]['discount_price'],
             sku: result.data["products"][i]['sku'],
             barcode: result.data["products"][i]['barcode'],
             isDamage: result.data["products"][i]['barcode'] == 0 ? false : true,

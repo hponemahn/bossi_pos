@@ -2,7 +2,12 @@ class QueryMutation {
   String getAll() {
     return """ 
       {
-        products {
+        products (orderBy: [
+        {
+          field: "id"
+          order: DESC
+        }
+    ]) {
           id
           name
           stock
@@ -18,8 +23,17 @@ class QueryMutation {
     """;
   }
 
-  String addProduct(String name, int categoryId, int stock, double buyPrice, double sellPrice, double discountPrice, String sku, String barcode, int isDamaged, String remark) {
-    
+  String addProduct(
+      String name,
+      int categoryId,
+      int stock,
+      double buyPrice,
+      double sellPrice,
+      double discountPrice,
+      String sku,
+      String barcode,
+      int isDamaged,
+      String remark) {
     return """
       mutation {
         createProduct (     
@@ -51,14 +65,39 @@ class QueryMutation {
     """;
   }
 
-  String editPerson(String id, String name, String lastName, int age) {
+  String editProduct(
+      String id,
+      String name,
+      int categoryId,
+      int stock,
+      double buyPrice,
+      double sellPrice,
+      double discountPrice,
+      String sku,
+      String barcode,
+      int isDamaged,
+      String remark
+    ) {
     return """
-      mutation{
-          editPerson(id: "$id", name: "$name", lastName: "$lastName", age: $age){
-            name
-            lastName
-          }
-      }    
+      mutation {
+        updateProduct (     
+          id: $id
+          name: "$name"
+          category_id: $categoryId
+          stock: $stock
+          buy_price: $buyPrice
+          sell_price: $sellPrice
+          discount_price: $discountPrice
+          sku: "$sku"
+          barcode: "$barcode"
+          is_damaged: $isDamaged
+          remark: "$remark"
+  ) {
+    id
+    name
+    
+  }
+}
      """;
   }
 }
