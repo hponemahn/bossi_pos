@@ -44,7 +44,9 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
 
     List<Product> _products = Provider.of<Products>(context).products;
     
-    return GestureDetector(
+    return _products.isEmpty ? Center(child: Text('ကုန်ပစ္စည်းမရှိသေးပါ'),) : 
+    
+    GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
 

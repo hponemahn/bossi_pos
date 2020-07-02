@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Products with ChangeNotifier {
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+  QueryMutation addMutation = QueryMutation();
+
   List<Product> _products = [
     /*
     Product(id: "i1", name: "အာလူး", desc: "", discountPrice: 0, price: 500.00, qty: 50, buyPrice: 400, sku: "1a", category: "1"),
@@ -34,10 +37,11 @@ class Products with ChangeNotifier {
         desc: _pr.desc,
         barcode: _pr.barcode,
         discountPrice: _pr.discountPrice,
-        isDamage: _pr.isDamage
-      );
+        isDamage: _pr.isDamage);
     _products.add(product);
     notifyListeners();
+
+    addGraphQL(_pr);
   }
 
   void delete(String id) {
@@ -61,11 +65,35 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts() async {
-    GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
-
+  Future<void> addGraphQL(Product _pr) async {
+    
     try {
-      
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.mutate(
+        MutationOptions(
+          documentNode: gql(addMutation.addProduct(
+              _pr.name,
+              int.parse(_pr.category),
+              _pr.qty,
+              _pr.buyPrice,
+              _pr.price,
+              _pr.discountPrice,
+              _pr.sku,
+              _pr.barcode,
+              _pr.isDamage == true ? 1 : 0,
+              _pr.desc)),
+        ),
+      );
+
+      print(result.exception);
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchProducts() async {
+    try {
       final List<Product> loadedProducts = [];
 
       QueryMutation queryMutation = QueryMutation();
@@ -77,30 +105,37 @@ class Products with ChangeNotifier {
         ),
       );
 
+      print('fetch');
+
       if (!result.hasException) {
+        print('no exception');
 
         for (var i = 0; i < result.data["products"].length; i++) {
 
           loadedProducts.add(Product(
-          id: result.data["products"][i]['id'],
-          name: result.data["products"][i]['name'], 
-          category: result.data["products"][i]['category_id'],
-          qty: result.data["products"][i]['stock'], 
-          buyPrice: result.data["products"][i]['buy_price'], 
-          price: result.data["products"][i]['sell_price'], 
-          discountPrice: result.data["products"][i]['discount_price'], 
-          sku: result.data["products"][i]['sku'], 
-          barcode: result.data["products"][i]['barcode'], 
-          isDamage: result.data["products"][i]['barcode'] == 0 ? false : true, 
-          // isDamage: result.data["products"][i]['is_damaged'], 
-          desc: result.data["products"][i]['remark'], 
-        ));
+            id: result.data["products"][i]['id'],
+            name: result.data["products"][i]['name'],
+            category: result.data["products"][i]['category_id'],
+            qty: result.data["products"][i]['stock'],
+            buyPrice: result.data["products"][i]['buy_price'] is int ? result.data["products"][i]['buy_price'].toDouble() : result.data["products"][i]['buy_price'],
+            price: result.data["products"][i]['sell_price'] is int ? result.data["products"][i]['sell_price'].toDouble() : result.data["products"][i]['sell_price'],
+            discountPrice: result.data["products"][i]['discount_price'] is int ? result.data["products"][i]['discount_price'].toDouble() : result.data["products"][i]['discount_price'],
+            sku: result.data["products"][i]['sku'],
+            barcode: result.data["products"][i]['barcode'],
+            isDamage: result.data["products"][i]['barcode'] == 0 ? false : true,
+            // isDamage: result.data["products"][i]['is_damaged'],
+            desc: result.data["products"][i]['remark'],
+          ));
 
-      _products = loadedProducts;
-      notifyListeners();
-      }
+          _products = loadedProducts;
+          notifyListeners();
+        }
+      } else {
+        print('exception');
+        print(result.exception);
       }
     } catch (e) {
+      print(e);
       throw (e);
     }
   }

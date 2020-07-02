@@ -134,18 +134,13 @@ class _AlertDialogWindow extends State<AlertDialogWindow> {
                 GraphQLClient _client = graphQLConfiguration.clientToQuery();
                 QueryResult result = await _client.mutate(
                   MutationOptions(
-                    documentNode: gql(addMutation.addPerson(
-                      txtId.text,
-                      txtName.text,
-                      txtLastName.text,
-                      int.parse(txtAge.text),
-                    )),
-                    // document: addMutation.addPerson(
+                    // documentNode: gql(addMutation.addProduct(
                     //   txtId.text,
                     //   txtName.text,
                     //   txtLastName.text,
                     //   int.parse(txtAge.text),
-                    // ),
+                    // )),
+                    
                   ),
                 );
                 if (!result.hasException) {

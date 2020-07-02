@@ -18,15 +18,25 @@ class QueryMutation {
     """;
   }
 
-  String addPerson(String id, String name, String lastName, int age) {
+  String addProduct(String name, int categoryId, int stock, double buyPrice, double sellPrice, double discountPrice, String sku, String barcode, int isDamaged, String remark) {
+    
     return """
-      mutation{
-          addPerson(id: "$id", name: "$name", lastName: "$lastName", age: $age){
-            id
-            name
-            lastName
-            age
-          }
+      mutation {
+        createProduct (     
+          name: "$name"
+          category_id: $categoryId
+          stock: $stock
+          buy_price: $buyPrice
+          sell_price: $sellPrice
+          discount_price: $discountPrice
+          sku: "$sku"
+          barcode: "$barcode"
+          is_damaged: $isDamaged
+          remark: "$remark"
+        ) {
+          id
+          name
+        }
       }
     """;
   }

@@ -100,7 +100,7 @@ class _SellBodyState extends State<SellBody> {
     Products _products = Provider.of<Products>(context);
     Cart _cart = Provider.of<Cart>(context);
 
-    return GestureDetector(
+    return _products.products.isEmpty ? Center(child: Text('ရောင်းရန် ပစ္စည်းမရှိသေးပါ'),) : GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
 
