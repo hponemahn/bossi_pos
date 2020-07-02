@@ -111,7 +111,7 @@ class _AlertDialogWindow extends State<AlertDialogWindow> {
                   GraphQLClient _client = graphQLConfiguration.clientToQuery();
                   QueryResult result = await _client.mutate(
                     MutationOptions(
-                      documentNode: gql(addMutation.deletePerson(txtId.text)),
+                      // documentNode: gql(addMutation.deletePerson(txtId.text)),
                       // document: addMutation.deletePerson(txtId.text),
                     ),
                   );

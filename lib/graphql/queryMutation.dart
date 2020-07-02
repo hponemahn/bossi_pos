@@ -55,13 +55,15 @@ class QueryMutation {
     """;
   }
 
-  String deletePerson(id) {
+  String deleteProduct(String id) {
     return """
-      mutation{
-        deletePerson(id: "$id"){
+      mutation {
+        deleteProduct (
+              id: $id
+        ) {
           id
         }
-      } 
+      }
     """;
   }
 
@@ -76,8 +78,7 @@ class QueryMutation {
       String sku,
       String barcode,
       int isDamaged,
-      String remark
-    ) {
+      String remark) {
     return """
       mutation {
         updateProduct (     

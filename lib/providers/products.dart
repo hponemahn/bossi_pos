@@ -47,6 +47,7 @@ class Products with ChangeNotifier {
   void delete(String id) {
     _products.removeWhere((pr) => pr.id == id);
     notifyListeners();
+    _deleteProduct(id);
   }
 
   Product findById(String id) {
@@ -109,8 +110,7 @@ class Products with ChangeNotifier {
               _pr.sku,
               _pr.barcode,
               _pr.isDamage == true ? 1 : 0,
-              _pr.desc
-          )),
+              _pr.desc)),
           // document: addMutation.editPerson(
           //   txtId.text,
           //   txtName.text,
@@ -121,7 +121,6 @@ class Products with ChangeNotifier {
       );
 
       print(result.exception);
-
     } catch (e) {
       print(e);
       throw (e);
@@ -179,5 +178,16 @@ class Products with ChangeNotifier {
       print(e);
       throw (e);
     }
+  }
+
+  Future<void> _deleteProduct(String id) async {
+    GraphQLClient _client = graphQLConfiguration.clientToQuery();
+    QueryResult result = await _client.mutate(
+      MutationOptions(
+        documentNode: gql(addMutation.deleteProduct(id)),
+      ),
+    );
+    
+    print(result.exception);
   }
 }
