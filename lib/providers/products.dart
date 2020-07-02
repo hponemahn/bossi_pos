@@ -1,12 +1,12 @@
 import 'package:bossi_pos/graphql/graphQLConf.dart';
-import 'package:bossi_pos/graphql/queryMutation.dart';
+import 'package:bossi_pos/graphql/productQueryMutation.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Products with ChangeNotifier {
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
-  QueryMutation addMutation = QueryMutation();
+  ProductQueryMutation addMutation = ProductQueryMutation();
 
   List<Product> _products = [
     /*
@@ -131,7 +131,7 @@ class Products with ChangeNotifier {
     try {
       final List<Product> loadedProducts = [];
 
-      QueryMutation queryMutation = QueryMutation();
+      ProductQueryMutation queryMutation = ProductQueryMutation();
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(

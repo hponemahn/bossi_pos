@@ -1,4 +1,4 @@
-class QueryMutation {
+class ProductQueryMutation {
   String getAll() {
     return """ 
       {
