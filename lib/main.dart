@@ -13,16 +13,13 @@ import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
+import 'graphql/graphQLConf.dart';
 
-import 'graphql/client_provider.dart';
+GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
-final String graphQLEndpoint = 'http://192.168.43.89:8000/graphql';
-
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -53,23 +50,21 @@ class MyApp extends StatelessWidget {
     //   },
     // ),);
 
-    return ClientProvider(
-      uri: graphQLEndpoint,
-      // subscriptionUri: SUBSCRIPTION_ENDPOINT,
-      child: CacheProvider(
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider.value(value: Products()),
-            ChangeNotifierProvider.value(value: Cart()),
-            ChangeNotifierProvider.value(value: Categories()),
-          ],
-          child: MaterialApp(
-            theme: ThemeData(
-              primaryColor: Colors.purple[800],
-              accentColor: Colors.amber,
-              accentColorBrightness: Brightness.light,
-              // fontFamily: 'Roboto',
-              textTheme: TextTheme(
+    return GraphQLProvider(
+        client: graphQLConfiguration.client,
+        child: CacheProvider(child: 
+    
+    MultiProvider(providers: [
+      ChangeNotifierProvider.value(value: Products()),
+      ChangeNotifierProvider.value(value: Cart()),
+      ChangeNotifierProvider.value(value: Categories()),
+    ],child: MaterialApp(
+      theme: ThemeData(
+            primaryColor: Colors.purple[800],
+            accentColor: Colors.amber,
+            accentColorBrightness: Brightness.light,
+            // fontFamily: 'Roboto',
+            textTheme: TextTheme(
                 // headline:    TextStyle(fontSize: 36px, ... ),
                 // title:       TextStyle(fontSize: 24px, ... ),
                 // body:        TextStyle(fontSize: 12px, ... ),
@@ -91,8 +86,9 @@ class MyApp extends StatelessWidget {
               '/home': (context) => HomePage(),
             },
           ),
-        ),
-      ),
+    ),),
+
     );
+
   }
 }

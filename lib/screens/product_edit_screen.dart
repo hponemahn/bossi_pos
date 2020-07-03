@@ -435,11 +435,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   ),
 
                   TextFormField(
-                    initialValue: _initVal['qty'].toString(),
+                    initialValue: _initVal['qty'] == 0 ? '' : _initVal['qty'].toString(),
                     decoration: InputDecoration(
                       icon: Icon(Icons.confirmation_number),
                       labelText: "အရေအတွက်",
-                      hintText: "အရေအတွက် ထည့်သွင်းပါ",
+                      hintText: "ဥပမာ။  ။ 50 (English Number ဖြစ်ရပါမည်)",
+                      
                     ),
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) =>
@@ -472,11 +473,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   TextFormField(
-                    initialValue: _initVal['buyPrice'].toString(),
+                    initialValue: _initVal['buyPrice'] == 0 ? '' : _initVal['buyPrice'].toString(),
                     decoration: InputDecoration(
                         icon: Icon(Icons.attach_money),
                         labelText: "၀ယ်ရင်းစျေး",
-                        hintText: "၀ယ်ရင်းစျေး ထည့်သွင်းပါ"),
+                        hintText: "ဥပမာ။  ။ 5000 (English Number ဖြစ်ရပါမည်)"
+                        ),
                     keyboardType: TextInputType.number,
                     focusNode: _buyPriceFocusNode,
                     textInputAction: TextInputAction.next,
@@ -509,11 +511,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   TextFormField(
-                    initialValue: _initVal['price'].toString(),
+                    initialValue: _initVal['price'] == 0 ? '' : _initVal['price'].toString(),
                     decoration: InputDecoration(
                         icon: Icon(Icons.attach_money),
                         labelText: "ရောင်းစျေး",
-                        hintText: "ရောင်းစျေး ထည့်သွင်းပါ"),
+                        hintText: "ဥပမာ။  ။ 7000 (English Number ဖြစ်ရပါမည်)"
+                        ),
                     keyboardType: TextInputType.number,
                     focusNode: _priceFocusNode,
                     textInputAction: TextInputAction.next,
@@ -546,11 +549,11 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   TextFormField(
-                    initialValue: _initVal['discountPrice'].toString(),
+                    initialValue: _initVal['discountPrice'] == 0 ? '' : _initVal['discountPrice'].toString(),
                     decoration: InputDecoration(
                       icon: Icon(Icons.attach_money),
-                      labelText: "လျှော့စျေး",
-                      hintText: "လျှော့စျေး ရှိပါက ထည့်သွင်းပေးပါ",
+                      labelText: "လျှော့စျေး (လျှော့စျေး ရှိပါက ထည့်သွင်းပေးပါ)",
+                      hintText: "ဥပမာ။  ။ 6500 (English Number ဖြစ်ရပါမည်)",
                     ),
                     keyboardType: TextInputType.number,
                     focusNode: _discountFocusNode,
