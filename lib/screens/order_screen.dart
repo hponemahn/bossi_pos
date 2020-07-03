@@ -168,7 +168,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text("${cartItem.qty * cartItem.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text("${(cartItem.qty * cartItem.price).toStringAsFixed(2)}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                     ],
                   ),
@@ -247,7 +247,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text("ပြန်အမ်းငွေ  :"),
-                                  new Text(_cart.getChangedMoney.toString()),
+                                  new Text(_cart.getChangedMoney.toStringAsFixed(2)),
                                 ],
                               ),
                             )
