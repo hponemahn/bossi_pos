@@ -29,6 +29,8 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
       products = tempList;
     }
 
+    products = products.reversed.toList();
+
     return Expanded(
       child: ListView.builder(
           padding: EdgeInsets.all(10),

@@ -5,7 +5,7 @@ class ProductQueryMutation {
         products (orderBy: [
         {
           field: "id"
-          order: DESC
+          order: ASC
         }
     ]) {
           id

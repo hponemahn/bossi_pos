@@ -27,6 +27,8 @@ class _SellBodyState extends State<SellBody> {
       products = tempList;
     }
 
+    products = products.reversed.toList();
+
     return Flexible(
       child: GridView.builder(
         padding: const EdgeInsets.all(10),
