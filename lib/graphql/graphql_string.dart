@@ -5,6 +5,7 @@ String userInfo = r"""
                           name
                           email
                           remember_token
+                          api_token
                         }
                       }
                   """;
@@ -114,13 +115,15 @@ String products = r"""
                   """;
 
 String systemLogin = r"""
-                        mutation systemLogin($email:String,$password:String){
+                        mutation systemLogin($email:String,$phone:String,$password:String){
                           login (email :$email
+                                phone:$phone
                                  password :$password)
                             {
                             id
                             name
                             remember_token
+                            api_token
 
                           }
                         }
@@ -151,7 +154,7 @@ String simpleSingup=r"""
 
 String gmailSingup=r"""
                         mutation gmailSingup($name:String,$business_name:String,$business_cat_id: String,
-                        $phone: String,$email:String,$township_id: Int,$state_id: Int,$address: String,$remember_token:String){
+                        $phone: String,$email:String,$township_id: Int,$state_id: Int,$address: String,$api_token:String){
                           gmail_signup(
                             name:$name
                             business_name:$business_name
@@ -161,13 +164,14 @@ String gmailSingup=r"""
                             township_id: $township_id
                             state_id: $state_id
                             address: $address
-                            remember_token : $remember_token 
+                            api_token : $api_token 
                            
                           ){
                             id
                             name
                             email
                             remember_token
+                            api_token
                           }
                         }
                       """;
@@ -204,6 +208,15 @@ String updateProduct = r"""
                             }
                           }
 """;
+
+String deleteProduct = r"""
+                      mutation deleteProduct($id:ID!){
+                        deleteProduct(id:$id){
+                          id
+                          name
+                        }
+                      }
+                  """;
 
 String createOrder = r""" 
                       mutation createOrder($total:Int, $order_date:String, $product_id:Int, $price:Int, $qty:Int){

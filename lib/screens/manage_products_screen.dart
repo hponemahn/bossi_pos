@@ -55,7 +55,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
           }
 
           if (result.loading) {
-            return Text('Loading');
+            return Text('Loading....');
           }
           List repositories = result.data['products'];
           return Expanded(

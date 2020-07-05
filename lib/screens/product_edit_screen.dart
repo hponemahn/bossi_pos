@@ -1,5 +1,6 @@
 import 'package:bossi_pos/graphql/graphql_string.dart';
 import 'package:bossi_pos/graphql/nonW-graphql.dart';
+import 'package:bossi_pos/graphql/utils.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'package:bossi_pos/graphql/utils.dart' as utils;
 
 class ProductEditScreen extends StatefulWidget {
   static const routeName = "product_edit";
@@ -81,6 +83,67 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     );
   }
 
+  // void _showDialog(BuildContext context) {
+  //   // flutter defined function
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       // return object of type Dialog
+  //       return AlertDialog(
+  //         title: Text("အမျိုးအစားအသစ် ထည့်ရန်"),
+  //         content: textField(),
+  //         actions: <Widget>[
+  //           // usually buttons at the bottom of the dialog
+  //           FlatButton(
+  //             child: Text("မလုပ်ပါ"),
+  //             onPressed: () {
+  //               _textFieldController.text = '';
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+
+  //           FlatButton(
+  //             child: Text("ထည့်မည်"),
+  //             onPressed: () {
+  //               if (_textFieldController.text.isNotEmpty) {
+  //                 setState(() {
+  //                   _isValid = false;
+  //                   _newCat = Category(
+  //                       id: _newCat.id, category: _textFieldController.text);
+
+  //                   String _newCatId =
+  //                       Provider.of<Categories>(context, listen: false)
+  //                           .addAndGetID(_newCat);
+
+  //                   dropdownValue = _newCatId;
+
+  //                   _newProduct = Product(
+  //                       id: _newProduct.id,
+  //                       name: _newProduct.name,
+  //                       price: _newProduct.price,
+  //                       qty: _newProduct.qty,
+  //                       buyPrice: _newProduct.buyPrice,
+  //                       sku: _newProduct.sku,
+  //                       desc: _newProduct.desc,
+  //                       discountPrice: _newProduct.discountPrice,
+  //                       barcode: _newProduct.barcode,
+  //                       isDamage: _newProduct.isDamage,
+  //                       category: _newCatId);
+  //                 });
+
+  //                 _textFieldController.text = '';
+  //                 Navigator.of(context).pop();
+  //               } else {
+  //                 setState(() => _isValid = true);
+  //               }
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   void _showDialog(BuildContext context) {
     // flutter defined function
     showDialog(
@@ -102,36 +165,41 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
             FlatButton(
               child: Text("ထည့်မည်"),
-              onPressed: () {
+              onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
-                  setState(() {
-                    _isValid = false;
+                  QueryResult resultData = await graphQLClient.mutate(
+                    MutationOptions(
+                        documentNode: gql(categoryInsert),
+                        variables: {
+                          "name": _textFieldController.text,
+                        }),
+                  );
 
-                    _newCat = Category(
-                        id: _newCat.id, category: _textFieldController.text);
+                  String _newCatId =
+                      Provider.of<Categories>(context, listen: false)
+                          .addAndGetID(_newCat);
 
-                    String _newCatId =
-                        Provider.of<Categories>(context, listen: false)
-                            .addAndGetID(_newCat);
-
-                    dropdownValue = _newCatId;
-
-                    _newProduct = Product(
-                        id: _newProduct.id,
-                        name: _newProduct.name,
-                        price: _newProduct.price,
-                        qty: _newProduct.qty,
-                        buyPrice: _newProduct.buyPrice,
-                        sku: _newProduct.sku,
-                        desc: _newProduct.desc,
-                        discountPrice: _newProduct.discountPrice,
-                        barcode: _newProduct.barcode,
-                        isDamage: _newProduct.isDamage,
-                        category: _newCatId);
-                  });
+                  _newProduct = Product(
+                      id: _newProduct.id,
+                      name: _newProduct.name,
+                      price: _newProduct.price,
+                      qty: _newProduct.qty,
+                      buyPrice: _newProduct.buyPrice,
+                      sku: _newProduct.sku,
+                      desc: _newProduct.desc,
+                      discountPrice: _newProduct.discountPrice,
+                      barcode: _newProduct.barcode,
+                      isDamage: _newProduct.isDamage,
+                      category: _newCatId);
 
                   _textFieldController.text = '';
-                  Navigator.of(context).pop();
+
+                  if (resultData.data != null) {
+                    setState(() => _isValid = false);
+                    Navigator.of(context).pop();
+                  } else {
+                    setState(() => _isValid = true);
+                  }
                 } else {
                   setState(() => _isValid = true);
                 }
@@ -149,56 +217,42 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   }
 
   @override
-  void didChangeDependencies() async {
+  void didChangeDependencies() {
     if (_isInit) {
       String id = ModalRoute.of(context).settings.arguments as String;
-
-      print(id);
-
       if (id != null) {
-        QueryResult resultData = await graphQLClient.query(
-          QueryOptions(documentNode: gql(productID), variables: {
-            "id": int.parse(id),
-          }),
-        );
-
-        print(resultData.data);
-
         // Product _product =
         //     Provider.of<Products>(context, listen: false).findById(id);
-        // _newProduct = _product;
-        // _initVal = {
-        //   "id": _product.id,
-        //   "name": _product.name,
-        //   "category": _product.category,
-        //   "price": _product.price,
-        //   "qty": _product.qty,
-        //   "buyPrice": _product.buyPrice,
-        //   "sku": _product.sku,
-        //   "desc": _product.desc,
-        //   "discountPrice": _product.discountPrice,
-        //   "barcode": _product.barcode,
-        //   "isDamage": _product.isDamage
-        // };
+        Product _product = Product(
+            id: utils.pro_id,
+            name: utils.pro_name,
+            category: utils.pro_catgory,
+            price: utils.pro_price,
+            qty: utils.pro_qty,
+            buyPrice: utils.pro_buyprice,
+            sku: utils.pro_sku,
+            desc: utils.pro_desc,
+            discountPrice: utils.pro_discountPrice,
+            barcode: utils.pro_barcode,
+            isDamage: true);
+        _newProduct = _product;
         _initVal = {
-          "id": resultData.data['product']['id'].toString(),
-          "name": resultData.data['product']['name'].toString(),
-          "category": resultData.data['product']['category']['name'].toString(),
-          "price": resultData.data['product']['sell_price'].toString(),
-          "qty": resultData.data['product']['stock'].toString(),
-          "buyPrice": resultData.data['product']['buy_price'].toString(),
-          "sku": resultData.data['product']['sku'].toString(),
-          "desc": resultData.data['product']['remark'].toString(),
-          "discountPrice":
-              resultData.data['product']['discount_price'].toString(),
-          "barcode": resultData.data['product']['barcode'].toString(),
-          "isDamage": resultData.data['product']['is_damaged']
+          "id": _product.id,
+          "name": _product.name,
+          "category": _product.category,
+          "price": _product.price,
+          "qty": _product.qty,
+          "buyPrice": _product.buyPrice,
+          "sku": _product.sku,
+          "desc": _product.desc,
+          "discountPrice": _product.discountPrice,
+          "barcode": _product.barcode,
+          "isDamage": _product.isDamage
         };
         print(_initVal['name']);
         setState(() {
-          // dropdownValue = resultProduct.data['product']['category']['name'];
-          dropdownValue =
-              resultData.data['product']['category']['id'];
+          dropdownValue = _product.category;
+          // dropdownValue = resultData.data['product']['category']['id'];
           // print(_product.category);
         });
       }
@@ -260,6 +314,22 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
         Provider.of<Products>(context, listen: false).add(_newProduct);
       } else {
+        print(_newProduct.id);
+        QueryResult resultData = await graphQLClient.mutate(
+          MutationOptions(documentNode: gql(updateProduct), variables: {
+            "id": _newProduct.id,
+            "name": _newProduct.name,
+            "category_id": _newProduct.category,
+            "stock": _newProduct.qty,
+            "buy_price": _newProduct.buyPrice,
+            "sell_price": _newProduct.price,
+            "discount_price": _newProduct.discountPrice,
+            "sku": _newProduct.sku,
+            "barcode": _newProduct.barcode,
+            "is_damaged": _newProduct.isDamage,
+            "remark": _newProduct.desc
+          }),
+        );
         Provider.of<Products>(context, listen: false).edit(_newProduct);
       }
 
@@ -325,58 +395,55 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                           ),
                           builder: (QueryResult stateResult,
                               {VoidCallback refetch, FetchMore fetchMore}) {
-                            if (stateResult.data == null) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color(0xFF0F9671)),
-                                ),
-                              );
-                            } else {
-                              List temList = stateResult.data['categories'];
-                              return InputDecorator(
-                                decoration: InputDecoration(
-                                  icon: const Icon(Icons.category),
-                                  labelText: 'အမျိုးအစားများ',
-                                ),
-                                // isEmpty: _selectedCat == '',
-                                child: new DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    hint: Text('အမျိုးအစား ရွေးချယ်ပါ'),
-                                    value: dropdownValue,
-                                    isDense: true,
-                                    items: temList.map((item) {
-                                      return new DropdownMenuItem<String>(
-                                          value: item['id'].toString(),
-                                          child: new Text(
-                                              item['name'].toString()));
-                                    }).toList(),
-                                    onChanged: (val) {
-                                      setState(() {
-                                        _newProduct = Product(
-                                            id: _newProduct.id,
-                                            name: _newProduct.name,
-                                            price: _newProduct.price,
-                                            qty: _newProduct.qty,
-                                            buyPrice: _newProduct.buyPrice,
-                                            sku: _newProduct.sku,
-                                            desc: _newProduct.desc,
-                                            discountPrice:
-                                                _newProduct.discountPrice,
-                                            barcode: _newProduct.barcode,
-                                            isDamage: _newProduct.isDamage,
-                                            category: val.toString());
+                            List temList = stateResult.data == null
+                                ? null
+                                : stateResult.data['categories'];
+                            return InputDecorator(
+                              decoration: InputDecoration(
+                                icon: const Icon(Icons.category),
+                                labelText: 'အမျိုးအစားများ',
+                              ),
+                              // isEmpty: _selectedCat == '',
+                              child: new DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  hint: stateResult.data == null
+                                      ? Text('Loading...')
+                                      : Text('အမျိုးအစား ရွေးချယ်ပါ'),
+                                  value: dropdownValue,
+                                  isDense: true,
+                                  items: stateResult.data == null
+                                      ? null
+                                      : temList.map((item) {
+                                          return new DropdownMenuItem<String>(
+                                              value: item['id'].toString(),
+                                              child: new Text(
+                                                  item['name'].toString()));
+                                        }).toList(),
+                                  onChanged: (val) {
+                                    setState(() {
+                                      _newProduct = Product(
+                                          id: _newProduct.id,
+                                          name: _newProduct.name,
+                                          price: _newProduct.price,
+                                          qty: _newProduct.qty,
+                                          buyPrice: _newProduct.buyPrice,
+                                          sku: _newProduct.sku,
+                                          desc: _newProduct.desc,
+                                          discountPrice:
+                                              _newProduct.discountPrice,
+                                          barcode: _newProduct.barcode,
+                                          isDamage: _newProduct.isDamage,
+                                          category: val.toString());
 
-                                        dropdownValue = val.toString();
-                                        state.didChange(val);
-                                      });
-                                      print("id: $val");
-                                      print(dropdownValue);
-                                    },
-                                  ),
+                                      dropdownValue = val.toString();
+                                      state.didChange(val);
+                                    });
+                                    print("id: $val");
+                                    print(dropdownValue);
+                                  },
                                 ),
-                              );
-                            }
+                              ),
+                            );
                           });
                     },
                   ),
@@ -425,9 +492,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   // ),
                   FlatButton(
                     padding: EdgeInsets.fromLTRB(0, 0, 180, 0),
-                    onPressed: () => print(_initVal['name']),
-                    // Navigator.pushNamed(context, '/category_ce'),
-                    // _showDialog(context),
+                    onPressed: () =>
+                        // Navigator.pushNamed(context, '/category_ce'),
+                        _showDialog(context),
                     child: Text(
                       "အမျိုးအစား အသစ် ?",
                       style: TextStyle(color: Colors.blue, fontSize: 13),

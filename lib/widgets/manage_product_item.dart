@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
+import 'package:bossi_pos/graphql/utils.dart' as utils;
 
 class ManageProductItem extends StatelessWidget {
   final String id;
@@ -34,8 +35,15 @@ class ManageProductItem extends StatelessWidget {
 
             FlatButton(
               child: Text("ဖျက်မည်"),
-              onPressed: () {
+              onPressed: () async{
                 Provider.of<Products>(context, listen: false).delete(id);
+                QueryResult resultData = await graphQLClient.mutate(
+                  MutationOptions(
+                      documentNode: gql(deleteProduct),
+                      variables: {
+                        "id": id,
+                      }),
+                );
                 Navigator.of(context).pop();
                 // Navigator.pop(context, true);
               },
@@ -58,19 +66,31 @@ class ManageProductItem extends StatelessWidget {
           width: 100,
           child: Row(
           children: [
-            IconButton(icon: Icon(Icons.edit),onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id),),
-            // IconButton(icon: Icon(Icons.edit),onPressed: () async{
-            //   print(id);
-            //    QueryResult resultData = await graphQLClient.query(
-            //       QueryOptions(
-            //           documentNode: gql(productID),
-            //           variables: {
-            //             "id": int.parse(id),
-            //           }),
-            //     );
-
-            //     print(resultData.data);
-            // },),
+            // IconButton(icon: Icon(Icons.edit),onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id),),
+            IconButton(icon: Icon(Icons.edit),onPressed: () async{
+              print(id);
+               QueryResult resultData = await graphQLClient.query(
+                  QueryOptions(
+                      documentNode: gql(productID),
+                      variables: {
+                        "id": int.parse(id),
+                      }),
+                );
+                utils.pro_id = resultData.data['product']['id'];
+                utils.pro_name = resultData.data['product']['name'];
+                utils.pro_catgory = resultData.data['product']['category']['id'];
+                utils.pro_price = resultData.data['product']['sell_price'].toDouble();
+                utils.pro_qty = resultData.data['product']['stock'];
+                utils.pro_buyprice= resultData.data['product']['buy_price'].toDouble();
+                utils.pro_sku = resultData.data['product']['sku'];
+                utils.pro_desc = resultData.data['product']['remark'];
+                utils.pro_discountPrice= resultData.data['product']['discount_price'].toDouble();
+                utils.pro_barcode = resultData.data['product']['barcode'];
+                print(resultData.data);
+                if(resultData.data != null){
+                  Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id);
+                }
+            },),
             IconButton(icon: Icon(Icons.delete),onPressed: () => _showDialog(context, id)),
           ],
         ),

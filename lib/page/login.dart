@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   // login google
   bool _isLoggedIn = false;
   GoogleSignInAccount googleAccount;
@@ -48,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       GoogleSignInAccount account = await _googleSignIn.signIn();
       GoogleSignInAuthentication authentication = await account.authentication;
 
-       Navigator.of(context).pushReplacementNamed('/auth');
+      Navigator.of(context).pushReplacementNamed('/auth');
 
       setState(() {
         _isLoggedIn = true;
@@ -79,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
         utils.email = userProfile["email"];
         utils.accessToken = accessToken.token;
 
-          Navigator.of(context).pushReplacementNamed('/auth');
+        Navigator.of(context).pushReplacementNamed('/auth');
 
         break;
       case FacebookLoginStatus.cancelledByUser:
@@ -101,33 +103,34 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final emailField = TextFormField(
+      autofocus: false,
       controller: _emailController,
-      enableInteractiveSelection: false,
-      decoration: InputDecoration(
-          fillColor: Color(0xFFC6ECE6),
-          filled: true,
-          contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-          border: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(12.0),
-          ),
-          labelText: 'Email or Phone Number'),
+      decoration: const InputDecoration(
+        hintText: 'အီမောလ်(သို့)ဖုန်းနံပါတ်',
+        labelText: 'အီမောလ်(သို့)ဖုန်းနံပါတ်',
+      ),
+      keyboardType: TextInputType.emailAddress,
+      validator: (val) => val.isEmpty ? 'အီမေလ်(သို့)ဖုန်းနံပါတ်ရိုက်တည့်ရပါမည်' : null,
     );
 
     final passwordField = TextFormField(
+      autofocus: false,
       obscureText: true,
-      enableInteractiveSelection: false,
       controller: _passwordController,
       decoration: InputDecoration(
-          fillColor: Color(0xFFC6ECE6),
-          filled: true,
-          contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-          border: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(12.0),
-          ),
-          labelText: 'Password'),
+        hintText: 'လျှို့ဝှက်နံပါတ်',
+        labelText: 'လျှို့ဝှက်နံပါတ်',
+      ),
+      validator: (val) => val.length < 6 ? 'လျှို့ဝှက်နံပါတ်အနည်းဆုံး၆လုံးတည့်ရပါမည်' : null,
     );
 
+    void _showSnackBar(BuildContext context, String text) {
+      final snackBar = SnackBar(content: Text(text));
+      _scaffoldKey.currentState.showSnackBar(snackBar);
+    }
+
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       body: Mutation(
         options: MutationOptions(
@@ -137,14 +140,16 @@ class _LoginPageState extends State<LoginPage> {
           },
           onCompleted: (dynamic resultData) {
             if (resultData.data['login'] == null) {
+              _showSnackBar(context, "သင်၏အကောင့်မှားယွင်းနေပါသည်");
               print("error");
             } else {
               print(resultData.data['login']['name']);
               var result = resultData.data['login'];
-              utils.accessToken = result['remember_token'];
+              utils.accessToken = result['api_token'];
               msg = "login Sccess";
               showLongToast(msg);
               Navigator.of(context).pushReplacementNamed('/sellscreen');
+              // _showSnackBar(context, "login Sccess");
             }
           },
         ),
@@ -162,54 +167,49 @@ class _LoginPageState extends State<LoginPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: <Widget>[
-                      SizedBox(
-                        height: 150.0,
-                        child: Image.asset(
-                          "assets/img/logo.png",
-                          fit: BoxFit.contain,
+                      FlatButton(
+                        onPressed: () async {},
+                        child: ClipOval(
+                          child: Image.asset('assets/img/logo.png',
+                              width: 100, height: 100, fit: BoxFit.cover),
                         ),
+                        shape: new CircleBorder(),
                       ),
-                      SizedBox(height: 10.0),
+                      SizedBox(height: 80.0),
                       emailField,
-                      SizedBox(height: 10.0),
+                      SizedBox(height: 20.0),
                       passwordField,
-                      SizedBox(height: 15.0),
-                      Material(
-                        elevation: 5.0,
-                        borderRadius: new BorderRadius.circular(12.0),
-                        color: Colors.blue,
-                        child: MaterialButton(
-                          minWidth: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                          onPressed: () {
-                            String password = _passwordController.text.trim();
-                            if (_emailController.text == '') {
-                              msg = "Email or phone no required.";
-                              showLongToast(msg);
-                            } else if (password.length < 6) {
-                              msg =
-                                  "Invalid Password, Password must be at least 6 characters long.";
-                              showLongToast(msg);
-                            } else {
-                              // showLoading(context);
+                      SizedBox(height: 20.0),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: Material(
+                          borderRadius: BorderRadius.circular(0.0),
+                          shadowColor: Colors.purple[800],
+                          elevation: 5.0,
+                          child: MaterialButton(
+                            minWidth: 200.0,
+                            height: 50.0,
+                            onPressed: () {
                               runMutation(<String, dynamic>{
-                                "email": _emailController.text,
+                                // "email": _emailController.text,!val.contains('@') ? 'Not a valid email' : null
+                                "email": !_emailController.text.contains('@') ? null : _emailController.text,
+                                // "phone":null,
+                                "phone": _emailController.text.contains('@') ? null : _emailController.text,
                                 "password": _passwordController.text,
                               });
-                            }
-                          },
-                          child: Text('Login',
-                              textAlign: TextAlign.center,
-                              style: style.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                            },
+                            color: Colors.purple[800],
+                            child: Text('Log In',
+                                style: TextStyle(color: Colors.white)),
+                            highlightColor: Colors.deepOrange,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 4.0),
+                      SizedBox(height: 10.0),
                       FlatButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/register');
-                          print("2");
+                          // Navigator.pushNamed(context, '/home');
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -219,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Register',
                               textAlign: TextAlign.right,
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Colors.purple[800],
                               ),
                             ),
                           ],
