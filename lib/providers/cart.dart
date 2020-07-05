@@ -1,4 +1,7 @@
+// import 'package:bossi_pos/graphql/graphqlConf.dart';
+// import 'package:bossi_pos/graphql/orderQueryMutation.dart';
 import 'package:flutter/foundation.dart';
+// import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CartItem {
   final String id;
@@ -91,6 +94,28 @@ class Cart with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<void> confirm() async {
+    print('confirm');
+    print(_cart);
+    // GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+    // OrderQueryMutation addMutation = OrderQueryMutation();
+    // try {
+    //   GraphQLClient _client = graphQLConfiguration.clientToQuery();
+    //   QueryResult result = await _client.mutate(
+    //     MutationOptions(
+          // documentNode: gql(addMutation.addOrder(
+              // _cart
+            // )),
+    //     ),
+    //   );
+
+    //   print(result.exception);
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
   }
 
 }
