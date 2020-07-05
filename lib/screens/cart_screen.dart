@@ -82,7 +82,7 @@ class CartScreen extends StatelessWidget {
                       ),
                       Expanded(
                         flex: 2.5.toInt(),
-                        child: Text("${cartItem.qty * cartItem.price}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        child: Text("${(cartItem.qty * cartItem.price).toStringAsFixed(2)}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                     ],
                   ),

@@ -148,44 +148,32 @@ class _OrderScreenState extends State<OrderScreen> {
                             )
                           ]),
                         ]))),
-            SizedBox(
-              height: 20.0,
-            ),
-            ..._cart.cart.values.toList().map(
-                  (cartItem) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                    child: Card(
-                      child: SizedBox(
-                        height: 60,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              flex: 2.5.toInt(),
-                              child: Text(cartItem.name,
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center),
-                            ),
-                            Expanded(
-                              flex: 2.5.toInt(),
-                              child: Text(cartItem.qty.toString(),
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center),
-                            ),
-                            Expanded(
-                              flex: 2.5.toInt(),
-                              child: Text(cartItem.price.toString(),
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center),
-                            ),
-                            Expanded(
-                              flex: 2.5.toInt(),
-                              child: Text("${cartItem.qty * cartItem.price}",
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center),
-                            ),
-                          ],
-                        ),
+                        SizedBox(height: 20.0,),
+
+            ..._cart.cart.values.toList().map((cartItem) => Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              child: Card(
+                    child: SizedBox(
+                      height: 60,
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cartItem.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cartItem.qty.toString(),
+                                style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text(cartItem.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        flex: 2.5.toInt(),
+                        child: Text("${(cartItem.qty * cartItem.price).toStringAsFixed(2)}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
                       ),
                     ),
                   ),
@@ -262,7 +250,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text("ပြန်အမ်းငွေ  :"),
-                                  new Text(_cart.getChangedMoney.toString()),
+                                  new Text(_cart.getChangedMoney.toStringAsFixed(2)),
                                 ],
                               ),
                             )
