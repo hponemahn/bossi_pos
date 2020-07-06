@@ -21,6 +21,8 @@ GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
 void main() => runApp(MyApp());
 
+// Link link = graphQLConfiguration.authLink.concat(GraphQLConfiguration.httpLink);
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

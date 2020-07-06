@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
 import 'package:bossi_pos/graphql/utils.dart' as utils;
+import '../graphql/graphQLConf.dart';
 
 import 'package:multiselect_formfield/multiselect_formfield.dart';
 
@@ -15,6 +15,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+  // ProductQueryMutation addMutation = ProductQueryMutation();
+  
   List _myActivities;
   String _myActivitiesResult;
   final formKey = new GlobalKey<FormState>();
@@ -34,9 +38,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void fillList(context) async {
-   QueryResult resultCat = await graphQLClient.query(QueryOptions(
-      documentNode: gql(category),
-    ));
+    GraphQLClient _client = graphQLConfiguration.clientToQuery();
+
+    QueryResult resultCat = await _client.query(
+        QueryOptions(
+          documentNode: gql(category)),
+        );
 
     var jsonString = utils.getPrettyJSONString(resultCat.data);
     final temp = jsonDecode(jsonString);

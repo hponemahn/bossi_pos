@@ -1,4 +1,4 @@
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
+import 'package:bossi_pos/graphql/graphQLConf.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +6,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
 import 'package:bossi_pos/graphql/utils.dart' as utils;
-
+ GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 class ManageProductItem extends StatelessWidget {
+
   final String id;
   final String name;
   final int qty;
@@ -37,7 +38,8 @@ class ManageProductItem extends StatelessWidget {
               child: Text("ဖျက်မည်"),
               onPressed: () async{
                 Provider.of<Products>(context, listen: false).delete(id);
-                QueryResult resultData = await graphQLClient.mutate(
+                GraphQLClient _client = graphQLConfiguration.clientToQuery();
+                QueryResult resultData = await _client.mutate(
                   MutationOptions(
                       documentNode: gql(deleteProduct),
                       variables: {
@@ -69,7 +71,8 @@ class ManageProductItem extends StatelessWidget {
             // IconButton(icon: Icon(Icons.edit),onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id),),
             IconButton(icon: Icon(Icons.edit),onPressed: () async{
               print(id);
-               QueryResult resultData = await graphQLClient.query(
+              GraphQLClient _client = graphQLConfiguration.clientToQuery();
+               QueryResult resultData = await _client.query(
                   QueryOptions(
                       documentNode: gql(productID),
                       variables: {

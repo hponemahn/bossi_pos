@@ -1,5 +1,5 @@
+import 'package:bossi_pos/graphql/graphQLConf.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/widgets/drawlet.dart';
 import 'package:bossi_pos/widgets/manage_category_item.dart';
@@ -16,6 +16,8 @@ class ManageCategoryScreen extends StatefulWidget {
 }
 
 class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+
   String _searchText = "";
   Category _newEditCat = Category(
     id: null,
@@ -26,7 +28,8 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
   QueryResult resultData;
 
   Future<QueryResult> getdata() async {
-    return resultData = await graphQLClient.query(QueryOptions(
+    GraphQLClient _client = graphQLConfiguration.clientToQuery();
+    return resultData = await _client.query(QueryOptions(
       documentNode: gql(categories),
     ));
     // return resultData.data['categories']['name'].toString();
@@ -119,7 +122,8 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
               child: Text("ထည့်မည်"),
               onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
-                  QueryResult resultData = await graphQLClient.mutate(
+                  GraphQLClient _client = graphQLConfiguration.clientToQuery();
+                  QueryResult resultData = await _client.mutate(
                     MutationOptions(
                         documentNode: gql(categoryInsert),
                         variables: {

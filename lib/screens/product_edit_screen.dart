@@ -1,15 +1,12 @@
+import 'package:bossi_pos/graphql/graphQLConf.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
-import 'package:bossi_pos/graphql/utils.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
-import 'package:bossi_pos/widgets/cat_wid.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
 import 'package:bossi_pos/graphql/utils.dart' as utils;
 
 class ProductEditScreen extends StatefulWidget {
@@ -20,6 +17,8 @@ class ProductEditScreen extends StatefulWidget {
 }
 
 class _ProductEditScreenState extends State<ProductEditScreen> {
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -83,67 +82,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     );
   }
 
-  // void _showDialog(BuildContext context) {
-  //   // flutter defined function
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       // return object of type Dialog
-  //       return AlertDialog(
-  //         title: Text("အမျိုးအစားအသစ် ထည့်ရန်"),
-  //         content: textField(),
-  //         actions: <Widget>[
-  //           // usually buttons at the bottom of the dialog
-  //           FlatButton(
-  //             child: Text("မလုပ်ပါ"),
-  //             onPressed: () {
-  //               _textFieldController.text = '';
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-
-  //           FlatButton(
-  //             child: Text("ထည့်မည်"),
-  //             onPressed: () {
-  //               if (_textFieldController.text.isNotEmpty) {
-  //                 setState(() {
-  //                   _isValid = false;
-  //                   _newCat = Category(
-  //                       id: _newCat.id, category: _textFieldController.text);
-
-  //                   String _newCatId =
-  //                       Provider.of<Categories>(context, listen: false)
-  //                           .addAndGetID(_newCat);
-
-  //                   dropdownValue = _newCatId;
-
-  //                   _newProduct = Product(
-  //                       id: _newProduct.id,
-  //                       name: _newProduct.name,
-  //                       price: _newProduct.price,
-  //                       qty: _newProduct.qty,
-  //                       buyPrice: _newProduct.buyPrice,
-  //                       sku: _newProduct.sku,
-  //                       desc: _newProduct.desc,
-  //                       discountPrice: _newProduct.discountPrice,
-  //                       barcode: _newProduct.barcode,
-  //                       isDamage: _newProduct.isDamage,
-  //                       category: _newCatId);
-  //                 });
-
-  //                 _textFieldController.text = '';
-  //                 Navigator.of(context).pop();
-  //               } else {
-  //                 setState(() => _isValid = true);
-  //               }
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   void _showDialog(BuildContext context) {
     // flutter defined function
     showDialog(
@@ -167,7 +105,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
               child: Text("ထည့်မည်"),
               onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
-                  QueryResult resultData = await graphQLClient.mutate(
+                  GraphQLClient _client = graphQLConfiguration.clientToQuery();
+                  QueryResult resultData = await _client.mutate(
                     MutationOptions(
                         documentNode: gql(categoryInsert),
                         variables: {
@@ -297,7 +236,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       print(_newProduct.isDamage);
 
       if (_initVal['id'] == null) {
-        QueryResult resultData = await graphQLClient.mutate(
+        GraphQLClient _client = graphQLConfiguration.clientToQuery();
+        QueryResult resultData = await _client.mutate(
           MutationOptions(documentNode: gql(createProduct), variables: {
             "name": _newProduct.name,
             "category_id": _newProduct.category,
@@ -315,7 +255,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
         Provider.of<Products>(context, listen: false).add(_newProduct);
       } else {
         print(_newProduct.id);
-        QueryResult resultData = await graphQLClient.mutate(
+        GraphQLClient _client = graphQLConfiguration.clientToQuery();
+        QueryResult resultData = await _client.mutate(
           MutationOptions(documentNode: gql(updateProduct), variables: {
             "id": _newProduct.id,
             "name": _newProduct.name,

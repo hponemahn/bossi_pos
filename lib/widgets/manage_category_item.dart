@@ -1,9 +1,8 @@
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
+import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
 
 class ManageCategoryItem extends StatefulWidget {
@@ -19,6 +18,8 @@ class ManageCategoryItem extends StatefulWidget {
 }
 
 class _ManageCategoryItemState extends State<ManageCategoryItem> {
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+
   Category _newEditCat = Category(
     id: null,
     category: null,
@@ -63,8 +64,8 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
               onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
                   setState(() => _isValid = false);
-
-                  QueryResult resultData = await graphQLClient.mutate(
+                  GraphQLClient _client = graphQLConfiguration.clientToQuery();
+                  QueryResult resultData = await _client.mutate(
                   MutationOptions(
                       documentNode: gql(updateCategory),
                       variables: {
@@ -114,7 +115,8 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
               child: Text("ဖျက်မည်"),
               onPressed: () async {
                 print(id);
-                QueryResult resultData = await graphQLClient.mutate(
+                GraphQLClient _client = graphQLConfiguration.clientToQuery();
+                QueryResult resultData = await _client.mutate(
                   MutationOptions(
                       documentNode: gql(deleteCategory),
                       variables: {

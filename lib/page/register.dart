@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
+import 'package:bossi_pos/graphql/graphQLConf.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bossi_pos/widgets/showe-dialog.dart';
@@ -38,6 +38,8 @@ class Category {
 }
 
 class _RegisterState extends State<RegisterPage> {
+   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+
   String msg;
   var _nameController = new TextEditingController();
   var _shopController = new TextEditingController();
@@ -62,11 +64,12 @@ class _RegisterState extends State<RegisterPage> {
     super.initState();
     _myActivities = [];
     _myActivitiesResult = '';
-    fillList(context);
+    categoryList(context);
   }
 
-  void fillList(context) async {
-    QueryResult resultCat = await graphQLClient.query(QueryOptions(
+  void categoryList(context) async {
+    GraphQLClient _client = graphQLConfiguration.clientToQuery();
+    QueryResult resultCat = await _client.query(QueryOptions(
       documentNode: gql(category),
     ));
 

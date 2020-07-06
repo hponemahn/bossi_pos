@@ -1,8 +1,9 @@
-import 'package:bossi_pos/graphql/nonW-graphql.dart';
+import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:bossi_pos/graphql/graphql_string.dart';
 
+GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 void asyncInputDialog(BuildContext context)  {
   String teamName = '';
    showDialog<String>(
@@ -28,7 +29,8 @@ void asyncInputDialog(BuildContext context)  {
           FlatButton(
             child: Text('Add'),
             onPressed: () async{
-              QueryResult resultData = await graphQLClient.mutate(
+              GraphQLClient _client = graphQLConfiguration.clientToQuery();
+              QueryResult resultData = await _client.mutate(
                 MutationOptions(documentNode:gql(categoryInsert),variables:{
                   "name":teamName.toString()
                 }),
