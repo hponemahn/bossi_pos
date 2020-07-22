@@ -293,7 +293,7 @@ class _OrderScreenState extends State<OrderScreen> {
               padding: EdgeInsets.fromLTRB(140, 50, 140, 40),
               child: RaisedButton(
                 onPressed: () {
-                  _cart.clear();
+                  _cart.confirm().then((value) => _cart.clear());
                   Navigator.pushNamed(context, '/');
                 },
                 color: Theme.of(context).accentColor,
