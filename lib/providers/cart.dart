@@ -1,4 +1,7 @@
+import 'package:bossi_pos/graphql/graphqlConf.dart';
+import 'package:bossi_pos/graphql/orderQueryMutation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CartItem {
   final String id;
@@ -6,7 +9,11 @@ class CartItem {
   final int qty;
   final double price;
 
-  CartItem({@required this.id, @required this.name, @required this.qty, @required this.price});
+  CartItem(
+      {@required this.id,
+      @required this.name,
+      @required this.qty,
+      @required this.price});
 }
 
 class Cart with ChangeNotifier {
@@ -42,46 +49,57 @@ class Cart with ChangeNotifier {
     return _changedMoney;
   }
 
-  void add (String id, String name, double price) {
+  void add(String id, String name, double price) {
     if (_cart.containsKey(id)) {
-      _cart.update(id, (exitVal) => CartItem(id: exitVal.id, name: exitVal.name, qty: exitVal.qty + 1, price: exitVal.price));
+      _cart.update(
+          id,
+          (exitVal) => CartItem(
+              id: exitVal.id,
+              name: exitVal.name,
+              qty: exitVal.qty + 1,
+              price: exitVal.price));
     } else {
-      _cart.putIfAbsent(id, () => CartItem(id: id, name: name, qty: 1, price: price));
+      _cart.putIfAbsent(
+          id, () => CartItem(id: id, name: name, qty: 1, price: price));
     }
     notifyListeners();
   }
 
-  void remove (String id, String name, double price) {
+  void remove(String id, String name, double price) {
     if (_cart[id].qty == 1) {
       _cart.remove(id);
     } else {
-      _cart.update(id, (exitVal) => CartItem(id: exitVal.id, name: exitVal.name, qty: exitVal.qty - 1, price: exitVal.price));
-    } 
+      _cart.update(
+          id,
+          (exitVal) => CartItem(
+              id: exitVal.id,
+              name: exitVal.name,
+              qty: exitVal.qty - 1,
+              price: exitVal.price));
+    }
 
     notifyListeners();
   }
 
-  void clear () {
+  void clear() {
     _cart = {};
     notifyListeners();
   }
 
-  void changeMoney (double val) {
-    
+  void changeMoney(double val) {
     _debit = val;
 
     if (val > totalAmount) {
-      _changedMoney = val - totalAmount;  
+      _changedMoney = val - totalAmount;
     } else {
       _changedMoney = 0.0;
     }
     notifyListeners();
   }
 
-  void qtyChangeMoney () {
-
+  void qtyChangeMoney() {
     if (_debit > totalAmount) {
-      _changedMoney = _debit - totalAmount; 
+      _changedMoney = _debit - totalAmount;
     } else {
       _changedMoney = 0.0;
     }
@@ -93,4 +111,46 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> confirm() async {
+
+    List _orderData = [];
+
+    _cart.forEach((key, value) {
+      OrderItem _orI = OrderItem(
+        productId: int.parse(value.id),
+        qty: value.qty,
+        price: value.price
+      );
+      _orderData.add(_orI);
+    });
+
+    GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+    OrderQueryMutation addMutation = OrderQueryMutation();
+    try {
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.mutate(
+        MutationOptions(
+          documentNode: gql(addMutation.addOrder(totalAmount, DateTime.now().toString(), _orderData)),
+        ),
+      );
+
+      print(result.exception);
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+}
+
+class OrderItem {
+  final int productId;
+  final int qty;
+  final double price;
+
+  OrderItem(
+      {@required this.productId,
+      @required this.qty,
+      @required this.price});
+
+  @override toString() => '{product_id: $productId, qty: $qty, price: $price}';
 }
