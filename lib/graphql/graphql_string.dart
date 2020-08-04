@@ -39,8 +39,8 @@ String states = r"""
                   """;
 
 String townships = r"""
-                      query townships{
-                        townships{
+                      query townships($state_id:String){
+                        townships(state_id:$state_id){
                           id
                           name
                         }
@@ -147,7 +147,7 @@ String simpleSingup=r"""
                             id
                             name
                             email
-                            
+                            api_token
                           }
                         }
                       """; 

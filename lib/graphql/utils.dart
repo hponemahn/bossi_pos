@@ -4,6 +4,7 @@ import 'dart:convert';
 String name = '';
 String email = '';
 String accessToken = '';
+String stateId;
 
 String pro_id = '';
 String pro_name = '';

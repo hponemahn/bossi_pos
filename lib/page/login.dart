@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:bossi_pos/widgets/showe-dialog.dart';
@@ -177,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 80.0),
                       emailField,
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 15.0),
                       passwordField,
                       SizedBox(height: 20.0),
                       Padding(

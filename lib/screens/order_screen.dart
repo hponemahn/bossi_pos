@@ -294,7 +294,8 @@ class _OrderScreenState extends State<OrderScreen> {
               child: RaisedButton(
                 onPressed: () {
                   _cart.clear();
-                  Navigator.pushNamed(context, '/');
+                  // Navigator.pushNamed(context, '/');
+                   Navigator.pushNamed(context, '/sellscreen');
                 },
                 color: Theme.of(context).accentColor,
                 child: Text("Done", style: Theme.of(context).textTheme.button),

@@ -38,7 +38,7 @@ class Category {
 }
 
 class _RegisterState extends State<RegisterPage> {
-   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
   String msg;
   var _nameController = new TextEditingController();
@@ -58,6 +58,8 @@ class _RegisterState extends State<RegisterPage> {
   Color default_color = Colors.transparent;
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+
+  bool visibal = false;
 
   @override
   void initState() {
@@ -93,6 +95,9 @@ class _RegisterState extends State<RegisterPage> {
   var dropdownValue;
   var droptownshipValue;
 
+  List<String> _roles = ['Admin', 'Staff'];
+  String _selectedRole;
+
   @override
   Widget build(BuildContext context) {
     Widget _header() {
@@ -126,6 +131,31 @@ class _RegisterState extends State<RegisterPage> {
       );
     }
 
+    Widget role() {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 15.0),
+        margin: EdgeInsets.only(
+          top: 18.0,
+        ),
+        child: DropdownButton(
+          hint: Text('Please choose you role'),
+          value: _selectedRole,
+          onChanged: (newRole) {
+            setState(() {
+              _selectedRole = newRole;
+            });
+          },
+          isExpanded: true,
+          items: _roles.map((location) {
+            return DropdownMenuItem(
+              child: new Text(location),
+              value: location,
+            );
+          }).toList(),
+        ),
+      );
+    }
+
     state() {
       return Query(
           options: QueryOptions(
@@ -155,6 +185,8 @@ class _RegisterState extends State<RegisterPage> {
                 onChanged: (newValue) {
                   setState(() {
                     dropdownValue = newValue;
+                    utils.stateId = dropdownValue;
+                    visibal = true;
                   });
                 },
                 isExpanded: true,
@@ -167,10 +199,11 @@ class _RegisterState extends State<RegisterPage> {
     Widget township() {
       return Query(
           options: QueryOptions(
-            documentNode: gql(townships),
-          ),
+              documentNode: gql(townships),
+              variables: {'state_id': utils.stateId}),
           builder: (QueryResult townshipResult,
               {VoidCallback refetch, FetchMore fetchMore}) {
+            // print(townshipResult.data);
             List townshipList = townshipResult.data == null
                 ? null
                 : townshipResult.data['townships'];
@@ -179,25 +212,28 @@ class _RegisterState extends State<RegisterPage> {
               margin: EdgeInsets.only(
                 top: 18.0,
               ),
-              child: DropdownButton(
-                hint: townshipResult.data == null
-                    ? Text("Loading...")
-                    : Text("မြို့နယ်"),
-                items: townshipResult.data == null
-                    ? null
-                    : townshipList.map((item) {
-                        return new DropdownMenuItem(
-                          child: new Text(item['name']),
-                          value: item['id'].toString(),
-                        );
-                      }).toList(),
-                onChanged: (townshipValue) {
-                  setState(() {
-                    droptownshipValue = townshipValue;
-                  });
-                },
-                isExpanded: true,
-                value: droptownshipValue,
+              child: Visibility(
+                visible: visibal,
+                child: DropdownButton(
+                  hint: townshipResult.data == null
+                      ? Text("Loading...")
+                      : Text("မြို့နယ်"),
+                  items: townshipResult.data == null
+                      ? null
+                      : townshipList.map((item) {
+                          return new DropdownMenuItem(
+                            child: new Text(item['name']),
+                            value: item['id'].toString(),
+                          );
+                        }).toList(),
+                  onChanged: (townshipValue) {
+                    setState(() {
+                      droptownshipValue = townshipValue;
+                    });
+                  },
+                  isExpanded: true,
+                  value: droptownshipValue,
+                ),
               ),
             );
           });
@@ -226,6 +262,7 @@ class _RegisterState extends State<RegisterPage> {
     final phoneFeild = TextFormField(
       controller: _phoneController,
       enableInteractiveSelection: false,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
           hintText: "ဖုန်းနံပါတ်",
           labelText: 'ဖုန်းနံပါတ်',
@@ -252,7 +289,8 @@ class _RegisterState extends State<RegisterPage> {
           hintText: "လျှို့ဝှက်နံပါတ်",
           labelText: 'လျှို့ဝှက်နံပါတ်',
           labelStyle: new TextStyle(color: const Color(0xFF424242))),
-      validator: (val) => val.length < 6 ? 'လျှို့ဝှက်နံပါတ်အနည်းဆုံး၆လုံးတည့်ရပါမည်' : null,
+      validator: (val) =>
+          val.length < 6 ? 'လျှို့ဝှက်နံပါတ်အနည်းဆုံး၆လုံးတည့်ရပါမည်' : null,
     );
 
     final addFeild = TextFormField(
@@ -277,6 +315,7 @@ class _RegisterState extends State<RegisterPage> {
                   print("error");
                 } else {
                   print(resultData.data['signup']['name']);
+                  utils.accessToken = resultData.data['signup']['api_token'];
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => SellScreen()));
                 }
@@ -356,105 +395,108 @@ class _RegisterState extends State<RegisterPage> {
                               title: passFeild,
                             ),
                           ],
-                          township(),
-                          state(),
                           new ListTile(
                             title: addFeild,
                           ),
+                          role(),
+                          state(),
+                          township(),
                           SizedBox(height: 10.0),
-                          utils.email == ''
-                              ? Center(
-                                  child: Container(
-                                      height: 40,
-                                      child: Material(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(90.0)),
-                                        color: Colors.purple[800],
-                                        child: MaterialButton(
-                                          minWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
-                                          padding: EdgeInsets.fromLTRB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                          onPressed: () {
-                                            if (droptownshipValue == null) {
-                                              msg =
-                                                  "choose township, Please township";
-                                              showLongToast(msg);
-                                            } else {
-                                              // showLoading(context);
-                                              runMutation(<String, dynamic>{
-                                                "name": _nameController.text,
-                                                "business_name":
-                                                    _shopController.text,
-                                                "business_cat_id":
-                                                    _myActivities.toString(),
-                                                "phone": _phoneController.text,
-                                                "email": _emailController.text,
-                                                "password": _password.text,
-                                                "township_id":
-                                                    droptownshipValue,
-                                                "state_id": dropdownValue,
-                                                "address": _addController.text
-                                              });
-                                            }
-                                          },
-                                          child: Text('Registr',
-                                              textAlign: TextAlign.center,
-                                              style: style.copyWith(
-                                                color: Colors.white,
-                                              )),
-                                        ),
-                                      )),
-                                )
-                              : Center(
-                                  child: Container(
-                                      height: 40,
-                                      child: Material(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(90.0)),
-                                        color: Colors.purple[800],
-                                        child: MaterialButton(
-                                          minWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2,
-                                          padding: EdgeInsets.fromLTRB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                          onPressed: () {
-                                            if (droptownshipValue == null) {
-                                              msg =
-                                                  "choose township, Please township";
-                                              showLongToast(msg);
-                                            } else {
-                                              // showLoading(context);
-                                              runFbMutation(<String, dynamic>{
-                                                "name": utils.name,
-                                                "business_name":
-                                                    _shopController.text,
-                                                "business_cat_id":
-                                                    _myActivities.toString(),
-                                                "phone": _phoneController.text,
-                                                "email": utils.email,
-                                                "township_id":
-                                                    droptownshipValue,
-                                                "state_id": dropdownValue,
-                                                "address": _addController.text,
-                                                "api_token":
-                                                    utils.accessToken
-                                              });
-                                            }
-                                          },
-                                          child: Text('Registr',
-                                              textAlign: TextAlign.center,
-                                              style: style.copyWith(
-                                                color: Colors.white,
-                                              )),
-                                        ),
-                                      )),
-                                ),
-                          SizedBox(height: 10.0),
+                          Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                            utils.email == ''
+                                ? Container(
+                                    height: 40,
+                                    child: Material(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(90.0)),
+                                      color: Colors.purple[800],
+                                      child: MaterialButton(
+                                        minWidth:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        padding: EdgeInsets.fromLTRB(
+                                            0.0, 0.0, 0.0, 0.0),
+                                        onPressed: () {
+                                          if (droptownshipValue == null) {
+                                            msg =
+                                                "choose township, Please township";
+                                            showLongToast(msg);
+                                          } else {
+                                            // showLoading(context);
+                                            runMutation(<String, dynamic>{
+                                              "name": _nameController.text,
+                                              "business_name":
+                                                  _shopController.text,
+                                              "business_cat_id":
+                                                  _myActivities.toString(),
+                                              "phone": _phoneController.text,
+                                              "email": _emailController.text,
+                                              "password": _password.text,
+                                              "township_id": droptownshipValue,
+                                              "state_id": dropdownValue,
+                                              "address": _addController.text
+                                            });
+                                          }
+                                        },
+                                        child: Text('Registr',
+                                            textAlign: TextAlign.center,
+                                            style: style.copyWith(
+                                              color: Colors.white,
+                                            )),
+                                      ),
+                                    ))
+                                : Container(
+                                    height: 40,
+                                    child: Material(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(90.0)),
+                                      color: Colors.purple[800],
+                                      child: MaterialButton(
+                                        minWidth:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        padding: EdgeInsets.fromLTRB(
+                                            0.0, 0.0, 0.0, 0.0),
+                                        onPressed: () {
+                                          if (droptownshipValue == null) {
+                                            msg =
+                                                "choose township, Please township";
+                                            showLongToast(msg);
+                                          } else {
+                                            // showLoading(context);
+                                            runFbMutation(<String, dynamic>{
+                                              "name": utils.name,
+                                              "business_name":
+                                                  _shopController.text,
+                                              "business_cat_id":
+                                                  _myActivities.toString(),
+                                              "phone": _phoneController.text,
+                                              "email": utils.email,
+                                              "township_id": droptownshipValue,
+                                              "state_id": dropdownValue,
+                                              "address": _addController.text,
+                                              "api_token": utils.accessToken
+                                            });
+                                          }
+                                        },
+                                        child: Text('Registr',
+                                            textAlign: TextAlign.center,
+                                            style: style.copyWith(
+                                              color: Colors.white,
+                                            )),
+                                      ),
+                                    )),
+                            Expanded(
+                                child: RaisedButton(
+                                    onPressed: () {},
+                                    color: Color(0xff0000ff),
+                                    child: Text(
+                                      "Left Button",
+                                      style: TextStyle(color: Colors.white),
+                                    ))),
+                          ])
                         ]));
                   });
             }));
