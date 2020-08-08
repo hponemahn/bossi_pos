@@ -1,3 +1,4 @@
+import 'package:bossi_pos/charts/ordinal_sales_model.dart';
 import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:bossi_pos/graphql/orderQueryMutation.dart';
 import 'package:flutter/foundation.dart';
@@ -17,9 +18,13 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
   Map<String, CartItem> _cart = {};
   double _changedMoney = 0.0;
   double _debit = 0.0;
+  List<OrdinalSalesModel> _ordinalSalesData = [];
+
+  List<OrdinalSalesModel> get getOrdinalSaleData => [..._ordinalSalesData];
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -112,29 +117,64 @@ class Cart with ChangeNotifier {
   }
 
   Future<void> confirm() async {
-
     List _orderData = [];
 
     _cart.forEach((key, value) {
       OrderItem _orI = OrderItem(
-        productId: int.parse(value.id),
-        qty: value.qty,
-        price: value.price
-      );
+          productId: int.parse(value.id), qty: value.qty, price: value.price);
       _orderData.add(_orI);
     });
 
-    GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
     OrderQueryMutation addMutation = OrderQueryMutation();
     try {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.mutate(
         MutationOptions(
-          documentNode: gql(addMutation.addOrder(totalAmount, DateTime.now().toString(), _orderData)),
+          documentNode: gql(addMutation.addOrder(
+              totalAmount, DateTime.now().toString(), _orderData)),
         ),
       );
 
       print(result.exception);
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchOrderSevenData() async {
+    try {
+      final List<OrdinalSalesModel> loadedProducts = [];
+
+      OrderQueryMutation queryMutation = OrderQueryMutation();
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getOrderForSevenDaysData()),
+          // document: queryMutation.getAll(),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["orderForSevenDays"].length; i++) {
+          
+          loadedProducts.add(
+            OrdinalSalesModel(
+                total: result.data["orderForSevenDays"][i]['total'].toString(),
+                orderDate: result.data["orderForSevenDays"][i]['order_date']
+                    .toString()
+                    .substring(0, 3)),
+          );
+        }
+
+        _ordinalSalesData = loadedProducts;
+        // print("ordinal");
+        // print(_ordinalSalesData);
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
     } catch (e) {
       print(e);
       throw (e);
@@ -148,9 +188,8 @@ class OrderItem {
   final double price;
 
   OrderItem(
-      {@required this.productId,
-      @required this.qty,
-      @required this.price});
+      {@required this.productId, @required this.qty, @required this.price});
 
-  @override toString() => '{product_id: $productId, qty: $qty, price: $price}';
+  @override
+  toString() => '{product_id: $productId, qty: $qty, price: $price}';
 }

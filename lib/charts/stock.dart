@@ -28,7 +28,7 @@ class Stock extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.BarChart(
       seriesList,
-      animate: true,
+      animate: false,
       animationDuration: Duration(seconds: 5),
       vertical: false,
       // Set a bar label decorator.

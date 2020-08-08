@@ -71,7 +71,7 @@ class NetEarnings extends StatelessWidget {
         hint: 'Press and hold to enable explore',
         child: new charts.BarChart(
           seriesList,
-          animate: true,
+          animate: false,
           animationDuration: Duration(seconds: 5),
           // To prevent conflict with the select nearest behavior that uses the
           // tap gesture, turn off default interactions when the user is using

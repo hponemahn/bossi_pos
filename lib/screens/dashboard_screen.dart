@@ -1,10 +1,12 @@
 import 'package:bossi_pos/charts/buy_summary.dart';
-import 'package:bossi_pos/charts/daily_summary.dart';
+import 'package:bossi_pos/charts/daily_sum.dart';
 import 'package:bossi_pos/charts/net_earnings.dart';
 import 'package:bossi_pos/charts/sales_summary.dart';
 import 'package:bossi_pos/charts/stock.dart';
+import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/widgets/drawlet.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const routeName = "dashboard";
@@ -14,8 +16,16 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
+  @override
+  void didChangeDependencies() {
+    Provider.of<Cart>(context).fetchOrderSevenData();
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('အစီရင်ခံစာ'),
@@ -28,7 +38,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(16.0),
               child: _buildTitledContainer("နေ့လိုက်ရောင်းအား",
                   child: Container(
-                      height: 200, child: DailySummary.withSampleData())),
+                      height: 200, child: DailySum())),
             ),
           ),
           SliverToBoxAdapter(

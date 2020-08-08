@@ -1,6 +1,16 @@
 class OrderQueryMutation {
-  String addOrder(double total, String orderDate, List products) {
+  String getOrderForSevenDaysData() {
+    return """ 
+      {
+  orderForSevenDays {
+    total
+    order_date
+  }
+}
+    """;
+  }
 
+  String addOrder(double total, String orderDate, List products) {
     return """
     
           mutation {
