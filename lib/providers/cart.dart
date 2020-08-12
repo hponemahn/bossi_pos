@@ -1,3 +1,4 @@
+import 'package:bossi_pos/charts/net_model.dart';
 import 'package:bossi_pos/charts/ordinal_sales_model.dart';
 import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:bossi_pos/graphql/orderQueryMutation.dart';
@@ -19,12 +20,18 @@ class CartItem {
 
 class Cart with ChangeNotifier {
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+  OrderQueryMutation queryMutation = OrderQueryMutation();
+
   Map<String, CartItem> _cart = {};
   double _changedMoney = 0.0;
   double _debit = 0.0;
+
+  // for charts
   List<OrdinalSalesModel> _ordinalSalesData = [];
+  List<NetModel> _netData = [];
 
   List<OrdinalSalesModel> get getOrdinalSaleData => [..._ordinalSalesData];
+  List<NetModel> get getNetData => [..._netData];
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -146,7 +153,6 @@ class Cart with ChangeNotifier {
     try {
       final List<OrdinalSalesModel> loadedProducts = [];
 
-      OrderQueryMutation queryMutation = OrderQueryMutation();
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
@@ -170,6 +176,50 @@ class Cart with ChangeNotifier {
         _ordinalSalesData = loadedProducts;
         // print("ordinal");
         // print(_ordinalSalesData);
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchNetData() async {
+    try {
+      final List<NetModel> loadedNetData = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getNetForFiveMonthsData()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["netForFiveMonths"].length; i++) {
+          
+          loadedNetData.add(
+            // OrdinalSalesModel(
+            //     total: result.data["netForFiveMonths"][i]['total'].toString(),
+            //     orderDate: result.data["netForFiveMonths"][i]['order_date']
+            //         .toString()
+            //         .substring(0, 3)),
+
+            NetModel(
+              year: result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year'],
+              sales: result.data["netForFiveMonths"][i]['total'].toString()
+            ),
+          );
+
+          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
+          // print(result.data["netForFiveMonths"][i]['total']);
+        }
+
+        _netData = loadedNetData;
+        // print("ordinal");
         notifyListeners();
       } else {
         print('exception');

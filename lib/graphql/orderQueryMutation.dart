@@ -10,6 +10,18 @@ class OrderQueryMutation {
     """;
   }
 
+  String getNetForFiveMonthsData() {
+    return """ 
+      {
+  netForFiveMonths {
+    total
+    year
+    month
+  }
+}
+    """;
+  }
+
   String addOrder(double total, String orderDate, List products) {
     return """
     

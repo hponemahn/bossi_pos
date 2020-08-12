@@ -1,5 +1,6 @@
 import 'package:bossi_pos/charts/buy_summary.dart';
 import 'package:bossi_pos/charts/daily_sum.dart';
+import 'package:bossi_pos/charts/net_earn.dart';
 import 'package:bossi_pos/charts/net_earnings.dart';
 import 'package:bossi_pos/charts/sales_summary.dart';
 import 'package:bossi_pos/charts/stock.dart';
@@ -20,6 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void didChangeDependencies() {
     Provider.of<Cart>(context).fetchOrderSevenData();
+    Provider.of<Cart>(context).fetchNetData();
     super.didChangeDependencies();
   }
 
@@ -39,6 +41,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: _buildTitledContainer("နေ့လိုက်ရောင်းအား",
                   child: Container(
                       height: 200, child: DailySum())),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildTitledContainer("အရှုံး/အမြတ်",
+                  child: Container(
+                      height: 200, child: NetEarn())),
             ),
           ),
           SliverToBoxAdapter(
