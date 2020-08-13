@@ -26,7 +26,7 @@ class BuySummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(seriesList,
-        animate: true,
+        animate: false,
         animationDuration: Duration(seconds: 5),
         behaviors: [
           new charts.DatumLegend(

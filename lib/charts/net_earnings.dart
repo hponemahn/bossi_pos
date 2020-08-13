@@ -1,3 +1,4 @@
+import 'package:bossi_pos/charts/net_model.dart';
 /// Example of a bar chart with domain selection A11y behavior.
 ///
 /// The OS screen reader (TalkBack / VoiceOver) setting must be turned on, or
@@ -46,7 +47,7 @@ class NetEarnings extends StatelessWidget {
   String vocalizeDomainAndMeasures(List<charts.SeriesDatum> seriesDatums) {
     final buffer = new StringBuffer();
 
-    // The datum's type in this case is [OrdinalSales].
+    // The datum's type in this case is [NetModel].
     // So we can access year and sales information here.
     buffer.write(seriesDatums.first.datum.year);
 
@@ -71,7 +72,7 @@ class NetEarnings extends StatelessWidget {
         hint: 'Press and hold to enable explore',
         child: new charts.BarChart(
           seriesList,
-          animate: true,
+          animate: false,
           animationDuration: Duration(seconds: 5),
           // To prevent conflict with the select nearest behavior that uses the
           // tap gesture, turn off default interactions when the user is using
@@ -80,75 +81,52 @@ class NetEarnings extends StatelessWidget {
           defaultInteractions: !MediaQuery.of(context).accessibleNavigation,
           behaviors: [
             new charts.DomainA11yExploreBehavior(
-              // Callback for generating the message that is vocalized.
-              // An example of how to use is in [vocalizeDomainAndMeasures].
-              // If none is set, the default only vocalizes the domain value.
               vocalizationCallback: vocalizeDomainAndMeasures,
-              // The following settings are optional, but shown here for
-              // demonstration purchases.
-              // [exploreModeTrigger] Default is press and hold, can be
-              // changed to tap.
               exploreModeTrigger: charts.ExploreModeTrigger.pressHold,
-              // [exploreModeEnabledAnnouncement] Optionally notify the OS
-              // when explore mode is enabled.
               exploreModeEnabledAnnouncement: 'Explore mode enabled',
-              // [exploreModeDisabledAnnouncement] Optionally notify the OS
-              // when explore mode is disabled.
               exploreModeDisabledAnnouncement: 'Explore mode disabled',
-              // [minimumWidth] Default and minimum is 1.0. This is the
-              // minimum width of the screen reader bounding box. The bounding
-              // box width is calculated based on the domain axis step size.
-              // Minimum width will be used if the step size is smaller.
               minimumWidth: 1.0,
             ),
-            // Optionally include domain highlighter as a behavior.
-            // This behavior is included in this example to show that when an
-            // a11y node has focus, the chart's internal selection model is
-            // also updated.
             new charts.DomainHighlighter(charts.SelectionModelType.info),
           ],
         ));
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<OrdinalSales, String>> _createSampleData() {
+  static List<charts.Series<NetModel, String>> _createSampleData() {
     final mobileData = [
-      new OrdinalSales('Jan 2020', 25),
-      new OrdinalSales('Feb 2020', 100),
-      new OrdinalSales('Mar 2020', 75),
+      new NetModel(year: 'Jan 2020', sales: "25"),
+      new NetModel(year: 'Feb 2020', sales: "100"),
+      new NetModel(year: 'Mar 2020', sales: "75"),
+      new NetModel(year: 'Apr 2020', sales: "10"),
+      new NetModel(year: 'May 2020', sales: "50"),
     ];
 
     final tabletData = [
       // Purposely missing data to show that only measures that are available
       // are vocalized.
-      new OrdinalSales('Jan 2020', 75),
-      new OrdinalSales('Feb 2020', 10),
-      new OrdinalSales('Mar 2020', 50),
+      new NetModel(year: 'Jan 2020', sales: "75"),
+      new NetModel(year: 'Feb 2020', sales: "10"),
+      new NetModel(year: 'Mar 2020', sales: "50"),
+      new NetModel(year: 'Apr 2020', sales: "100"),
+      new NetModel(year: 'May 2020', sales: "90"),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
-        id: 'Mobile Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: mobileData,
-      ),
-      new charts.Series<OrdinalSales, String>(
+      new charts.Series<NetModel, String>(
         id: 'Tablet Sales',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
+        domainFn: (NetModel sales, _) => sales.year,
+        measureFn: (NetModel sales, _) => double.parse(sales.sales),
         data: tabletData,
+      ),
+      new charts.Series<NetModel, String>(
+        id: 'Mobile Sales',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (NetModel sales, _) => sales.year,
+        measureFn: (NetModel sales, _) => double.parse(sales.sales),
+        data: mobileData,
       )
     ];
   }
-}
-
-/// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
-
-  OrdinalSales(this.year, this.sales);
 }
