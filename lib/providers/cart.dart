@@ -29,9 +29,11 @@ class Cart with ChangeNotifier {
   // for charts
   List<OrdinalSalesModel> _ordinalSalesData = [];
   List<NetModel> _netData = [];
+  List<NetModel> _lostData = [];
 
   List<OrdinalSalesModel> get getOrdinalSaleData => [..._ordinalSalesData];
   List<NetModel> get getNetData => [..._netData];
+  List<NetModel> get getLostData => [..._lostData];
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -174,8 +176,6 @@ class Cart with ChangeNotifier {
         }
 
         _ordinalSalesData = loadedProducts;
-        // print("ordinal");
-        // print(_ordinalSalesData);
         notifyListeners();
       } else {
         print('exception');
@@ -219,6 +219,50 @@ class Cart with ChangeNotifier {
         }
 
         _netData = loadedNetData;
+        // print("ordinal");
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchLostData() async {
+    try {
+      final List<NetModel> loadedLostData = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getLostForFiveMonthsData()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["lostForFiveMonths"].length; i++) {
+          
+          loadedLostData.add(
+            // OrdinalSalesModel(
+            //     total: result.data["netForFiveMonths"][i]['total'].toString(),
+            //     orderDate: result.data["netForFiveMonths"][i]['order_date']
+            //         .toString()
+            //         .substring(0, 3)),
+
+            NetModel(
+              year: result.data["lostForFiveMonths"][i]['month'] + " " + result.data["lostForFiveMonths"][i]['year'],
+              sales: result.data["lostForFiveMonths"][i]['total'].toString()
+            ),
+          );
+
+          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
+          // print(result.data["netForFiveMonths"][i]['total']);
+        }
+
+        _lostData = loadedLostData;
         // print("ordinal");
         notifyListeners();
       } else {

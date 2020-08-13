@@ -22,6 +22,18 @@ class OrderQueryMutation {
     """;
   }
 
+  String getLostForFiveMonthsData() {
+    return """ 
+      {
+  lostForFiveMonths {
+    total
+    year
+    month
+  }
+}
+    """;
+  }
+
   String addOrder(double total, String orderDate, List products) {
     return """
     

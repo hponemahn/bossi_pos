@@ -26,7 +26,9 @@ class NetEarn extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final List<NetModel> _netData = Provider.of<Cart>(context, listen: false).getNetData;
+    Cart _cart = Provider.of<Cart>(context, listen: false);
+    final List<NetModel> _netData = _cart.getNetData;
+    final List<NetModel> _lostData = _cart.getLostData;
 
     print("daily summ build");
 
@@ -37,7 +39,7 @@ class NetEarn extends StatelessWidget {
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         domainFn: (NetModel sales, _) => sales.year,
         measureFn: (NetModel sales, _) => double.parse(sales.sales),
-        data: _netData,
+        data: _lostData,
       ),
       new charts.Series<NetModel, String>(
         id: 'Mobile Sales',

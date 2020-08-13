@@ -22,6 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void didChangeDependencies() {
     Provider.of<Cart>(context).fetchOrderSevenData();
     Provider.of<Cart>(context).fetchNetData();
+    Provider.of<Cart>(context).fetchLostData();
     super.didChangeDependencies();
   }
 
