@@ -110,6 +110,9 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    print("cat screen");
+
     List<Category> _cats = Provider.of<Categories>(context).categories;
 
     return Scaffold(

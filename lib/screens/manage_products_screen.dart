@@ -36,6 +36,8 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
   @override
   Widget build(BuildContext context) {
     
+    print("product screen");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("ကုန်ပစ္စည်းစာရင်း"),
