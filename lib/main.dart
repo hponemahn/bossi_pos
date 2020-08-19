@@ -10,12 +10,7 @@ import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
-
-import 'graphql/graphQLConf.dart';
-
-GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
 void main() => runApp(MyApp());
 
@@ -23,9 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GraphQLProvider(
-        client: graphQLConfiguration.client,
-        child: CacheProvider(child: 
+    return 
     
     MultiProvider(providers: [
       ChangeNotifierProvider.value(value: Products()),
@@ -55,10 +48,7 @@ class MyApp extends StatelessWidget {
         ProductEditScreen.routeName: (ctx) => ProductEditScreen(),
         ManageCategoryScreen.routeName: (ctx) => ManageCategoryScreen(),
       },
-    ),),
-
-    ),
-      );
+    ),);
 
   }
 }
