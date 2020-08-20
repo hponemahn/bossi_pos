@@ -1,4 +1,4 @@
-import 'package:bossi_pos/graphql/graphQLConf.dart';
+import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:bossi_pos/graphql/productQueryMutation.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:flutter/material.dart';

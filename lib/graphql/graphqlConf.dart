@@ -2,15 +2,15 @@ import "package:flutter/material.dart";
 import "package:graphql_flutter/graphql_flutter.dart";
 import '../graphql/utils.dart' as utils;
 
- final HttpLink httpLink = HttpLink(
-    uri: 'http://172.10.0.195:8000/graphql',
-  );
+final HttpLink httpLink = HttpLink(
+  uri: 'http://172.10.0.195:8000/graphql',
+);
 
-  final AuthLink authLink = AuthLink(
-    getToken: () async => utils.getToken(),
-  );
+final AuthLink authLink = AuthLink(
+  getToken: () async => utils.getToken(),
+);
 
-  final Link link = authLink.concat(httpLink);
+final Link link = authLink.concat(httpLink);
 
 class GraphQLConfiguration {
   // static HttpLink httpLink = HttpLink(
@@ -32,7 +32,4 @@ class GraphQLConfiguration {
       link: link,
     );
   }
-
 }
-
-
