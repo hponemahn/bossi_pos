@@ -1,7 +1,7 @@
 import 'package:bossi_pos/charts/buy_summary.dart';
 import 'package:bossi_pos/charts/daily_sum.dart';
 import 'package:bossi_pos/charts/net_earn.dart';
-import 'package:bossi_pos/charts/sales_summary.dart';
+import 'package:bossi_pos/charts/sale_sum.dart';
 import 'package:bossi_pos/charts/stock.dart';
 import 'package:flutter/material.dart';
 
@@ -11,48 +11,45 @@ class DashboardBodyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildTitledContainer("နေ့လိုက်ရောင်းအား",
-                  child: Container(
-                      height: 200, child: DailySum())),
-            ),
+      slivers: <Widget>[
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _buildTitledContainer("နေ့လိုက်ရောင်းအား",
+                child: Container(height: 200, child: DailySum())),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildTitledContainer("အရှုံး/အမြတ်",
-                  child: Container(
-                      height: 200, child: NetEarn())),
-            ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _buildTitledContainer("အရှုံး/အမြတ်",
+                child: Container(height: 200, child: NetEarn())),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildTitledContainer("အရောင်း",
-                  child: Container(
-                      height: 200, child: SalesSummary.withSampleData())),
-            ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _buildTitledContainer("အရောင်း",
+                child: Container(height: 200, child: SaleSum())),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildTitledContainer("ကုန်ပစ္စည်း",
-                  child: Container(height: 200, child: Stock.withSampleData())),
-            ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _buildTitledContainer("ကုန်ပစ္စည်း",
+                child: Container(height: 200, child: Stock.withSampleData())),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildTitledContainer("အ၀ယ်",
-                  child: Container(
-                      height: 200, child: BuySummary.withSampleData())),
-            ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _buildTitledContainer("အ၀ယ်",
+                child:
+                    Container(height: 200, child: BuySummary.withSampleData())),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Container _buildTitledContainer(String title, {Widget child, double height}) {
@@ -75,9 +72,13 @@ class DashboardBodyScreen extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
               ),
               GestureDetector(
-                child: Text('ပိုမိုသိရှိရန်', style: TextStyle(fontSize: 12, decoration: TextDecoration.underline,
-                // decorationStyle: TextDecorationStyle.dotted,
-                ),),
+                child: Text(
+                  'ပိုမိုသိရှိရန်',
+                  style: TextStyle(
+                    fontSize: 12, decoration: TextDecoration.underline,
+                    // decorationStyle: TextDecorationStyle.dotted,
+                  ),
+                ),
                 onTap: () {
                   print('show more');
                 },

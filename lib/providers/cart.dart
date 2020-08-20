@@ -1,8 +1,10 @@
 import 'package:bossi_pos/charts/net_model.dart';
 import 'package:bossi_pos/charts/ordinal_sales_model.dart';
+import 'package:bossi_pos/charts/task_model.dart';
 import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:bossi_pos/graphql/orderQueryMutation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CartItem {
@@ -30,10 +32,12 @@ class Cart with ChangeNotifier {
   List<OrdinalSalesModel> _ordinalSalesData = [];
   List<NetModel> _netData = [];
   List<NetModel> _lostData = [];
+  List<TaskModel> _saleData = [];
 
   List<OrdinalSalesModel> get getOrdinalSaleData => [..._ordinalSalesData];
   List<NetModel> get getNetData => [..._netData];
   List<NetModel> get getLostData => [..._lostData];
+  List<TaskModel> get getSaleData => [..._saleData];
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -165,7 +169,6 @@ class Cart with ChangeNotifier {
 
       if (!result.hasException) {
         for (var i = 0; i < result.data["orderForSevenDays"].length; i++) {
-          
           loadedProducts.add(
             OrdinalSalesModel(
                 total: result.data["orderForSevenDays"][i]['total'].toString(),
@@ -200,7 +203,6 @@ class Cart with ChangeNotifier {
 
       if (!result.hasException) {
         for (var i = 0; i < result.data["netForFiveMonths"].length; i++) {
-          
           loadedNetData.add(
             // OrdinalSalesModel(
             //     total: result.data["netForFiveMonths"][i]['total'].toString(),
@@ -209,9 +211,10 @@ class Cart with ChangeNotifier {
             //         .substring(0, 3)),
 
             NetModel(
-              year: result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year'],
-              sales: result.data["netForFiveMonths"][i]['total'].toString()
-            ),
+                year: result.data["netForFiveMonths"][i]['month'] +
+                    " " +
+                    result.data["netForFiveMonths"][i]['year'],
+                sales: result.data["netForFiveMonths"][i]['total'].toString()),
           );
 
           // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
@@ -244,7 +247,6 @@ class Cart with ChangeNotifier {
 
       if (!result.hasException) {
         for (var i = 0; i < result.data["lostForFiveMonths"].length; i++) {
-          
           loadedLostData.add(
             // OrdinalSalesModel(
             //     total: result.data["netForFiveMonths"][i]['total'].toString(),
@@ -253,9 +255,10 @@ class Cart with ChangeNotifier {
             //         .substring(0, 3)),
 
             NetModel(
-              year: result.data["lostForFiveMonths"][i]['month'] + " " + result.data["lostForFiveMonths"][i]['year'],
-              sales: result.data["lostForFiveMonths"][i]['total'].toString()
-            ),
+                year: result.data["lostForFiveMonths"][i]['month'] +
+                    " " +
+                    result.data["lostForFiveMonths"][i]['year'],
+                sales: result.data["lostForFiveMonths"][i]['total'].toString()),
           );
 
           // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
@@ -263,6 +266,71 @@ class Cart with ChangeNotifier {
         }
 
         _lostData = loadedLostData;
+        // print("ordinal");
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchSaleData() async {
+    try {
+      final List<TaskModel> loadedSaleData = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getSaleForFourData()),
+        ),
+      );
+
+      if (!result.hasException) {
+        final _color = [
+          Color(0xff3366cc),
+          Color(0xff990099),
+          Color(0xff109618),
+          Color(0xfffdbe19)
+        ];
+        for (var i = 0; i < result.data["saleForFour"].length - 1; i++) {
+          String _name = "";
+          double _total;
+
+          if (result.data["saleForFour"][i]['name'] != null) {
+            _name = result.data["saleForFour"][i]['name'];
+          }
+
+          // final double _allTotal = result.data["saleForFour"][2]['all'];
+          // _total = (result.data["saleForFour"][i]['total'] / _allTotal) * 100;
+
+          print("percentage");
+          if (result.data["saleForFour"][i]['total'] != null) {
+            final lastElement = result.data["saleForFour"].length - 1;
+            _total = (result.data["saleForFour"][i]['total'] /
+                    result.data["saleForFour"][lastElement]['all']) *
+                100;
+            print(_total);
+          }
+
+          loadedSaleData.add(TaskModel(
+              task: _name,
+              taskvalue: double.parse(_total.toStringAsFixed(2)),
+              colorval: _color[i]
+              // year: result.data["saleForFour"][i]['month'] +
+              //     " " +
+              //     result.data["saleForFour"][i]['year'],
+              // sales: result.data["saleForFour"][i]['total'].toString()),
+              ));
+
+          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
+          // print(result.data["netForFiveMonths"][i]['total']);
+        }
+
+        _saleData = loadedSaleData;
         // print("ordinal");
         notifyListeners();
       } else {
