@@ -33,11 +33,13 @@ class Cart with ChangeNotifier {
   List<NetModel> _netData = [];
   List<NetModel> _lostData = [];
   List<TaskModel> _saleData = [];
+  List<TaskModel> _buyData = [];
 
   List<OrdinalSalesModel> get getOrdinalSaleData => [..._ordinalSalesData];
   List<NetModel> get getNetData => [..._netData];
   List<NetModel> get getLostData => [..._lostData];
   List<TaskModel> get getSaleData => [..._saleData];
+  List<TaskModel> get getBuyData => [..._buyData];
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -331,6 +333,71 @@ class Cart with ChangeNotifier {
         }
 
         _saleData = loadedSaleData;
+        // print("ordinal");
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchBuyData() async {
+    try {
+      final List<TaskModel> loadedBuyData = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getBuyForFourData()),
+        ),
+      );
+
+      if (!result.hasException) {
+        final _color = [
+          Color(0xff3366cc),
+          Color(0xffdc3912),
+          Color(0xff109618),
+          Color(0xfffdbe19)
+        ];
+        for (var i = 0; i < result.data["buyForFour"].length - 1; i++) {
+          String _name = "";
+          double _total;
+
+          if (result.data["buyForFour"][i]['name'] != null) {
+            _name = result.data["buyForFour"][i]['name'];
+          }
+
+          // final double _allTotal = result.data["buyForFour"][2]['all'];
+          // _total = (result.data["buyForFour"][i]['total'] / _allTotal) * 100;
+
+          print("percentage");
+          if (result.data["buyForFour"][i]['total'] != null) {
+            final lastElement = result.data["buyForFour"].length - 1;
+            _total = (result.data["buyForFour"][i]['total'] /
+                    result.data["buyForFour"][lastElement]['all']) *
+                100;
+            print(_total);
+          }
+
+          loadedBuyData.add(TaskModel(
+              task: _name,
+              taskvalue: double.parse(_total.toStringAsFixed(2)),
+              colorval: _color[i]
+              // year: result.data["buyForFour"][i]['month'] +
+              //     " " +
+              //     result.data["buyForFour"][i]['year'],
+              // sales: result.data["buyForFour"][i]['total'].toString()),
+              ));
+
+          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
+          // print(result.data["netForFiveMonths"][i]['total']);
+        }
+
+        _buyData = loadedBuyData;
         // print("ordinal");
         notifyListeners();
       } else {
