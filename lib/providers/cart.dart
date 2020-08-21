@@ -1,5 +1,6 @@
 import 'package:bossi_pos/charts/net_model.dart';
 import 'package:bossi_pos/charts/ordinal_sales_model.dart';
+import 'package:bossi_pos/charts/stock_model.dart';
 import 'package:bossi_pos/charts/task_model.dart';
 import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:bossi_pos/graphql/orderQueryMutation.dart';
@@ -34,12 +35,14 @@ class Cart with ChangeNotifier {
   List<NetModel> _lostData = [];
   List<TaskModel> _saleData = [];
   List<TaskModel> _buyData = [];
+  List<StockModel> _stockData = [];
 
   List<OrdinalSalesModel> get getOrdinalSaleData => [..._ordinalSalesData];
   List<NetModel> get getNetData => [..._netData];
   List<NetModel> get getLostData => [..._lostData];
   List<TaskModel> get getSaleData => [..._saleData];
   List<TaskModel> get getBuyData => [..._buyData];
+  List<StockModel> get getStockData => [..._stockData];
 
   Map<String, CartItem> get cart {
     return {..._cart};
@@ -206,25 +209,15 @@ class Cart with ChangeNotifier {
       if (!result.hasException) {
         for (var i = 0; i < result.data["netForFiveMonths"].length; i++) {
           loadedNetData.add(
-            // OrdinalSalesModel(
-            //     total: result.data["netForFiveMonths"][i]['total'].toString(),
-            //     orderDate: result.data["netForFiveMonths"][i]['order_date']
-            //         .toString()
-            //         .substring(0, 3)),
-
             NetModel(
                 year: result.data["netForFiveMonths"][i]['month'] +
                     " " +
                     result.data["netForFiveMonths"][i]['year'],
                 sales: result.data["netForFiveMonths"][i]['total'].toString()),
           );
-
-          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
-          // print(result.data["netForFiveMonths"][i]['total']);
         }
 
         _netData = loadedNetData;
-        // print("ordinal");
         notifyListeners();
       } else {
         print('exception');
@@ -250,25 +243,15 @@ class Cart with ChangeNotifier {
       if (!result.hasException) {
         for (var i = 0; i < result.data["lostForFiveMonths"].length; i++) {
           loadedLostData.add(
-            // OrdinalSalesModel(
-            //     total: result.data["netForFiveMonths"][i]['total'].toString(),
-            //     orderDate: result.data["netForFiveMonths"][i]['order_date']
-            //         .toString()
-            //         .substring(0, 3)),
-
             NetModel(
                 year: result.data["lostForFiveMonths"][i]['month'] +
                     " " +
                     result.data["lostForFiveMonths"][i]['year'],
                 sales: result.data["lostForFiveMonths"][i]['total'].toString()),
           );
-
-          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
-          // print(result.data["netForFiveMonths"][i]['total']);
         }
 
         _lostData = loadedLostData;
-        // print("ordinal");
         notifyListeners();
       } else {
         print('exception');
@@ -306,10 +289,6 @@ class Cart with ChangeNotifier {
             _name = result.data["saleForFour"][i]['name'];
           }
 
-          // final double _allTotal = result.data["saleForFour"][2]['all'];
-          // _total = (result.data["saleForFour"][i]['total'] / _allTotal) * 100;
-
-          print("percentage");
           if (result.data["saleForFour"][i]['total'] != null) {
             final lastElement = result.data["saleForFour"].length - 1;
             _total = (result.data["saleForFour"][i]['total'] /
@@ -321,19 +300,10 @@ class Cart with ChangeNotifier {
           loadedSaleData.add(TaskModel(
               task: _name,
               taskvalue: double.parse(_total.toStringAsFixed(2)),
-              colorval: _color[i]
-              // year: result.data["saleForFour"][i]['month'] +
-              //     " " +
-              //     result.data["saleForFour"][i]['year'],
-              // sales: result.data["saleForFour"][i]['total'].toString()),
-              ));
-
-          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
-          // print(result.data["netForFiveMonths"][i]['total']);
+              colorval: _color[i]));
         }
 
         _saleData = loadedSaleData;
-        // print("ordinal");
         notifyListeners();
       } else {
         print('exception');
@@ -371,10 +341,6 @@ class Cart with ChangeNotifier {
             _name = result.data["buyForFour"][i]['name'];
           }
 
-          // final double _allTotal = result.data["buyForFour"][2]['all'];
-          // _total = (result.data["buyForFour"][i]['total'] / _allTotal) * 100;
-
-          print("percentage");
           if (result.data["buyForFour"][i]['total'] != null) {
             final lastElement = result.data["buyForFour"].length - 1;
             _total = (result.data["buyForFour"][i]['total'] /
@@ -386,19 +352,40 @@ class Cart with ChangeNotifier {
           loadedBuyData.add(TaskModel(
               task: _name,
               taskvalue: double.parse(_total.toStringAsFixed(2)),
-              colorval: _color[i]
-              // year: result.data["buyForFour"][i]['month'] +
-              //     " " +
-              //     result.data["buyForFour"][i]['year'],
-              // sales: result.data["buyForFour"][i]['total'].toString()),
-              ));
-
-          // print(result.data["netForFiveMonths"][i]['month'] + " " + result.data["netForFiveMonths"][i]['year']);
-          // print(result.data["netForFiveMonths"][i]['total']);
+              colorval: _color[i]));
         }
 
         _buyData = loadedBuyData;
-        // print("ordinal");
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchStockData() async {
+    try {
+      final List<StockModel> _loadedStockData = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getStockForFourData()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["stockForFour"].length; i++) {
+          _loadedStockData.add(StockModel(
+              name: result.data["stockForFour"][i]['name'],
+              total: result.data["stockForFour"][i]['total'].toString()));
+        }
+
+        _stockData = _loadedStockData;
         notifyListeners();
       } else {
         print('exception');

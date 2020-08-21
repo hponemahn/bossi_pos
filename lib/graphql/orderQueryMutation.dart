@@ -58,6 +58,17 @@ class OrderQueryMutation {
     """;
   }
 
+  String getStockForFourData() {
+    return """ 
+          {
+  stockForFour {
+    name
+    total
+  }
+}
+    """;
+  }
+
   String addOrder(double total, String orderDate, List products) {
     return """
     

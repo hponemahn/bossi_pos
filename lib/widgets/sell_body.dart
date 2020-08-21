@@ -48,7 +48,8 @@ class _SellBodyState extends State<SellBody> {
                 child: GridTile(
                   child: GestureDetector(
                     onTap: () {
-                      _cart.add(products[index].id, products[index].name, products[index].price);
+                      _cart.add(products[index].id, products[index].name,
+                          products[index].price);
                     },
                     child: CircleAvatar(
                         backgroundColor: Colors.blueGrey.shade500,
@@ -66,30 +67,31 @@ class _SellBodyState extends State<SellBody> {
                 ),
               ),
             ),
-            if(_cart.cart[products[index].id] != null && _cart.cart[products[index].id].qty != 0)
-            Positioned(
-              right: 8,
-              top: 8,
-              child: Container(
-                padding: EdgeInsets.all(2.0),
-                // color: Theme.of(context).accentColor,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Theme.of(context).accentColor,
-                ),
-                constraints: BoxConstraints(
-                  minWidth: 24,
-                  minHeight: 24,
-                ),
-                child: Text(
-                  _cart.cart[products[index].id].qty.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
+            if (_cart.cart[products[index].id] != null &&
+                _cart.cart[products[index].id].qty != 0)
+              Positioned(
+                right: 8,
+                top: 8,
+                child: Container(
+                  padding: EdgeInsets.all(2.0),
+                  // color: Theme.of(context).accentColor,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Theme.of(context).accentColor,
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 24,
+                    minHeight: 24,
+                  ),
+                  child: Text(
+                    _cart.cart[products[index].id].qty.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
-              ),
-            )
+              )
           ],
         ),
       ),
@@ -98,38 +100,39 @@ class _SellBodyState extends State<SellBody> {
 
   @override
   Widget build(BuildContext context) {
-
     Products _products = Provider.of<Products>(context);
     Cart _cart = Provider.of<Cart>(context);
 
-    print("products build");
+    return _products.products.isEmpty
+        ? Center(
+            child: Text('ရောင်းရန် ပစ္စည်းမရှိသေးပါ'),
+          )
+        : GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
 
-    return _products.products.isEmpty ? Center(child: Text('ရောင်းရန် ပစ္စည်းမရှိသေးပါ'),) : GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },child: 
-    Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(20),
-            child: TextField(
-              onChanged: (val) {
-                setState(() {
-                  _searchText = val;
-                });
-              },
-              decoration: new InputDecoration(
-                  prefixIcon: new Icon(Icons.search),
-                  hintText: 'ရောင်းမည့်ပစ္စည်းရှာရန် ...'),
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: TextField(
+                    onChanged: (val) {
+                      setState(() {
+                        _searchText = val;
+                      });
+                    },
+                    decoration: new InputDecoration(
+                        prefixIcon: new Icon(Icons.search),
+                        hintText: 'ရောင်းမည့်ပစ္စည်းရှာရန် ...'),
+                  ),
+                ),
+                _grid(_products.products, _cart),
+              ],
             ),
-          ),
-          _grid(_products.products, _cart),
-        ],
-      ),
-    );
+          );
   }
 }

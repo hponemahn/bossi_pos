@@ -10,8 +10,6 @@ class BuySum extends StatelessWidget {
     final List<TaskModel> _netData =
         Provider.of<Cart>(context, listen: false).getBuyData;
 
-    print("buy summ build");
-
     List<charts.Series<TaskModel, String>> series = [
       charts.Series(
         domainFn: (TaskModel task, _) => task.task,

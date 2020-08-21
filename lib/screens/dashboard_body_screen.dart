@@ -2,7 +2,7 @@ import 'package:bossi_pos/charts/buy_sum.dart';
 import 'package:bossi_pos/charts/daily_sum.dart';
 import 'package:bossi_pos/charts/net_earn.dart';
 import 'package:bossi_pos/charts/sale_sum.dart';
-import 'package:bossi_pos/charts/stock.dart';
+import 'package:bossi_pos/charts/stock_sum.dart';
 import 'package:flutter/material.dart';
 
 class DashboardBodyScreen extends StatelessWidget {
@@ -37,7 +37,7 @@ class DashboardBodyScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: _buildTitledContainer("ကုန်ပစ္စည်း",
-                child: Container(height: 200, child: Stock.withSampleData())),
+                child: Container(height: 200, child: StockSum())),
           ),
         ),
         SliverToBoxAdapter(

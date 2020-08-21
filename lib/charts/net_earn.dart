@@ -30,8 +30,6 @@ class NetEarn extends StatelessWidget {
     final List<NetModel> _netData = _cart.getNetData;
     final List<NetModel> _lostData = _cart.getLostData;
 
-    print("daily summ build");
-
     List<charts.Series<NetModel, String>> series = [
       new charts.Series<NetModel, String>(
         id: 'Tablet Sales',

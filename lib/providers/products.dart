@@ -55,9 +55,7 @@ class Products with ChangeNotifier {
   }
 
   void edit(Product _pr) {
-    print("update id ${_pr.id}");
     int index = _products.indexWhere((pr) => pr.id == _pr.id);
-    print("update ${_pr.name}");
     if (index >= 0) {
       _products[index] = _pr;
       notifyListeners();
@@ -140,8 +138,6 @@ class Products with ChangeNotifier {
         ),
       );
 
-      print('fetch');
-
       if (!result.hasException) {
         print('no exception');
 
@@ -187,7 +183,7 @@ class Products with ChangeNotifier {
         documentNode: gql(addMutation.deleteProduct(id)),
       ),
     );
-    
+
     print(result.exception);
   }
 }

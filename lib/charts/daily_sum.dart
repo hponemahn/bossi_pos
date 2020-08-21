@@ -5,12 +5,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:provider/provider.dart';
 
 class DailySum extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
-    final List<OrdinalSalesModel> _ordinalSalesData = Provider.of<Cart>(context, listen: false).getOrdinalSaleData;
-
-    print("daily summ build");
+    final List<OrdinalSalesModel> _ordinalSalesData =
+        Provider.of<Cart>(context, listen: false).getOrdinalSaleData;
 
     List<charts.Series<OrdinalSalesModel, String>> series = [
       new charts.Series<OrdinalSalesModel, String>(
