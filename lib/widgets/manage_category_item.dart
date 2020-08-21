@@ -156,8 +156,6 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
                 IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      // Navigator.pushNamed(context, CategoryEditScreen.routeName, arguments: id),
-                      // print(id),
                       _textFieldController.text = widget.category;
                       _showEditDialog(context, widget.id);
                     }),

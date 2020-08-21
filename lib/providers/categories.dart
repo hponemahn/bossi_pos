@@ -4,7 +4,7 @@ class Category {
   final String id;
   final String category;
 
-  Category({@required this.id, @required this.category});  
+  Category({@required this.id, @required this.category});
 }
 
 class Categories with ChangeNotifier {
@@ -18,37 +18,37 @@ class Categories with ChangeNotifier {
 
   List<Category> get categories {
     return [..._categories];
-  }  
+  }
 
-  void delete (String id) {
+  void delete(String id) {
     _categories.removeWhere((pr) => pr.id == id);
     notifyListeners();
   }
 
-  Category findById (String id) {
+  Category findById(String id) {
     return _categories.firstWhere((pr) => pr.id == id);
   }
 
-  void add (Category _pr) {
-    var category = Category(id: DateTime.now().toString(), category: _pr.category);
+  void add(Category _pr) {
+    var category =
+        Category(id: DateTime.now().toString(), category: _pr.category);
     _categories.add(category);
     notifyListeners();
   }
 
-  String addAndGetID (Category _pr) {
-    var category = Category(id: DateTime.now().toString(), category: _pr.category);
+  String addAndGetID(Category _pr) {
+    var category =
+        Category(id: DateTime.now().toString(), category: _pr.category);
     _categories.add(category);
     notifyListeners();
     return category.id;
   }
 
-  void edit (Category _pr) {
-    print("update id ${_pr.id}");
+  void edit(Category _pr) {
     int index = _categories.indexWhere((pr) => pr.id == _pr.id);
-    print("update ${_pr.category}");
     if (index >= 0) {
       _categories[index] = _pr;
-      notifyListeners();   
+      notifyListeners();
     } else {
       print("...");
     }

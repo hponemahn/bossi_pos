@@ -24,7 +24,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Provider.of<Cart>(context).fetchNetData();
       Provider.of<Cart>(context).fetchLostData();
       Provider.of<Cart>(context).fetchSaleData();
-      Provider.of<Cart>(context).fetchBuyData().then((_) {
+      Provider.of<Cart>(context).fetchBuyData();
+      Provider.of<Cart>(context).fetchStockData().then((_) {
         setState(() {
           _isLoading = false;
         });
