@@ -1,6 +1,7 @@
 import 'package:bossi_pos/screens/dashboard_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
+import 'package:bossi_pos/screens/report_screen.dart';
 import 'package:flutter/material.dart';
 
 class Drawlet extends StatelessWidget {
@@ -24,15 +25,16 @@ class Drawlet extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 20.0,
                         fontWeight: FontWeight.w500))),
-          ])
-          );
+          ]));
     }
 
     return Drawer(
       child: Column(
         children: <Widget>[
           _createHeader(),
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
           ListTile(
             leading: Icon(Icons.home),
             title: Text("မူလ"),
@@ -52,7 +54,15 @@ class Drawlet extends StatelessWidget {
             leading: Icon(Icons.report),
             title: Text("အစီရင်ခံစာ"),
             onTap: () {
-              Navigator.pushReplacementNamed(context, DashboardScreen.routeName);
+              Navigator.pushReplacementNamed(
+                  context, DashboardScreen.routeName);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.report),
+            title: Text("အစီရင်ခံစာ - report"),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, ReportScreen.routeName);
             },
           ),
           Divider(),
@@ -60,7 +70,8 @@ class Drawlet extends StatelessWidget {
             leading: Icon(Icons.store),
             title: Text("ကုန်ပစ္စည်းများ"),
             onTap: () {
-              Navigator.pushReplacementNamed(context, ManageProductsScreen.routeName);
+              Navigator.pushReplacementNamed(
+                  context, ManageProductsScreen.routeName);
             },
           ),
           Divider(),
@@ -68,7 +79,8 @@ class Drawlet extends StatelessWidget {
             leading: Icon(Icons.category),
             title: Text("အမျိုးအစားများ"),
             onTap: () {
-              Navigator.pushReplacementNamed(context, ManageCategoryScreen.routeName);
+              Navigator.pushReplacementNamed(
+                  context, ManageCategoryScreen.routeName);
             },
           ),
           Divider(),
