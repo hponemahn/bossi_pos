@@ -1,4 +1,5 @@
 import 'package:bossi_pos/widgets/drawlet.dart';
+import 'package:bossi_pos/widgets/report_expansion.dart';
 import 'package:flutter/material.dart';
 
 class ReportScreen extends StatelessWidget {
@@ -16,94 +17,41 @@ class ReportScreen extends StatelessWidget {
         padding: const EdgeInsets.only(top: 16),
         // physics: BouncingScrollPhysics(),
         children: [
-          Card(
-            margin: EdgeInsets.symmetric(
-              vertical: 8.0,
-              horizontal: 14.0,
-            ),
-            // color: Colors.redAccent,
-            elevation: 20,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: ExpansionTile(
-                leading: Icon(Icons.power),
-                title: Text('အရင်း၊ အမြတ် နှင့် အရှုံး'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 32.0),
-                    child: ListTile(
-                      leading:
-                          Icon(Icons.arrow_right, color: Colors.deepOrange),
-                      contentPadding: EdgeInsets.all(0),
-                      dense: false,
-                      isThreeLine: false,
-                      // trailing: Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: <Widget>[
-                      //     IconButton(
-                      //       icon: Icon(Icons.code),
-                      //       onPressed: null,
-                      //     ),
-                      //   ],
-                      // ),
-                      title: Text(
-                        "next line",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.black87),
-                      ),
-                      onTap: () => print("tap 1"),
-                    ),
-                  )
-                ]),
-          ),
-          Card(
-            margin: EdgeInsets.symmetric(
-              vertical: 8.0,
-              horizontal: 14.0,
-            ),
-            // color: Colors.redAccent,
-            elevation: 20,
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: ExpansionTile(
-                leading: Icon(Icons.power),
-                title: Text('အရင်း၊ အမြတ် နှင့် အရှုံး'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 32.0),
-                    child: ListTile(
-                      leading:
-                          Icon(Icons.arrow_right, color: Colors.deepOrange),
-                      contentPadding: EdgeInsets.all(0),
-                      dense: false,
-                      isThreeLine: false,
-                      // trailing: Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: <Widget>[
-                      //     IconButton(
-                      //       icon: Icon(Icons.code),
-                      //       onPressed: null,
-                      //     ),
-                      //   ],
-                      // ),
-                      title: Text(
-                        "next line",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle1
-                            .copyWith(color: Colors.black87),
-                      ),
-                      onTap: () => print("tap"),
-                    ),
-                  )
-                ]),
-          ),
+          ReportExpansion('အရင်း၊ အမြတ် နှင့် အရှုံး',
+              // အရောင်း၀င်ငွေ စုစုပေါင်း
+              ['အရင်း၊ အမြတ် နှင့် အရှုံး', 'အရောင်း၀င်ငွေ စုစုပေါင်း']),
+          ReportExpansion('အရောင်း',
+              // အရောင်း၀င်ငွေ စုစုပေါင်း
+              [
+                'အရောင်း စုစုပေါင်း',
+                'ကုန်ပစ္စည်းအလိုက် အမြတ်စာရင်း',
+                'ကုန်ပစ္စည်းအမျိုးအစားအလိုက် အမြတ်စာရင်း',
+                'ကုန်ပစ္စည်းအလိုက် အရှုံးစာရင်း',
+                'ကုန်ပစ္စည်းအမျိုးအစားအလိုက် အရှုံးစာရင်း',
+                'ရောင်းအားအကောင်ဆုံး ကုန်ပစ္စည်း',
+                'ရောင်းအားအကောင်ဆုံး အမျိုးအစား',
+                'ရောင်းအားအနည်းဆုံး ကုန်ပစ္စည်း',
+                'ရောင်းအားအနည်းဆုံး အမျိုးအစား'
+              ]),
+          ReportExpansion('အ၀ယ်',
+              // အရောင်း၀င်ငွေ စုစုပေါင်း
+              [
+                'အ၀ယ် စုစုပေါင်း',
+                ' အ၀ယ်အများဆုံး ကုန်ပစ္စည်း',
+                ' အ၀ယ်အများဆုံး အမျိုးအစား',
+                ' အ၀ယ်အနည်းဆုံး ကုန်ပစ္စည်း',
+                'အ၀ယ်အနည်းဆုံး အမျိုးအစား'
+              ]),
+          ReportExpansion('ကုန်ပစ္စည်း',
+              // အရောင်း၀င်ငွေ စုစုပေါင်း
+              [
+                'ကုန်ပစ္စည်း စုစုပေါင်း',
+                'အရေအတွက်နည်းနေသော ကုန်ပစ္စည်းစာရင်း',
+                'အရေအတွက်များနေသော ကုန်ပစ္စည်းစာရင်း',
+                'ပျက်စီးစာရင်း',
+                'ပျောက်ဆုံးစာရင်း',
+                'ဒိတ်လွန်နေသော ကုန်ပစ္စည်းစာရင်း'
+              ]),
         ],
       ),
     );
