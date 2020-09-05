@@ -1,9 +1,11 @@
+import 'package:bossi_pos/screens/report_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class ReportExpansion extends StatelessWidget {
   final String title;
   final List subTitle;
-  const ReportExpansion(this.title, this.subTitle);
+  final IconData titleIcon;
+  const ReportExpansion(this.title, this.titleIcon, this.subTitle);
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +21,20 @@ class ReportExpansion extends StatelessWidget {
         borderRadius: BorderRadius.circular(30.0),
       ),
       child: ExpansionTile(
-        leading: Icon(Icons.attach_money),
-        title: Text(title),
+        leading: Icon(
+          titleIcon,
+          color: Colors.black,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(color: Colors.black),
+        ),
         children: subTitle.map((subT) {
           return Padding(
             padding: const EdgeInsets.only(left: 32.0),
             child: ListTile(
-              leading: Icon(Icons.arrow_right, color: Colors.deepOrange),
+              leading:
+                  Icon(Icons.arrow_right, color: Theme.of(context).accentColor),
               contentPadding: EdgeInsets.all(0),
               dense: false,
               isThreeLine: false,
@@ -36,48 +45,11 @@ class ReportExpansion extends StatelessWidget {
                     .subtitle1
                     .copyWith(color: Colors.black87),
               ),
-              onTap: () => print("tap 1"),
+              onTap: () => Navigator.pushReplacementNamed(
+                  context, ReportDetailScreen.routeName),
             ),
           );
         }).toList(),
-
-        // [
-
-        //   Padding(
-        //     padding: const EdgeInsets.only(left: 32.0),
-        //     child: ListTile(
-        //       leading: Icon(Icons.arrow_right, color: Colors.deepOrange),
-        //       contentPadding: EdgeInsets.all(0),
-        //       dense: false,
-        //       isThreeLine: false,
-        //       title: Text(
-        //         "အရင်း၊ အမြတ် နှင့် အရှုံး",
-        //         style: Theme.of(context)
-        //             .textTheme
-        //             .subtitle1
-        //             .copyWith(color: Colors.black87),
-        //       ),
-        //       onTap: () => print("tap 1"),
-        //     ),
-        //   ),
-        //   Padding(
-        //     padding: const EdgeInsets.only(left: 32.0),
-        //     child: ListTile(
-        //       leading: Icon(Icons.arrow_right, color: Colors.deepOrange),
-        //       contentPadding: EdgeInsets.all(0),
-        //       dense: false,
-        //       isThreeLine: false,
-        //       title: Text(
-        //         "အရောင်း၀င်ငွေ စုစုပေါင်း",
-        //         style: Theme.of(context)
-        //             .textTheme
-        //             .subtitle1
-        //             .copyWith(color: Colors.black87),
-        //       ),
-        //       onTap: () => print("tap 1"),
-        //     ),
-        //   )
-        // ]
       ),
     );
   }
