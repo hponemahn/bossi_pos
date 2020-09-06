@@ -118,6 +118,10 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      elevation: 20,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: ListTile(
           title: Text(widget.category),
           // subtitle: Text("$qty Qty  -  $price MMK"),

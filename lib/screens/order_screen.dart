@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../print/document.dart';
 
 class OrderScreen extends StatefulWidget {
-
   static const routeName = "order";
 
   @override
@@ -69,7 +68,8 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> _sharePdf() async {
     print('Share ...');
-    final pw.Document document = await generateDocument(PdfPageFormat.a4, _cartForPrint);
+    final pw.Document document =
+        await generateDocument(PdfPageFormat.a4, _cartForPrint);
 
     // Calculate the widget center for iPad sharing popup position
     final RenderBox referenceBox =
@@ -86,7 +86,6 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     Cart _cart = Provider.of<Cart>(context);
 
     setState(() {
@@ -137,46 +136,58 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text('အရောင်းပြေစာ: #A002'),
-                                  new Text("$_curDay/$_curMon/$_curYear - $_curHr:$_curMin"),
+                                  new Text(
+                                      "$_curDay/$_curMon/$_curYear - $_curHr:$_curMin"),
                                 ],
                               ),
                             )
                           ]),
                         ]))),
-                        SizedBox(height: 20.0,),
-
-            ..._cart.cart.values.toList().map((cartItem) => Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              child: Card(
+            SizedBox(
+              height: 20.0,
+            ),
+            ..._cart.cart.values.toList().map(
+                  (cartItem) => Card(
+                    margin: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                    elevation: 20,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
                     child: SizedBox(
                       height: 60,
                       child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text(cartItem.name, style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2.5.toInt(),
+                            child: Text(cartItem.name,
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center),
+                          ),
+                          Expanded(
+                            flex: 2.5.toInt(),
+                            child: Text(cartItem.qty.toString(),
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center),
+                          ),
+                          Expanded(
+                            flex: 2.5.toInt(),
+                            child: Text(cartItem.price.toString(),
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center),
+                          ),
+                          Expanded(
+                            flex: 2.5.toInt(),
+                            child: Text(
+                                "${(cartItem.qty * cartItem.price).toStringAsFixed(2)}",
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text(cartItem.qty.toString(),
-                                style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                      ),
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text(cartItem.price.toString(), style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                      ),
-                      Expanded(
-                        flex: 2.5.toInt(),
-                        child: Text("${(cartItem.qty * cartItem.price).toStringAsFixed(2)}", style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
-                      ),
-                    ],
-                  ),
                     ),
                   ),
-            ),
-          ),
-            
+                ),
             Container(
                 // height: MediaQuery.of(context).size.height,
                 child: Padding(
@@ -191,7 +202,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text('စုစုပေါင်း  :'),
-                                  new Text(_cart.totalAmount.toStringAsFixed(2)),
+                                  new Text(
+                                      _cart.totalAmount.toStringAsFixed(2)),
                                 ],
                               ),
                             )
@@ -235,7 +247,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text("ပေးငွေ  :"),
-                                  new Text("${_cart.totalAmount + _cart.getChangedMoney}"),
+                                  new Text(
+                                      "${_cart.totalAmount + _cart.getChangedMoney}"),
                                 ],
                               ),
                             )
@@ -247,7 +260,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   new Text("ပြန်အမ်းငွေ  :"),
-                                  new Text(_cart.getChangedMoney.toStringAsFixed(2)),
+                                  new Text(
+                                      _cart.getChangedMoney.toStringAsFixed(2)),
                                 ],
                               ),
                             )
@@ -275,11 +289,11 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
                 FlatButton(
                   onPressed: printingInfo?.canPrint ?? false ? _printPdf : null,
-                    // setState(() {
-                    //   _cartForPrint = _cart;
-                    // });
-                    // printingInfo?.canPrint ?? false ? _printPdf : null;
-                    // printingInfo.canPrint ? _printPdf : null;
+                  // setState(() {
+                  //   _cartForPrint = _cart;
+                  // });
+                  // printingInfo?.canPrint ?? false ? _printPdf : null;
+                  // printingInfo.canPrint ? _printPdf : null;
                   // },
                   child: Image.asset(
                     "assets/print.png",
@@ -292,6 +306,10 @@ class _OrderScreenState extends State<OrderScreen> {
             Container(
               padding: EdgeInsets.fromLTRB(140, 50, 140, 40),
               child: RaisedButton(
+                elevation: 20,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
                 onPressed: () {
                   _cart.confirm().then((value) => _cart.clear());
                   Navigator.pushNamed(context, '/');
@@ -301,6 +319,6 @@ class _OrderScreenState extends State<OrderScreen> {
               ),
             ),
           ],
-        ))    ;
+        ));
   }
 }

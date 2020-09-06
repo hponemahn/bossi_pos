@@ -2,7 +2,6 @@ import 'package:bossi_pos/charts/daily_sum.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/widgets/button_titled_container.dart';
-import 'package:bossi_pos/widgets/drawlet.dart';
 import 'package:bossi_pos/widgets/manage_product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +21,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     List<Product> _products = Provider.of<Products>(context).products;
     return Scaffold(
       appBar: AppBar(
-        title: Text('အစီရင်ခံစာ'),
-      ),
-      drawer: Drawlet(),
+          automaticallyImplyLeading: true,
+          title: Text('အစီရင်ခံစာ'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          )),
       body: CustomScrollView(slivers: <Widget>[
         SliverToBoxAdapter(
           child: Padding(

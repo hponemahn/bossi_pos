@@ -19,7 +19,8 @@ class ManageProductItem extends StatelessWidget {
         // return object of type Dialog
         return AlertDialog(
           title: Text("ဖျက်မှာ သေချာပါသလား?"),
-          content: Text("ဤကုန်ပစ္စည်းကို ဖျက်လိုက်မည်ဆိုပါက ပြန်ရနိုင်တော့မည် မဟုတ်ပါ။​"),
+          content: Text(
+              "ဤကုန်ပစ္စည်းကို ဖျက်လိုက်မည်ဆိုပါက ပြန်ရနိုင်တော့မည် မဟုတ်ပါ။​"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
@@ -45,22 +46,34 @@ class ManageProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
-      child: ListTile(
-        title: Text(name),
-        subtitle: Text("$qty Qty  -  $price MMK"),
-        // subtitle: Text("အရေအတွက်: 25 | စျေးနှုန်း: 2,500"),
-        trailing: Container(
-          width: 100,
-          child: Row(
-          children: [
-            IconButton(icon: Icon(Icons.edit),onPressed: () => Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id),),
-            IconButton(icon: Icon(Icons.delete),onPressed: () => _showDialog(context, id)),
-          ],
-        ),
-        )
+      margin: EdgeInsets.symmetric(
+        vertical: 6.0,
+        horizontal: 8.0,
       ),
+      elevation: 20,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      child: ListTile(
+          title: Text(name),
+          subtitle: Text("$qty Qty  -  $price MMK"),
+          // subtitle: Text("အရေအတွက်: 25 | စျေးနှုန်း: 2,500"),
+          trailing: Container(
+            width: 100,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => Navigator.pushNamed(
+                      context, ProductEditScreen.routeName,
+                      arguments: id),
+                ),
+                IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () => _showDialog(context, id)),
+              ],
+            ),
+          )),
     );
   }
 }

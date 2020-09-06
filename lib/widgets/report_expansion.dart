@@ -33,21 +33,24 @@ class ReportExpansion extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(left: 32.0),
             child: ListTile(
-              leading:
-                  Icon(Icons.arrow_right, color: Theme.of(context).accentColor),
-              contentPadding: EdgeInsets.all(0),
-              dense: false,
-              isThreeLine: false,
-              title: Text(
-                subT,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    .copyWith(color: Colors.black87),
-              ),
-              onTap: () => Navigator.pushReplacementNamed(
-                  context, ReportDetailScreen.routeName),
-            ),
+                leading: Icon(Icons.arrow_right,
+                    color: Theme.of(context).accentColor),
+                contentPadding: EdgeInsets.all(0),
+                dense: false,
+                isThreeLine: false,
+                title: Text(
+                  subT,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(color: Colors.black87),
+                ),
+                // Navigator.pushNamed(context, ProductEditScreen.routeName, arguments: id)
+                // onTap: () => Navigator.pushReplacementNamed(
+                //     context, ReportDetailScreen.routeName),
+                onTap: () => Navigator.pushNamed(
+                    context, ReportDetailScreen.routeName,
+                    arguments: "aa")),
           );
         }).toList(),
       ),
