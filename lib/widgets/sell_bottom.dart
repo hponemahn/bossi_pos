@@ -12,12 +12,16 @@ class SellBottom extends StatelessWidget {
     Cart _cart = Provider.of<Cart>(context);
 
     return BottomAppBar(
+      elevation: 20,
       child: ButtonBar(
         alignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Row(
             children: <Widget>[
-              Icon(Icons.money_off),
+              Icon(
+                Icons.money_off,
+                color: Theme.of(context).accentColor,
+              ),
               Text("${_cart.totalAmount.toStringAsFixed(2)}",
                   style: TextStyle(fontSize: 17.0, color: Colors.grey[800])),
             ],
@@ -54,7 +58,10 @@ class SellBottom extends StatelessWidget {
                       {Navigator.pushNamed(context, CartScreen.routeName)}
                   },
               icon: Badge(
-                  child: Icon(Icons.shopping_cart),
+                  child: Icon(
+                    Icons.shopping_cart,
+                    color: Theme.of(context).accentColor,
+                  ),
                   value: _cart.totalCount.toString()),
               label: Text(
                 "ရောင်းမည်",
@@ -67,7 +74,10 @@ class SellBottom extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               splashColor: Colors.blueAccent,
               onPressed: () => _cart.clear(),
-              icon: Icon(Icons.cancel),
+              icon: Icon(
+                Icons.cancel,
+                color: Theme.of(context).accentColor,
+              ),
               label: Text(
                 "ဖျက်မည်",
                 style: TextStyle(fontSize: 17.0),

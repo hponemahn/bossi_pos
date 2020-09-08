@@ -46,7 +46,7 @@ class DashboardBodyScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             // child: _buildTitledContainer("အ၀ယ်",
             //     child: Container(height: 200, child: BuySum())),
-            child: ButtonTitledContainer("အ၀ယ်",
+            child: ButtonTitledContainer(
                 child: Container(height: 200, child: BuySum())),
           ),
         ),

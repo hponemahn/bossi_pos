@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ReportExpansion extends StatelessWidget {
   final String title;
-  final List subTitle;
+  final List<dynamic> subTitle;
   final IconData titleIcon;
   const ReportExpansion(this.title, this.titleIcon, this.subTitle);
 
@@ -39,7 +39,7 @@ class ReportExpansion extends StatelessWidget {
                 dense: false,
                 isThreeLine: false,
                 title: Text(
-                  subT,
+                  subT['subTile'],
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1
@@ -49,8 +49,10 @@ class ReportExpansion extends StatelessWidget {
                 // onTap: () => Navigator.pushReplacementNamed(
                 //     context, ReportDetailScreen.routeName),
                 onTap: () => Navigator.pushNamed(
-                    context, ReportDetailScreen.routeName,
-                    arguments: "aa")),
+                        context, ReportDetailScreen.routeName, arguments: {
+                      "title": subT['subTile'],
+                      "subVal": subT['subVal']
+                    })),
           );
         }).toList(),
       ),
