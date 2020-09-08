@@ -2,8 +2,8 @@ import 'package:bossi_pos/charts/cpl.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/widgets/button_titled_container.dart';
-import 'package:bossi_pos/widgets/manage_product_item.dart';
 import 'package:bossi_pos/widgets/report_detail_bottom.dart';
+import 'package:bossi_pos/widgets/report_detail_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,13 +20,28 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _title;
   Widget _chart;
   List<Product> _products;
+  var _isInit = true;
+  // var _isLoading = false;
 
   @override
   void didChangeDependencies() {
+    if (_isInit) {
+      // setState(() {
+      //   _isLoading = true;
+      // });
+      Provider.of<Products>(context).fetchProducts().then((_) {
+        // setState(() {
+        //   _isLoading = false;
+        // });
+      });
+    }
+    _isInit = false;
+
     final Map _args = ModalRoute.of(context).settings.arguments as Map;
     if (_args['subVal'] == "cpl") {
       _chart = CPL();
       _products = Provider.of<Products>(context).products;
+      print("cpl");
     }
     _title = _args['title'];
     super.didChangeDependencies();
@@ -111,15 +126,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: ButtonTitledContainer(
+              child: ButtonTitledContainer(_title,
                   child: Container(height: 200, child: _chart)),
             ),
           ),
+          SliverToBoxAdapter(
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 40, right: 40),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("အရင်း"),
+                        Text("အမြတ်"),
+                      ]))),
           SliverList(
               delegate: SliverChildBuilderDelegate(
             (context, i) {
-              return ManageProductItem(_products[i].id, _products[i].name,
-                  _products[i].qty, _products[i].price);
+              return ReportDetailItem();
             },
             childCount: _products.length,
           )),

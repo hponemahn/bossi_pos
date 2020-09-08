@@ -44,10 +44,10 @@ class DashboardBodyScreen extends StatelessWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            // child: _buildTitledContainer("အ၀ယ်",
-            //     child: Container(height: 200, child: BuySum())),
-            child: ButtonTitledContainer(
+            child: _buildTitledContainer("အ၀ယ်",
                 child: Container(height: 200, child: BuySum())),
+            // child: ButtonTitledContainer(
+            //     child: Container(height: 200, child: BuySum())),
           ),
         ),
       ],

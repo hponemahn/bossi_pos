@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ButtonTitledContainer extends StatelessWidget {
-  // final String title;
+  final String title;
   final Widget child;
   final double height;
 
-  ButtonTitledContainer(
-      // this.title,
-      {this.child,
-      this.height});
+  ButtonTitledContainer(this.title, {this.child, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +21,10 @@ class ButtonTitledContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Text(
+            "တစ်လစာ $title",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
           //   children: [
