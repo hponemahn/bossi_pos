@@ -1,5 +1,6 @@
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/categories.dart';
+import 'package:bossi_pos/providers/chart.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
 import 'package:bossi_pos/screens/dashboard_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: Products()),
         ChangeNotifierProvider.value(value: Cart()),
         ChangeNotifierProvider.value(value: Categories()),
+        ChangeNotifierProvider.value(value: Chart()),
       ],
       child: MaterialApp(
         theme: ThemeData(

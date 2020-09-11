@@ -20,20 +20,7 @@ class CPL extends StatelessWidget {
       new OrdinalSales('2017', 20),
     ];
 
-    final mobileSalesData = [
-      new OrdinalSales('2014', 10),
-      new OrdinalSales('2015', 15),
-      new OrdinalSales('2016', 50),
-      new OrdinalSales('2017', 45),
-    ];
-
     List<charts.Series<OrdinalSales, String>> seriesList = [
-      new charts.Series<OrdinalSales, String>(
-        id: 'Desktop',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: desktopSalesData,
-      ),
       new charts.Series<OrdinalSales, String>(
         id: 'Tablet',
         domainFn: (OrdinalSales sales, _) => sales.year,
@@ -41,10 +28,10 @@ class CPL extends StatelessWidget {
         data: tableSalesData,
       ),
       new charts.Series<OrdinalSales, String>(
-        id: 'Mobile',
+        id: 'Desktop',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: mobileSalesData,
+        data: desktopSalesData,
       ),
     ];
 
