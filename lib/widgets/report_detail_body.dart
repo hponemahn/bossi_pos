@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 class ReportDetailBody extends StatelessWidget {
   final String title;
   final List<ChartModel> caps;
-  const ReportDetailBody(this.title, this.caps);
+  final List<ChartModel> profits;
+  const ReportDetailBody(this.title, this.caps, this.profits);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class ReportDetailBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ButtonTitledContainer(title,
-              child: Container(height: 200, child: CPL())),
+              child: Container(height: 200, child: CPL(caps, profits))),
         ),
       ),
       SliverToBoxAdapter(
@@ -31,8 +32,9 @@ class ReportDetailBody extends StatelessWidget {
       SliverList(
           delegate: SliverChildBuilderDelegate(
         (context, i) {
+
           return ReportDetailItem(
-              caps[i].total, caps[i].day, caps[i].month, caps[i].year);
+              caps[i].total, caps[i].day, caps[i].month, caps[i].year, profits);
         },
         childCount: caps.length,
       )),

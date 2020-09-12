@@ -1,3 +1,4 @@
+import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:flutter/material.dart';
 
 class ReportDetailItem extends StatelessWidget {
@@ -5,18 +6,26 @@ class ReportDetailItem extends StatelessWidget {
   final String day;
   final String month;
   final String year;
-  const ReportDetailItem(this.total, this.day, this.month, this.year);
+  final List<ChartModel> profits;
+  const ReportDetailItem(
+      this.total, this.day, this.month, this.year, this.profits);
 
   @override
   Widget build(BuildContext context) {
-    print("day $day");
-    print("month $month");
-    print("year $year");
-    print(month == null ? "" : month);
-
     final String d = day == null ? "" : day;
     final String m = month == null ? "" : month;
     final String y = year == null ? "" : year;
+    String pTotal = "";
+
+    profits.forEach((v) {
+      final String pD = v.day == null ? "" : v.day;
+      final String pM = v.month == null ? "" : v.month;
+      final String pY = v.year == null ? "" : v.year;
+
+      if (pM == m && pY == y && pD == d) {
+        pTotal = v.total;
+      }
+    });
 
     return Card(
       margin: EdgeInsets.symmetric(
@@ -31,7 +40,7 @@ class ReportDetailItem extends StatelessWidget {
           subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
           trailing: Text(
-            "1000000000",
+            pTotal,
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           )),
     );

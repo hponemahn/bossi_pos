@@ -9,8 +9,10 @@ class Chart with ChangeNotifier {
   ChartQuery _query = ChartQuery();
 
   List<ChartModel> _capData = [];
+  List<ChartModel> _profitData = [];
 
   List<ChartModel> get cap => [..._capData];
+  List<ChartModel> get profit => [..._profitData];
 
   Future<void> fetchCapData() async {
     try {
@@ -27,14 +29,48 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["capital"].length; i++) {
           _loadedCapData.add(
             ChartModel(
-                total: result.data["capital"][i]['total'].toString(),
-                day: result.data["capital"][i]['day'],
-                month: result.data["capital"][i]['month'],
-                year: result.data["capital"][i]['year']),
+                result.data["capital"][i]['total'].toString(),
+                result.data["capital"][i]['day'],
+                result.data["capital"][i]['month'],
+                result.data["capital"][i]['year']),
           );
         }
 
         _capData = _loadedCapData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchProfitData() async {
+    try {
+      final List<ChartModel> _loadedProfitData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getProfit(filter: "m")),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["profit"].length; i++) {
+          _loadedProfitData.add(
+            ChartModel(
+                result.data["profit"][i]['total'].toString(),
+                result.data["profit"][i]['day'],
+                result.data["profit"][i]['month'],
+                result.data["profit"][i]['year']),
+          );
+        }
+
+        _profitData = _loadedProfitData;
         notifyListeners();
       } else {
         print('exception');

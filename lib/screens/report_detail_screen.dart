@@ -29,7 +29,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
 
       if (_args['subVal'] == "cpl") {
-        Provider.of<Chart>(context).fetchCapData().then((_) {
+        Provider.of<Chart>(context).fetchCapData();
+        Provider.of<Chart>(context).fetchProfitData().then((_) {
           setState(() {
             _isLoading = false;
           });
@@ -121,7 +122,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : ReportDetailBody(_title, Provider.of<Chart>(context).cap),
+            : ReportDetailBody(_title, Provider.of<Chart>(context).cap, Provider.of<Chart>(context).profit),
         bottomNavigationBar: ReportDetailButton());
   }
 }

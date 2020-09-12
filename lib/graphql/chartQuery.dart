@@ -12,4 +12,18 @@ class ChartQuery {
 }
     """;
   }
+
+  String getProfit({String filter}) {
+    return """
+      {
+  profit(filter: "$filter") {   
+    total
+    day
+    year
+    month
+    months
+  }
+}
+    """;
+  }
 }

@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:bossi_pos/charts/chart_model.dart';
 
 class CPL extends StatelessWidget {
-  const CPL({Key key}) : super(key: key);
+  final List<ChartModel> caps;
+  final List<ChartModel> profits;
+  const CPL(this.caps, this.profits);
 
   @override
   Widget build(BuildContext context) {
-    final desktopSalesData = [
-      new OrdinalSales('2014', 5),
-      new OrdinalSales('2015', 25),
-      new OrdinalSales('2016', 100),
-      new OrdinalSales('2017', 75),
-    ];
+    final List<CPLModel> capitalData = [];
+    final List<CPLModel> profitData = [];
 
-    final tableSalesData = [
-      new OrdinalSales('2014', 25),
-      new OrdinalSales('2015', 50),
-      new OrdinalSales('2016', 10),
-      new OrdinalSales('2017', 20),
-    ];
+    for (var i = 0; i < caps.length; i++) {
+      if (i < 5) {
 
-    List<charts.Series<OrdinalSales, String>> seriesList = [
-      new charts.Series<OrdinalSales, String>(
-        id: 'Tablet',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: tableSalesData,
-      ),
-      new charts.Series<OrdinalSales, String>(
+        for (var index = 0; index < profits.length; index++) {
+          if (index < 5 && profits[index].month == caps[i].month &&
+              profits[index].year == caps[i].year &&
+              profits[index].day == caps[i].day) {
+                profitData.add(CPLModel(profits[index].month, double.parse(profits[index].total)));
+                capitalData
+            .add(CPLModel(caps[i].month, double.parse(caps[i].total)));
+          }
+        }
+      }
+    }
+
+    List<charts.Series<CPLModel, String>> seriesList = [
+      new charts.Series<CPLModel, String>(
         id: 'Desktop',
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
-        data: desktopSalesData,
+        domainFn: (CPLModel sales, _) => sales.date,
+        measureFn: (CPLModel sales, _) => sales.total,
+        data: capitalData,
+      ),
+      new charts.Series<CPLModel, String>(
+        id: 'Tablet',
+        domainFn: (CPLModel sales, _) => sales.date,
+        measureFn: (CPLModel sales, _) => sales.total,
+        data: profitData,
       ),
     ];
 
@@ -44,9 +51,9 @@ class CPL extends StatelessWidget {
 }
 
 /// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
+class CPLModel {
+  final double total;
+  final String date;
 
-  OrdinalSales(this.year, this.sales);
+  CPLModel(this.date, this.total);
 }
