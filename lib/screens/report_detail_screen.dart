@@ -18,6 +18,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   var _isInit = true;
   var _isLoading = false;
+  String _filterText = "m";
 
   @override
   void didChangeDependencies() {
@@ -61,7 +62,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 onSelected: (val) {
-                  print(val);
+                  setState(() {
+                    _filterText = val;
+                  });
                   Provider.of<Chart>(context, listen: false).fetchCapData(val);
                   Provider.of<Chart>(context, listen: false).fetchProfitData(val);
                 },
@@ -124,7 +127,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : ReportDetailBody(_title, Provider.of<Chart>(context).cap, Provider.of<Chart>(context).profit),
+            : ReportDetailBody(_title, _filterText, Provider.of<Chart>(context).cap, Provider.of<Chart>(context).profit),
         bottomNavigationBar: ReportDetailButton());
   }
 }

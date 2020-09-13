@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 
 class ButtonTitledContainer extends StatelessWidget {
   final String title;
+  final String filterText;
   final Widget child;
   final double height;
 
-  ButtonTitledContainer(this.title, {this.child, this.height});
+  ButtonTitledContainer(this.title, this.filterText, {this.child, this.height});
 
   @override
   Widget build(BuildContext context) {
+
+    String _filterTitle;
+
+    if (filterText == "d") {
+      _filterTitle = "ရက်အလိုက် ";
+    } else if (filterText == "y") {
+      _filterTitle = "နှစ်အလိုက် ";
+    } else {
+      _filterTitle = "လအလိုက် ";
+    }
+
     // final double height = 200;
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -30,7 +42,7 @@ class ButtonTitledContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "တစ်လစာ $title",
+            "$_filterTitle $title",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
           ),
           // Row(
