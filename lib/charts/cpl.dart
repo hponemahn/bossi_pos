@@ -14,14 +14,28 @@ class CPL extends StatelessWidget {
 
     for (var i = 0; i < caps.length; i++) {
       if (i < 5) {
-
         for (var index = 0; index < profits.length; index++) {
-          if (index < 5 && profits[index].month == caps[i].month &&
-              profits[index].year == caps[i].year &&
-              profits[index].day == caps[i].day) {
-                profitData.add(CPLModel(profits[index].month, double.parse(profits[index].total)));
-                capitalData
-            .add(CPLModel(caps[i].month, double.parse(caps[i].total)));
+
+          final String cD = caps[i].day == null ? "" : caps[i].day;
+          final String cM = caps[i].month == null ? "" : caps[i].month;
+          final String cY = caps[i].year == null ? "" : caps[i].year;
+
+          final String pD =
+              profits[index].day == null ? "" : profits[index].day;
+          final String pM =
+              profits[index].month == null ? "" : profits[index].month;
+          final String pY =
+              profits[index].year == null ? "" : profits[index].year;
+
+          if (index < 5 &&
+              pM == cM &&
+              pY == cY &&
+              pD == cD) {
+
+            profitData.add(CPLModel(
+                pY + " " + pM + " " + pD, double.parse(profits[index].total)));
+            capitalData
+                .add(CPLModel(cY + " " + cM + " " + cD, double.parse(caps[i].total)));
           }
         }
       }
