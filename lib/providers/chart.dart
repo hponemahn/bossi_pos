@@ -14,14 +14,14 @@ class Chart with ChangeNotifier {
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get profit => [..._profitData];
 
-  Future<void> fetchCapData() async {
+  Future<void> fetchCapData([String filter]) async {
     try {
       final List<ChartModel> _loadedCapData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getCapital(filter: "m")),
+          documentNode: gql(_query.getCapital(filter: filter)),
         ),
       );
 
@@ -48,14 +48,14 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProfitData() async {
+  Future<void> fetchProfitData([String filter]) async {
     try {
       final List<ChartModel> _loadedProfitData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getProfit(filter: "m")),
+          documentNode: gql(_query.getProfit(filter: filter)),
         ),
       );
 

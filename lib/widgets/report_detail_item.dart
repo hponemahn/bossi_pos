@@ -12,6 +12,7 @@ class ReportDetailItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final String d = day == null ? "" : day;
     final String m = month == null ? "" : month;
     final String y = year == null ? "" : year;
@@ -36,11 +37,12 @@ class ReportDetailItem extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
-          title: Text(total),
+          title: Text(double.parse(total).toStringAsFixed(2)),
           subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
           trailing: Text(
-            pTotal,
+            // double.parse(pTotal).toStringAsFixed(2),
+            pTotal.isEmpty ? "" : double.parse(pTotal).toStringAsFixed(2),
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           )),
     );

@@ -62,6 +62,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 icon: Icon(Icons.more_vert),
                 onSelected: (val) {
                   print(val);
+                  Provider.of<Chart>(context, listen: false).fetchCapData(val);
+                  Provider.of<Chart>(context, listen: false).fetchProfitData(val);
                 },
                 itemBuilder: (context) => [
                       PopupMenuItem(
@@ -71,7 +73,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       ),
                       PopupMenuItem(
-                        value: "day",
+                        value: "d",
                         child: Container(
                           child: Row(
                             children: [
@@ -86,7 +88,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       ),
                       PopupMenuItem(
-                        value: "month",
+                        value: "m",
                         child: Container(
                           child: Row(
                             children: [
@@ -101,7 +103,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       ),
                       PopupMenuItem(
-                        value: "year",
+                        value: "y",
                         child: Container(
                           child: Row(
                             children: [
