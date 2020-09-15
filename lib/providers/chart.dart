@@ -9,9 +9,11 @@ class Chart with ChangeNotifier {
   ChartQuery _query = ChartQuery();
 
   List<ChartModel> _capData = [];
+  List<ChartModel> _saleData = [];
   List<ChartModel> _profitData = [];
 
   List<ChartModel> get cap => [..._capData];
+  List<ChartModel> get sale => [..._saleData];
   List<ChartModel> get profit => [..._profitData];
 
   Future<void> fetchCapData([String filter]) async {
@@ -48,6 +50,40 @@ class Chart with ChangeNotifier {
     }
   }
 
+  Future<void> fetchSaleData([String filter]) async {
+    try {
+      final List<ChartModel> _loadedSaleData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getSale(filter: filter)),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["saleChart"].length; i++) {
+          _loadedSaleData.add(
+            ChartModel(
+                result.data["saleChart"][i]['total'].toString(),
+                result.data["saleChart"][i]['day'],
+                result.data["saleChart"][i]['month'],
+                result.data["saleChart"][i]['year']),
+          );
+        }
+
+        _saleData = _loadedSaleData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
   Future<void> fetchProfitData([String filter]) async {
     try {
       final List<ChartModel> _loadedProfitData = [];
@@ -60,13 +96,13 @@ class Chart with ChangeNotifier {
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["profit"].length; i++) {
+        for (var i = 0; i < result.data["profitChart"].length; i++) {
           _loadedProfitData.add(
             ChartModel(
-                result.data["profit"][i]['total'].toString(),
-                result.data["profit"][i]['day'],
-                result.data["profit"][i]['month'],
-                result.data["profit"][i]['year']),
+                result.data["profitChart"][i]['total'].toString(),
+                result.data["profitChart"][i]['day'],
+                result.data["profitChart"][i]['month'],
+                result.data["profitChart"][i]['year']),
           );
         }
 

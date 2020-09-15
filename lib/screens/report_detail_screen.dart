@@ -1,6 +1,5 @@
 import 'package:bossi_pos/providers/chart.dart';
 import 'package:bossi_pos/widgets/report_detail_body.dart';
-import 'package:bossi_pos/widgets/report_detail_bottom.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +30,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
       if (_args['subVal'] == "cpl") {
         Provider.of<Chart>(context).fetchCapData();
+        Provider.of<Chart>(context).fetchSaleData();
         Provider.of<Chart>(context).fetchProfitData().then((_) {
           setState(() {
             _isLoading = false;
@@ -66,6 +66,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                     _filterText = val;
                   });
                   Provider.of<Chart>(context, listen: false).fetchCapData(val);
+                  Provider.of<Chart>(context, listen: false).fetchSaleData(val);
                   Provider.of<Chart>(context, listen: false).fetchProfitData(val);
                 },
                 itemBuilder: (context) => [
@@ -127,7 +128,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : ReportDetailBody(_title, _filterText, Provider.of<Chart>(context).cap, Provider.of<Chart>(context).profit),
-        bottomNavigationBar: ReportDetailButton());
+            : ReportDetailBody(_title, _filterText, Provider.of<Chart>(context).cap, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit),
+        // bottomNavigationBar: ReportDetailButton(Provider.of<Chart>(context).profit)
+        );
   }
 }

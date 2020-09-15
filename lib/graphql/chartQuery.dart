@@ -13,10 +13,24 @@ class ChartQuery {
     """;
   }
 
+  String getSale({String filter}) {
+    return """
+      {
+  saleChart(filter: "$filter") {   
+    total
+    day
+    year
+    month
+    months
+  }
+}
+    """;
+  }
+
   String getProfit({String filter}) {
     return """
       {
-  profit(filter: "$filter") {   
+  profitChart(filter: "$filter") {   
     total
     day
     year

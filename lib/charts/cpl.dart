@@ -4,36 +4,37 @@ import 'package:bossi_pos/charts/chart_model.dart';
 
 class CPL extends StatelessWidget {
   final List<ChartModel> caps;
+  final List<ChartModel> sales;
   final List<ChartModel> profits;
-  const CPL(this.caps, this.profits);
+  const CPL(this.caps, this.sales, this.profits);
 
   @override
   Widget build(BuildContext context) {
     final List<CPLModel> capitalData = [];
-    final List<CPLModel> profitData = [];
+    final List<CPLModel> saleData = [];
 
     for (var i = 0; i < caps.length; i++) {
       if (i < 5) {
-        for (var index = 0; index < profits.length; index++) {
+        for (var index = 0; index < sales.length; index++) {
 
           final String cD = caps[i].day == null ? "" : caps[i].day;
           final String cM = caps[i].month == null ? "" : caps[i].month;
           final String cY = caps[i].year == null ? "" : caps[i].year;
 
-          final String pD =
-              profits[index].day == null ? "" : profits[index].day;
-          final String pM =
-              profits[index].month == null ? "" : profits[index].month;
-          final String pY =
-              profits[index].year == null ? "" : profits[index].year;
+          final String sD =
+              sales[index].day == null ? "" : sales[index].day;
+          final String sM =
+              sales[index].month == null ? "" : sales[index].month;
+          final String sY =
+              sales[index].year == null ? "" : sales[index].year;
 
           if (index < 5 &&
-              pM == cM &&
-              pY == cY &&
-              pD == cD) {
+              sM == cM &&
+              sY == cY &&
+              sD == cD) {
 
-            profitData.add(CPLModel(
-                pY + " " + pM + " " + pD, double.parse(profits[index].total)));
+            saleData.add(CPLModel(
+                sY + " " + sM + " " + sD, double.parse(sales[index].total)));
             capitalData
                 .add(CPLModel(cY + " " + cM + " " + cD, double.parse(caps[i].total)));
           }
@@ -52,7 +53,7 @@ class CPL extends StatelessWidget {
         id: 'Tablet',
         domainFn: (CPLModel sales, _) => sales.date,
         measureFn: (CPLModel sales, _) => sales.total,
-        data: profitData,
+        data: saleData,
       ),
     ];
 

@@ -1,7 +1,9 @@
+import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:flutter/material.dart';
 
 class ReportDetailButton extends StatelessWidget {
-  const ReportDetailButton({Key key}) : super(key: key);
+  final List<ChartModel> profits;
+  const ReportDetailButton(this.profits);
 
   @override
   Widget build(BuildContext context) {

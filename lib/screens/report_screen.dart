@@ -18,8 +18,7 @@ class ReportScreen extends StatelessWidget {
         // physics: BouncingScrollPhysics(),
         children: [
           ReportExpansion('အရင်း၊ အမြတ်', Icons.account_balance, [
-            {"subTile": 'အရင်း၊ အမြတ်', "subVal": "cpl"},
-            {"subTile": 'အရောင်း၀င်ငွေ စုစုပေါင်း'}
+            {"subTile": 'အရင်း၊ အရောင်း၊ အမြတ် ငွေစုစုပေါင်း', "subVal": "cpl"},
           ]),
           ReportExpansion('အရောင်း', Icons.shopping_cart, [
             {"subTile": 'အရောင်း စုစုပေါင်း'},
