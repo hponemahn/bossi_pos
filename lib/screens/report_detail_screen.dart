@@ -1,5 +1,5 @@
 import 'package:bossi_pos/providers/chart.dart';
-import 'package:bossi_pos/widgets/report_detail_body.dart';
+import 'package:bossi_pos/widgets/sell_profit_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +18,31 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   var _isInit = true;
   var _isLoading = false;
   String _filterText = "m";
+  Map _arguments;
+
+  void _fetchDataWithCondition () {
+    if (_arguments['subVal'] == "sell&profit") {
+        Provider.of<Chart>(context).fetchSaleData();
+        Provider.of<Chart>(context).fetchProfitData().then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      } else if (_arguments['subVal'] == "capital") {
+        Provider.of<Chart>(context).fetchCapData();
+      }
+  }
+
+  void _fetchFilterData (String val) {
+    if (_arguments['subVal'] == "sell&profit") {
+      
+      Provider.of<Chart>(context, listen: false).fetchSaleData(val);
+      Provider.of<Chart>(context, listen: false).fetchProfitData(val);
+        
+      } else if (_arguments['subVal'] == "capital") {
+        Provider.of<Chart>(context, listen: false).fetchCapData(val);
+      }
+  }
 
   @override
   void didChangeDependencies() {
@@ -26,17 +51,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     if (_isInit) {
       setState(() {
         _isLoading = true;
+        _arguments = _args;
       });
 
-      if (_args['subVal'] == "cpl") {
-        Provider.of<Chart>(context).fetchCapData();
-        Provider.of<Chart>(context).fetchSaleData();
-        Provider.of<Chart>(context).fetchProfitData().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      }
+      _fetchDataWithCondition();
     }
 
     _isInit = false;
@@ -65,9 +83,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   setState(() {
                     _filterText = val;
                   });
-                  Provider.of<Chart>(context, listen: false).fetchCapData(val);
-                  Provider.of<Chart>(context, listen: false).fetchSaleData(val);
-                  Provider.of<Chart>(context, listen: false).fetchProfitData(val);
+
+                  _fetchFilterData(val);
+                  
                 },
                 itemBuilder: (context) => [
                       PopupMenuItem(
@@ -128,7 +146,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : ReportDetailBody(_title, _filterText, Provider.of<Chart>(context).cap, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit),
+              // Provider.of<Chart>(context).cap, 
+            : SellProfitBody(_title, _filterText, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit),
         // bottomNavigationBar: ReportDetailButton(Provider.of<Chart>(context).profit)
         );
   }
