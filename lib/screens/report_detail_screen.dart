@@ -1,5 +1,6 @@
 import 'package:bossi_pos/providers/chart.dart';
-import 'package:bossi_pos/widgets/sell_profit_body.dart';
+import 'package:bossi_pos/widgets/chart/capital_body.dart';
+import 'package:bossi_pos/widgets/chart/sell_profit_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,28 +21,30 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _filterText = "m";
   Map _arguments;
 
-  void _fetchDataWithCondition () {
+  void _fetchDataWithCondition() {
     if (_arguments['subVal'] == "sell&profit") {
-        Provider.of<Chart>(context).fetchSaleData();
-        Provider.of<Chart>(context).fetchProfitData().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
+      Provider.of<Chart>(context).fetchSaleData();
+      Provider.of<Chart>(context).fetchProfitData().then((_) {
+        setState(() {
+          _isLoading = false;
         });
-      } else if (_arguments['subVal'] == "capital") {
-        Provider.of<Chart>(context).fetchCapData();
-      }
+      });
+    } else if (_arguments['subVal'] == "capital") {
+      Provider.of<Chart>(context).fetchCapData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
   }
 
-  void _fetchFilterData (String val) {
+  void _fetchFilterData(String val) {
     if (_arguments['subVal'] == "sell&profit") {
-      
       Provider.of<Chart>(context, listen: false).fetchSaleData(val);
       Provider.of<Chart>(context, listen: false).fetchProfitData(val);
-        
-      } else if (_arguments['subVal'] == "capital") {
-        Provider.of<Chart>(context, listen: false).fetchCapData(val);
-      }
+    } else if (_arguments['subVal'] == "capital") {
+      Provider.of<Chart>(context, listen: false).fetchCapData(val);
+    }
   }
 
   @override
@@ -60,6 +63,22 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     _isInit = false;
     _title = _args['title'];
     super.didChangeDependencies();
+  }
+
+  Widget _widget() {
+    Widget _widgetBody;
+
+    if (_isLoading) {
+      _widgetBody = Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (_arguments['subVal'] == "sell&profit") {
+      _widgetBody = SellProfitBody(_title, _filterText, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit);
+    } else if (_arguments['subVal'] == "capital") {
+      _widgetBody = CapitalBody(_title, _filterText, Provider.of<Chart>(context).cap);
+    }
+
+    return _widgetBody;
   }
 
   @override
@@ -85,7 +104,6 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   });
 
                   _fetchFilterData(val);
-                  
                 },
                 itemBuilder: (context) => [
                       PopupMenuItem(
@@ -142,12 +160,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                     ]),
           ],
         ),
-        body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-              // Provider.of<Chart>(context).cap, 
-            : SellProfitBody(_title, _filterText, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit),
+        body: _widget()
+        // _isLoading
+        //     ? Center(
+        //         child: CircularProgressIndicator(),
+        //       )
+        //     :
+        //     SellProfitBody(_title, _filterText, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit),
         // bottomNavigationBar: ReportDetailButton(Provider.of<Chart>(context).profit)
         );
   }

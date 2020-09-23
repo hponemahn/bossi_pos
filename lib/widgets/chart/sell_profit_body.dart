@@ -1,7 +1,7 @@
 import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:bossi_pos/charts/sell_profit.dart';
 import 'package:bossi_pos/widgets/button_titled_container.dart';
-import 'package:bossi_pos/widgets/sell_profit_item.dart';
+import 'package:bossi_pos/widgets/chart/sell_profit_item.dart';
 import 'package:flutter/material.dart';
 
 class SellProfitBody extends StatelessWidget {
