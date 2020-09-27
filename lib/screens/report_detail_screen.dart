@@ -3,6 +3,7 @@ import 'package:bossi_pos/widgets/chart/capital_body.dart';
 import 'package:bossi_pos/widgets/chart/sell_profit_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 class ReportDetailScreen extends StatefulWidget {
   static const routeName = "report_detail";
@@ -73,9 +74,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         child: CircularProgressIndicator(),
       );
     } else if (_arguments['subVal'] == "sell&profit") {
-      _widgetBody = SellProfitBody(_title, _filterText, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit);
+      _widgetBody = SellProfitBody(_title, _filterText,
+          Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit);
     } else if (_arguments['subVal'] == "capital") {
-      _widgetBody = CapitalBody(_title, _filterText, Provider.of<Chart>(context).cap);
+      _widgetBody =
+          CapitalBody(_title, _filterText, Provider.of<Chart>(context).cap);
     }
 
     return _widgetBody;
@@ -90,7 +93,19 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               size: 30.0, color: Theme.of(context).accentColor, opacity: 10.0),
           actions: <Widget>[
             GestureDetector(
-              onTap: () {},
+              onTap: () async {
+                final List<DateTime> picked =
+                    await DateRagePicker.showDatePicker(
+                        context: context,
+                        initialFirstDate: new DateTime.now(),
+                        initialLastDate:
+                            (new DateTime.now()).add(new Duration(days: 7)),
+                        firstDate: new DateTime(DateTime.now().year - 50),
+                        lastDate: new DateTime(DateTime.now().year + 50));
+                if (picked != null && picked.length == 2) {
+                  print(picked);
+                }
+              },
               child: Icon(
                 Icons.filter_list,
                 size: 26.0,
