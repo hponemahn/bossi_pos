@@ -16,14 +16,14 @@ class Chart with ChangeNotifier {
   List<ChartModel> get sale => [..._saleData];
   List<ChartModel> get profit => [..._profitData];
 
-  Future<void> fetchCapData([String filter]) async {
+  Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedCapData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getCapital(filter: filter)),
+          documentNode: gql(_query.getCapital(filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 

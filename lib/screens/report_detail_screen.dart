@@ -20,6 +20,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   var _isInit = true;
   var _isLoading = false;
   String _filterText = "m";
+  String _startDate = "0";
+  String _endDate = "0";
   Map _arguments;
 
   void _fetchDataWithCondition() {
@@ -31,7 +33,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         });
       });
     } else if (_arguments['subVal'] == "capital") {
-      Provider.of<Chart>(context).fetchCapData().then((_) {
+      Provider.of<Chart>(context).fetchCapData(_filterText, _startDate, _endDate).then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -39,12 +41,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
   }
 
-  void _fetchFilterData(String val) {
+  void _fetchFilterData() {
     if (_arguments['subVal'] == "sell&profit") {
-      Provider.of<Chart>(context, listen: false).fetchSaleData(val);
-      Provider.of<Chart>(context, listen: false).fetchProfitData(val);
+      Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText);
+      Provider.of<Chart>(context, listen: false).fetchProfitData(_filterText);
     } else if (_arguments['subVal'] == "capital") {
-      Provider.of<Chart>(context, listen: false).fetchCapData(val);
+      Provider.of<Chart>(context, listen: false).fetchCapData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -94,7 +96,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           actions: <Widget>[
             GestureDetector(
               onTap: () async {
-                final List<DateTime> picked =
+                final List picked =
                     await DateRagePicker.showDatePicker(
                         context: context,
                         initialFirstDate: new DateTime.now(),
@@ -103,7 +105,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         firstDate: new DateTime(DateTime.now().year - 50),
                         lastDate: new DateTime(DateTime.now().year + 50));
                 if (picked != null && picked.length == 2) {
-                  print(picked);
+                  setState(() {
+                    _startDate = picked[0].toString();
+                    _endDate = picked[1].toString();
+                  });
+                  _fetchFilterData();
                 }
               },
               child: Icon(
@@ -116,9 +122,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 onSelected: (val) {
                   setState(() {
                     _filterText = val;
+                    // _startDate = "0";
+                    // _endDate = "0";
                   });
 
-                  _fetchFilterData(val);
+                  _fetchFilterData();
                 },
                 itemBuilder: (context) => [
                       PopupMenuItem(

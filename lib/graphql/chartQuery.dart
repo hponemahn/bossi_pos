@@ -1,8 +1,8 @@
 class ChartQuery {
-  String getCapital({String filter}) {
+  String getCapital({String filter, String startDate, String endDate}) {
     return """
       {
-  capital(filter: "$filter") {   
+  capital(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
     total
     day
     year
