@@ -25,7 +25,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _endDate = "0";
   Map _arguments;
 
-  void _fetchDataWithCondition() {
+  void _fetchDataOnCondition() {
     if (_arguments['subVal'] == "sell&profit") {
       Provider.of<Chart>(context).fetchSaleData(_filterText, _startDate, _endDate);
       Provider.of<Chart>(context).fetchProfitData(_filterText, _startDate, _endDate).then((_) {
@@ -39,6 +39,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "total-sell") {
+      Provider.of<Chart>(context).fetchSaleData(_filterText, _startDate, _endDate).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -48,6 +54,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       Provider.of<Chart>(context, listen: false).fetchProfitData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "capital") {
       Provider.of<Chart>(context, listen: false).fetchCapData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "total-sell") {
+      Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -61,7 +69,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         _arguments = _args;
       });
 
-      _fetchDataWithCondition();
+      _fetchDataOnCondition();
     }
 
     _isInit = false;
@@ -81,7 +89,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit);
     } else if (_arguments['subVal'] == "capital") {
       _widgetBody =
-          CapitalBody(_title, _filterText, Provider.of<Chart>(context).cap);
+          CapitalBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).cap);
+    } else if (_arguments['subVal'] == "total-sell") {
+      _widgetBody =
+          CapitalBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).sale);
     }
 
     return _widgetBody;

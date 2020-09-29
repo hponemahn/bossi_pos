@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:bossi_pos/charts/chart_model.dart';
 
-class Capital extends StatelessWidget {
+class CommonChart extends StatelessWidget {
   final List<ChartModel> caps;
-  const Capital(this.caps);
+  const CommonChart(this.caps);
 
   @override
   Widget build(BuildContext context) {

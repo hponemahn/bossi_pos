@@ -22,7 +22,7 @@ class ReportScreen extends StatelessWidget {
             {"subTile": 'အရောင်း၊ အမြတ် ငွေစုစုပေါင်း', "subVal": "sell&profit"},
           ]),
           ReportExpansion('အရောင်း', Icons.shopping_cart, [
-            {"subTile": 'အရောင်း စုစုပေါင်း'},
+            {"subTile": 'အရောင်း စုစုပေါင်း', "subVal": "total-sell"},
             {"subTile": 'ကုန်ပစ္စည်းအလိုက် အမြတ်'},
             {"subTile": 'ကုန်ပစ္စည်းအမျိုးအစားအလိုက် အမြတ်'},
             {"subTile": 'ကုန်ပစ္စည်းအလိုက် အရှုံး'},
