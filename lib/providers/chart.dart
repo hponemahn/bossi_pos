@@ -50,14 +50,14 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchSaleData([String filter]) async {
+  Future<void> fetchSaleData(String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedSaleData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getSale(filter: filter)),
+          documentNode: gql(_query.getSale(filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -84,14 +84,14 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProfitData([String filter]) async {
+  Future<void> fetchProfitData(String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedProfitData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getProfit(filter: filter)),
+          documentNode: gql(_query.getProfit(filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 

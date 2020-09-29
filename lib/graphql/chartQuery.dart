@@ -13,10 +13,10 @@ class ChartQuery {
     """;
   }
 
-  String getSale({String filter}) {
+  String getSale({String filter, String startDate, String endDate}) {
     return """
       {
-  saleChart(filter: "$filter") {   
+  saleChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
     total
     day
     year
@@ -27,10 +27,10 @@ class ChartQuery {
     """;
   }
 
-  String getProfit({String filter}) {
+  String getProfit({String filter, String startDate, String endDate}) {
     return """
       {
-  profitChart(filter: "$filter") {   
+  profitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
     total
     day
     year

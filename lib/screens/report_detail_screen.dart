@@ -4,6 +4,7 @@ import 'package:bossi_pos/widgets/chart/sell_profit_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:intl/intl.dart';
 
 class ReportDetailScreen extends StatefulWidget {
   static const routeName = "report_detail";
@@ -26,8 +27,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   void _fetchDataWithCondition() {
     if (_arguments['subVal'] == "sell&profit") {
-      Provider.of<Chart>(context).fetchSaleData();
-      Provider.of<Chart>(context).fetchProfitData().then((_) {
+      Provider.of<Chart>(context).fetchSaleData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context).fetchProfitData(_filterText, _startDate, _endDate).then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -43,8 +44,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   void _fetchFilterData() {
     if (_arguments['subVal'] == "sell&profit") {
-      Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText);
-      Provider.of<Chart>(context, listen: false).fetchProfitData(_filterText);
+      Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchProfitData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "capital") {
       Provider.of<Chart>(context, listen: false).fetchCapData(_filterText, _startDate, _endDate);
     }
@@ -86,6 +87,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     return _widgetBody;
   }
 
+  String _convertDateTime (val) {
+    var newFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+    return newFormat.format(DateFormat("yyyy-MM-dd HH:mm:ss").parse(val));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,8 +112,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         lastDate: new DateTime(DateTime.now().year + 50));
                 if (picked != null && picked.length == 2) {
                   setState(() {
-                    _startDate = picked[0].toString();
-                    _endDate = picked[1].toString();
+                    _startDate = _convertDateTime(picked[0].toString());
+                    _endDate = _convertDateTime(picked[1].toString());
                   });
                   _fetchFilterData();
                 }
