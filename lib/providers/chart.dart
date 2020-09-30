@@ -11,10 +11,12 @@ class Chart with ChangeNotifier {
   List<ChartModel> _capData = [];
   List<ChartModel> _saleData = [];
   List<ChartModel> _profitData = [];
+  List<ChartModel> _itemProfitData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
   List<ChartModel> get profit => [..._profitData];
+  List<ChartModel> get itemProfit => [..._itemProfitData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -31,10 +33,10 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["capital"].length; i++) {
           _loadedCapData.add(
             ChartModel(
-                result.data["capital"][i]['total'].toString(),
-                result.data["capital"][i]['day'],
-                result.data["capital"][i]['month'],
-                result.data["capital"][i]['year']),
+                total: result.data["capital"][i]['total'].toString(),
+                day: result.data["capital"][i]['day'],
+                month: result.data["capital"][i]['month'],
+                year: result.data["capital"][i]['year']),
           );
         }
 
@@ -65,10 +67,10 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["saleChart"].length; i++) {
           _loadedSaleData.add(
             ChartModel(
-                result.data["saleChart"][i]['total'].toString(),
-                result.data["saleChart"][i]['day'],
-                result.data["saleChart"][i]['month'],
-                result.data["saleChart"][i]['year']),
+                total: result.data["saleChart"][i]['total'].toString(),
+                day: result.data["saleChart"][i]['day'],
+                month: result.data["saleChart"][i]['month'],
+                year: result.data["saleChart"][i]['year']),
           );
         }
 
@@ -99,14 +101,50 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["profitChart"].length; i++) {
           _loadedProfitData.add(
             ChartModel(
-                result.data["profitChart"][i]['total'].toString(),
-                result.data["profitChart"][i]['day'],
-                result.data["profitChart"][i]['month'],
-                result.data["profitChart"][i]['year']),
+                total: result.data["profitChart"][i]['total'].toString(),
+                day: result.data["profitChart"][i]['day'],
+                month: result.data["profitChart"][i]['month'],
+                year: result.data["profitChart"][i]['year']),
           );
         }
 
         _profitData = _loadedProfitData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchItemProfitData(String filter, String startDate, String endDate) async {
+    try {
+      final List<ChartModel> _loadedItemProfitData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getItemProfit(filter: filter, startDate: startDate, endDate: endDate)),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["itemProfitChart"].length; i++) {
+          _loadedItemProfitData.add(
+            ChartModel(
+              name: result.data["itemProfitChart"][i]['name'],
+              qty: result.data["itemProfitChart"][i]['qty'],
+              total: result.data["itemProfitChart"][i]['total'].toString(),
+              day: result.data["itemProfitChart"][i]['day'],
+              month: result.data["itemProfitChart"][i]['month'],
+              year: result.data["itemProfitChart"][i]['year']),
+          );
+        }
+
+        _itemProfitData = _loadedItemProfitData;
         notifyListeners();
       } else {
         print('exception');

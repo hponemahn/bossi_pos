@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CapitalItem extends StatelessWidget {
+class CommonReportDetailItem extends StatelessWidget {
   final String total;
   final String day;
   final String month;
   final String year;
   
-  const CapitalItem(
+  const CommonReportDetailItem(
       this.total, this.day, this.month, this.year);
 
   @override

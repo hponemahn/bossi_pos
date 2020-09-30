@@ -1,6 +1,7 @@
 import 'package:bossi_pos/providers/chart.dart';
-import 'package:bossi_pos/widgets/chart/capital_body.dart';
+import 'package:bossi_pos/widgets/chart/common_report_detail_body.dart';
 import 'package:bossi_pos/widgets/chart/sell_profit_body.dart';
+import 'package:bossi_pos/widgets/chart/two_titles_report_detail_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
@@ -45,6 +46,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "item-profit") {
+      Provider.of<Chart>(context).fetchItemProfitData(_filterText, _startDate, _endDate).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -56,6 +63,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       Provider.of<Chart>(context, listen: false).fetchCapData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "total-sell") {
       Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "item-profit") {
+      Provider.of<Chart>(context, listen: false).fetchItemProfitData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -89,10 +98,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit);
     } else if (_arguments['subVal'] == "capital") {
       _widgetBody =
-          CapitalBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).cap);
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).cap);
     } else if (_arguments['subVal'] == "total-sell") {
       _widgetBody =
-          CapitalBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).sale);
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).sale);
+    } else if (_arguments['subVal'] == "item-profit") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).itemProfit);
     }
 
     return _widgetBody;
@@ -201,12 +213,6 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           ],
         ),
         body: _widget()
-        // _isLoading
-        //     ? Center(
-        //         child: CircularProgressIndicator(),
-        //       )
-        //     :
-        //     SellProfitBody(_title, _filterText, Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit),
         // bottomNavigationBar: ReportDetailButton(Provider.of<Chart>(context).profit)
         );
   }

@@ -3,30 +3,28 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:bossi_pos/charts/chart_model.dart';
 
 class CommonChart extends StatelessWidget {
-  final List<ChartModel> caps;
-  const CommonChart(this.caps);
+  final List<ChartModel> data;
+  const CommonChart(this.data);
 
   @override
   Widget build(BuildContext context) {
-    final List<SellProfitModel> capitalData = [];
+    final List<CommonModel> commonData = [];
 
-    for (var i = 0; i < caps.length; i++) {
+    for (var i = 0; i < data.length; i++) {
       if (i < 4) {
-        final String cD = caps[i].day == null ? "" : caps[i].day;
-        final String cM = caps[i].month == null ? "" : caps[i].month;
-        final String cY = caps[i].year == null ? "" : caps[i].year;
 
-        capitalData.add(SellProfitModel(
-            cY + " " + cM + " " + cD, double.parse(caps[i].total)));
+        commonData.add(CommonModel(
+            data[i].name, double.parse(data[i].total)));
+
       }
     }
 
-    List<charts.Series<SellProfitModel, String>> seriesList = [
-      new charts.Series<SellProfitModel, String>(
+    List<charts.Series<CommonModel, String>> seriesList = [
+      new charts.Series<CommonModel, String>(
         id: 'Desktop',
-        domainFn: (SellProfitModel sales, _) => sales.date,
-        measureFn: (SellProfitModel sales, _) => sales.total,
-        data: capitalData,
+        domainFn: (CommonModel sales, _) => sales.date,
+        measureFn: (CommonModel sales, _) => sales.total,
+        data: commonData,
       ),
     ];
 
@@ -39,9 +37,9 @@ class CommonChart extends StatelessWidget {
 }
 
 /// Sample ordinal data type.
-class SellProfitModel {
-  final double total;
+class CommonModel {
   final String date;
+  final double total;
 
-  SellProfitModel(this.date, this.total);
+  CommonModel(this.date, this.total);
 }

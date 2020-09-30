@@ -40,4 +40,20 @@ class ChartQuery {
 }
     """;
   }
+
+  String getItemProfit({String filter, String startDate, String endDate}) {
+    return """
+      {
+        itemProfitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
+          name
+          qty
+          total
+          day
+          year
+          month
+          months
+        }
+      }
+          """;
+  }
 }
