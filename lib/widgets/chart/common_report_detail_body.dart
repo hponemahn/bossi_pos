@@ -29,7 +29,7 @@ class CommonReportDetailBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ButtonTitledContainer(title, filterText,
-              child: Container(height: 200, child: CommonChart(data))),
+              child: Container(height: 200, child: CommonChart(subVal, data))),
         ),
       ),
       SliverToBoxAdapter(

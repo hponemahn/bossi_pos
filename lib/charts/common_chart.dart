@@ -3,26 +3,38 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:bossi_pos/charts/chart_model.dart';
 
 class CommonChart extends StatelessWidget {
+  final String subVal;
   final List<ChartModel> data;
-  const CommonChart(this.data);
+  const CommonChart(this.subVal, this.data);
 
   @override
   Widget build(BuildContext context) {
     final List<CommonModel> commonData = [];
 
-    for (var i = 0; i < data.length; i++) {
-      if (i < 4) {
+    if (subVal == "capital" || subVal == "total-sell") {
+      for (var i = 0; i < data.length; i++) {
+        if (i < 4) {
+          final String cD = data[i].day == null ? "" : data[i].day;
+          final String cM = data[i].month == null ? "" : data[i].month;
+          final String cY = data[i].year == null ? "" : data[i].year;
 
-        commonData.add(CommonModel(
-            data[i].name, double.parse(data[i].total)));
-
+          commonData.add(CommonModel(
+              cY + " " + cM + " " + cD, double.parse(data[i].total)));
+        }
+      }
+    } else if (subVal == "item-profit" || subVal == "itemCat-profit") {
+      for (var i = 0; i < data.length; i++) {
+        if (i < 4) {
+          commonData
+              .add(CommonModel(data[i].name, double.parse(data[i].total)));
+        }
       }
     }
 
     List<charts.Series<CommonModel, String>> seriesList = [
       new charts.Series<CommonModel, String>(
         id: 'Desktop',
-        domainFn: (CommonModel sales, _) => sales.date,
+        domainFn: (CommonModel sales, _) => sales.data,
         measureFn: (CommonModel sales, _) => sales.total,
         data: commonData,
       ),
@@ -38,8 +50,8 @@ class CommonChart extends StatelessWidget {
 
 /// Sample ordinal data type.
 class CommonModel {
-  final String date;
+  final String data;
   final double total;
 
-  CommonModel(this.date, this.total);
+  CommonModel(this.data, this.total);
 }
