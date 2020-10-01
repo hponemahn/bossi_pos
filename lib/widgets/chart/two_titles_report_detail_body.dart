@@ -28,7 +28,7 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("အမည် - ရက်စွဲ"),
+                    Text(subVal == "itemCat-profit" ? "အမျိုးအမည် - ရက်စွဲ" : "အမည် - ရက်စွဲ"),
                     Row(
                       // spacing: 12,
                       children: [

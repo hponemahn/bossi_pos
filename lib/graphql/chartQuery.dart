@@ -56,4 +56,20 @@ class ChartQuery {
       }
           """;
   }
+
+  String getItemCatProfit({String filter, String startDate, String endDate}) {
+    return """
+      {
+        itemCatProfitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
+          name
+          qty
+          total
+          day
+          year
+          month
+          months
+        }
+      }
+          """;
+  }
 }

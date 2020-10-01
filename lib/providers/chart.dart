@@ -12,11 +12,13 @@ class Chart with ChangeNotifier {
   List<ChartModel> _saleData = [];
   List<ChartModel> _profitData = [];
   List<ChartModel> _itemProfitData = [];
+  List<ChartModel> _itemCatProfitData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
   List<ChartModel> get profit => [..._profitData];
   List<ChartModel> get itemProfit => [..._itemProfitData];
+  List<ChartModel> get itemCatProfit => [..._itemCatProfitData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -145,6 +147,42 @@ class Chart with ChangeNotifier {
         }
 
         _itemProfitData = _loadedItemProfitData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchItemCatProfitData(String filter, String startDate, String endDate) async {
+    try {
+      final List<ChartModel> _loadedItemCatProfitData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getItemCatProfit(filter: filter, startDate: startDate, endDate: endDate)),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["itemCatProfitChart"].length; i++) {
+          _loadedItemCatProfitData.add(
+            ChartModel(
+              name: result.data["itemCatProfitChart"][i]['name'],
+              qty: result.data["itemCatProfitChart"][i]['qty'],
+              total: result.data["itemCatProfitChart"][i]['total'].toString(),
+              day: result.data["itemCatProfitChart"][i]['day'],
+              month: result.data["itemCatProfitChart"][i]['month'],
+              year: result.data["itemCatProfitChart"][i]['year']),
+          );
+        }
+
+        _itemCatProfitData = _loadedItemCatProfitData;
         notifyListeners();
       } else {
         print('exception');

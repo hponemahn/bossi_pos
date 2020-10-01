@@ -52,6 +52,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "itemCat-profit") {
+      Provider.of<Chart>(context).fetchItemCatProfitData(_filterText, _startDate, _endDate).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -65,6 +71,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "item-profit") {
       Provider.of<Chart>(context, listen: false).fetchItemProfitData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "itemCat-profit") {
+      Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -105,6 +113,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "item-profit") {
       _widgetBody =
           TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).itemProfit);
+    } else if (_arguments['subVal'] == "itemCat-profit") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).itemCatProfit);
     }
 
     return _widgetBody;
