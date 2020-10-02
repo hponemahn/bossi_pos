@@ -12,8 +12,22 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
   const TwoTitlesReportDetailBody(
       this.title, this.filterText, this.subVal, this.data);
 
+  String _getTitle() {
+    String _title;
+    if (subVal == "itemCat-profit" || subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat") {
+      _title = "အမျိုးအမည် - ရက်စွဲ";
+    } else {
+      _title = "အမည် - ရက်စွဲ";
+    }
+    
+    return _title;
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    
+
     return CustomScrollView(slivers: <Widget>[
       SliverToBoxAdapter(
         child: Padding(
@@ -28,7 +42,7 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(subVal == "itemCat-profit" ? "အမျိုးအမည် - ရက်စွဲ" : "အမည် - ရက်စွဲ"),
+                    Text(_getTitle()),
                     Row(
                       // spacing: 12,
                       children: [
@@ -44,7 +58,7 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
           delegate: SliverChildBuilderDelegate(
         (context, i) {
           return TwoTitlesReportDetailItem(
-              data[i]);
+              subVal, data[i]);
         },
         childCount: data.length,
       )),

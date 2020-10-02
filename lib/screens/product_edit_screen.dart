@@ -235,7 +235,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           padding: EdgeInsets.all(10),
           child: Form(
             key: _formKey,
-            autovalidate: true,
+            // autovalidate: true,
+            autovalidateMode: AutovalidateMode.always,
             child: SingleChildScrollView(
               child: Column(
                 children: [

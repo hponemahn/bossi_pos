@@ -13,12 +13,16 @@ class Chart with ChangeNotifier {
   List<ChartModel> _profitData = [];
   List<ChartModel> _itemProfitData = [];
   List<ChartModel> _itemCatProfitData = [];
+  List<ChartModel> _bestSellingItem = [];
+  List<ChartModel> _worstSellingItem = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
   List<ChartModel> get profit => [..._profitData];
   List<ChartModel> get itemProfit => [..._itemProfitData];
   List<ChartModel> get itemCatProfit => [..._itemCatProfitData];
+  List<ChartModel> get bestSellingItem => [..._bestSellingItem];
+  List<ChartModel> get worstSellingItem => [..._worstSellingItem];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -183,6 +187,80 @@ class Chart with ChangeNotifier {
         }
 
         _itemCatProfitData = _loadedItemCatProfitData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchBestSellingItemData(String filter, String startDate, String endDate) async {
+    try {
+      final List<ChartModel> _loadedBestSellingItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getBestSellingItem(filter: filter, startDate: startDate, endDate: endDate)),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["bestSellingItemChart"].length; i++) {
+          _loadedBestSellingItemData.add(
+            ChartModel(
+              name: result.data["bestSellingItemChart"][i]['name'],
+              catName: result.data["bestSellingItemChart"][i]['catName'],
+              qty: result.data["bestSellingItemChart"][i]['qty'],
+              total: result.data["bestSellingItemChart"][i]['total'].toString(),
+              day: result.data["bestSellingItemChart"][i]['day'],
+              month: result.data["bestSellingItemChart"][i]['month'],
+              year: result.data["bestSellingItemChart"][i]['year']),
+          );
+        }
+
+        _bestSellingItem = _loadedBestSellingItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchWorstSellingItemData(String filter, String startDate, String endDate) async {
+    try {
+      final List<ChartModel> _loadedWorstSellingItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getWorstSellingItem(filter: filter, startDate: startDate, endDate: endDate)),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["worstSellingItemChart"].length; i++) {
+          _loadedWorstSellingItemData.add(
+            ChartModel(
+              name: result.data["worstSellingItemChart"][i]['name'],
+              catName: result.data["worstSellingItemChart"][i]['catName'],
+              qty: result.data["worstSellingItemChart"][i]['qty'],
+              total: result.data["worstSellingItemChart"][i]['total'].toString(),
+              day: result.data["worstSellingItemChart"][i]['day'],
+              month: result.data["worstSellingItemChart"][i]['month'],
+              year: result.data["worstSellingItemChart"][i]['year']),
+          );
+        }
+
+        _worstSellingItem = _loadedWorstSellingItemData;
         notifyListeners();
       } else {
         print('exception');

@@ -58,6 +58,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "bestSellingItem" || _arguments['subVal'] == "bestSellingItemCat") {
+      Provider.of<Chart>(context).fetchBestSellingItemData(_filterText, _startDate, _endDate).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
+      Provider.of<Chart>(context).fetchWorstSellingItemData(_filterText, _startDate, _endDate).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -73,6 +85,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       Provider.of<Chart>(context, listen: false).fetchItemProfitData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "itemCat-profit") {
       Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "bestSellingItem" || _arguments['subVal'] == "bestSellingItemCat") {
+      Provider.of<Chart>(context, listen: false).fetchBestSellingItemData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
+      Provider.of<Chart>(context, listen: false).fetchWorstSellingItemData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -116,6 +132,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "itemCat-profit") {
       _widgetBody =
           TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).itemCatProfit);
+    } else if (_arguments['subVal'] == "bestSellingItem" || _arguments['subVal'] == "bestSellingItemCat") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).bestSellingItem);
+    } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).worstSellingItem);
     }
 
     return _widgetBody;

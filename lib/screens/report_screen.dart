@@ -25,12 +25,10 @@ class ReportScreen extends StatelessWidget {
             {"subTile": 'အရောင်း စုစုပေါင်း', "subVal": "total-sell"},
             {"subTile": 'ကုန်ပစ္စည်းအလိုက် အမြတ်', "subVal": "item-profit"},
             {"subTile": 'ကုန်ပစ္စည်းအမျိုးအစားအလိုက် အမြတ်', "subVal": "itemCat-profit"},
-            {"subTile": 'ကုန်ပစ္စည်းအလိုက် အရှုံး'},
-            {"subTile": 'ကုန်ပစ္စည်းအမျိုးအစားအလိုက် အရှုံး'},
-            {"subTile": 'ရောင်းအားအကောင်ဆုံး ကုန်ပစ္စည်း'},
-            {"subTile": 'ရောင်းအားအကောင်ဆုံး အမျိုးအစား'},
-            {"subTile": 'ရောင်းအားအနည်းဆုံး ကုန်ပစ္စည်း'},
-            {"subTile": 'ရောင်းအားအနည်းဆုံး အမျိုးအစား'}
+            {"subTile": 'ရောင်းအားအကောင်ဆုံး ကုန်ပစ္စည်း', "subVal": "bestSellingItem"},
+            {"subTile": 'ရောင်းအားအကောင်ဆုံး အမျိုးအစား', "subVal": "bestSellingItemCat"},
+            {"subTile": 'ရောင်းအားအနည်းဆုံး ကုန်ပစ္စည်း', "subVal": "worstSellingItem"},
+            {"subTile": 'ရောင်းအားအနည်းဆုံး အမျိုးအစား', "subVal": "worstSellingItemCat"}
           ]),
           ReportExpansion('အ၀ယ်', Icons.attach_money,
               // အရောင်း၀င်ငွေ စုစုပေါင်း
@@ -51,6 +49,7 @@ class ReportScreen extends StatelessWidget {
                 {"subTile": 'ပျောက်ဆုံး'},
                 {"subTile": 'ဒိတ်လွန်နေသော ကုန်ပစ္စည်း'}
               ]),
+          SizedBox(height: 20)
         ],
       ),
     );

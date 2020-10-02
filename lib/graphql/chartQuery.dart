@@ -72,4 +72,38 @@ class ChartQuery {
       }
           """;
   }
+
+  String getBestSellingItem({String filter, String startDate, String endDate}) {
+    return """
+      {
+        bestSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
+          name
+          catName
+          qty
+          total
+          day
+          year
+          month
+          months
+        }
+      }
+          """;
+  }
+
+  String getWorstSellingItem({String filter, String startDate, String endDate}) {
+    return """
+      {
+        worstSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
+          name
+          catName
+          qty
+          total
+          day
+          year
+          month
+          months
+        }
+      }
+          """;
+  }
 }

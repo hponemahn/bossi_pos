@@ -29,6 +29,20 @@ class CommonChart extends StatelessWidget {
               .add(CommonModel(data[i].name, double.parse(data[i].total)));
         }
       }
+    } else if (subVal == "bestSellingItem" || subVal == "worstSellingItem") {
+      for (var i = 0; i < data.length; i++) {
+        if (i < 4) {
+          commonData
+              .add(CommonModel(data[i].name, double.parse(data[i].qty)));
+        }
+      }
+    } else if (subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat") {
+      for (var i = 0; i < data.length; i++) {
+        if (i < 4) {
+          commonData
+              .add(CommonModel(data[i].catName, double.parse(data[i].qty)));
+        }
+      }
     }
 
     List<charts.Series<CommonModel, String>> seriesList = [

@@ -2,9 +2,10 @@ import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:flutter/material.dart';
 
 class TwoTitlesReportDetailItem extends StatelessWidget {
+  final String subVal;
   final ChartModel data;
 
-  const TwoTitlesReportDetailItem(this.data);
+  const TwoTitlesReportDetailItem(this.subVal, this.data);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class TwoTitlesReportDetailItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
           // title: Text(double.parse(total).toStringAsFixed(2)),
-          title: Text(data.name),
+          title: Text(subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat" ? data.catName : data.name),
           subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
           trailing: Wrap(

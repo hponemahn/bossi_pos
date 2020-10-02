@@ -174,8 +174,9 @@ class CartScreen extends StatelessWidget {
                                             TextInputType.numberWithOptions(
                                                 signed: true, decimal: true),
                                         inputFormatters: <TextInputFormatter>[
-                                          WhitelistingTextInputFormatter
-                                              .digitsOnly
+                                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                                          // WhitelistingTextInputFormatter
+                                          //     .digitsOnly
                                         ],
                                         textInputAction: TextInputAction.done,
                                         // inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],

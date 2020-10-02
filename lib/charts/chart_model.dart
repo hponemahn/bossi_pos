@@ -1,5 +1,6 @@
 class ChartModel {
   final String name;
+  final String catName;
   final String qty;
   final String total;
   final String day;
@@ -8,6 +9,7 @@ class ChartModel {
 
   ChartModel({
     this.name,
+    this.catName,
     this.qty,
     this.total,
     this.day,
