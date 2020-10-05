@@ -15,6 +15,9 @@ class Chart with ChangeNotifier {
   List<ChartModel> _itemCatProfitData = [];
   List<ChartModel> _bestSellingItem = [];
   List<ChartModel> _worstSellingItem = [];
+  List<ChartModel> _buyData = [];
+  List<ChartModel> _mostBuyingItemData = [];
+  List<ChartModel> _mostBuyingItemCatData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
@@ -23,6 +26,9 @@ class Chart with ChangeNotifier {
   List<ChartModel> get itemCatProfit => [..._itemCatProfitData];
   List<ChartModel> get bestSellingItem => [..._bestSellingItem];
   List<ChartModel> get worstSellingItem => [..._worstSellingItem];
+  List<ChartModel> get buy => [..._buyData];
+  List<ChartModel> get mostBuyingItem => [..._mostBuyingItemData];
+  List<ChartModel> get mostBuyingItemCat => [..._mostBuyingItemCatData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -261,6 +267,108 @@ class Chart with ChangeNotifier {
         }
 
         _worstSellingItem = _loadedWorstSellingItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchBuyData(String filter, String startDate, String endDate) async {
+    try {
+      final List<ChartModel> _loadedBuyData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getBuy(filter: filter, startDate: startDate, endDate: endDate)),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["buyChart"].length; i++) {
+          _loadedBuyData.add(
+            ChartModel(
+                total: result.data["buyChart"][i]['total'].toString(),
+                day: result.data["buyChart"][i]['day'],
+                month: result.data["buyChart"][i]['month'],
+                year: result.data["buyChart"][i]['year']),
+          );
+        }
+
+        _buyData = _loadedBuyData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchMostBuyingItemData() async {
+    try {
+      final List<ChartModel> _loadedMostBuyingItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getMostBuyingItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["mostBuyingItemChart"].length; i++) {
+          _loadedMostBuyingItemData.add(
+            ChartModel(
+                name: result.data["mostBuyingItemChart"][i]['name'],
+                qty: result.data["mostBuyingItemChart"][i]['qty'],
+                total: result.data["mostBuyingItemChart"][i]['total'].toString(),
+              ),
+          );
+        }
+
+        _mostBuyingItemData = _loadedMostBuyingItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchMostBuyingItemCatData() async {
+    try {
+      final List<ChartModel> _loadedMostBuyingItemCatData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getMostBuyingItemCat()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["mostBuyingItemCatChart"].length; i++) {
+          _loadedMostBuyingItemCatData.add(
+            ChartModel(
+                catName: result.data["mostBuyingItemCatChart"][i]['catName'],
+                qty: result.data["mostBuyingItemCatChart"][i]['qty'],
+                total: result.data["mostBuyingItemCatChart"][i]['total'].toString(),
+              ),
+          );
+        }
+
+        _mostBuyingItemCatData = _loadedMostBuyingItemCatData;
         notifyListeners();
       } else {
         print('exception');

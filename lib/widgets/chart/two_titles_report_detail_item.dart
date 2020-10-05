@@ -23,7 +23,7 @@ class TwoTitlesReportDetailItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
           // title: Text(double.parse(total).toStringAsFixed(2)),
-          title: Text(subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat" ? data.catName : data.name),
+          title: Text(subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat" || subVal == "mostBuy-itemCat" ? data.catName : data.name),
           subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
           trailing: Wrap(

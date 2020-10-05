@@ -11,7 +11,7 @@ class CommonChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<CommonModel> commonData = [];
 
-    if (subVal == "capital" || subVal == "total-sell") {
+    if (subVal == "capital" || subVal == "total-sell" || subVal == "buy") {
       for (var i = 0; i < data.length; i++) {
         if (i < 4) {
           final String cD = data[i].day == null ? "" : data[i].day;
@@ -22,7 +22,7 @@ class CommonChart extends StatelessWidget {
               cY + " " + cM + " " + cD, double.parse(data[i].total)));
         }
       }
-    } else if (subVal == "item-profit" || subVal == "itemCat-profit") {
+    } else if (subVal == "item-profit" || subVal == "itemCat-profit" || subVal == "mostBuy-item") {
       for (var i = 0; i < data.length; i++) {
         if (i < 4) {
           commonData
@@ -41,6 +41,13 @@ class CommonChart extends StatelessWidget {
         if (i < 4) {
           commonData
               .add(CommonModel(data[i].catName, double.parse(data[i].qty)));
+        }
+      }
+    } else if (subVal == "mostBuy-itemCat") {
+      for (var i = 0; i < data.length; i++) {
+        if (i < 4) {
+          commonData
+              .add(CommonModel(data[i].catName, double.parse(data[i].total)));
         }
       }
     }

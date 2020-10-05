@@ -15,6 +15,8 @@ class CommonReportDetailBody extends StatelessWidget {
     String _rT;
     if (subVal == "total-sell") {
       _rT = "အရောင်း";
+    } else if (subVal == "buy") {
+      _rT = "အ၀ယ်";
     } else {
       _rT = "အရင်း";
     }

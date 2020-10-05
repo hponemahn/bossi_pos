@@ -17,8 +17,10 @@ class ButtonTitledContainer extends StatelessWidget {
       _filterTitle = "ရက်အလိုက် ";
     } else if (filterText == "y") {
       _filterTitle = "နှစ်အလိုက် ";
-    } else {
+    } else if (filterText == "m") {
       _filterTitle = "လအလိုက် ";
+    } else {
+      _filterTitle = "";
     }
 
     // final double height = 200;

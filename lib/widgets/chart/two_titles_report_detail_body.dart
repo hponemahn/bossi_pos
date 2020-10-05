@@ -16,6 +16,10 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
     String _title;
     if (subVal == "itemCat-profit" || subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat") {
       _title = "အမျိုးအမည် - ရက်စွဲ";
+    } else if (subVal == "mostBuy-itemCat") {
+      _title = "အမျိုးအမည်";
+    } else if (subVal == "mostBuy-item") {
+      _title = "အမည်";
     } else {
       _title = "အမည် - ရက်စွဲ";
     }
@@ -25,8 +29,6 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    
 
     return CustomScrollView(slivers: <Widget>[
       SliverToBoxAdapter(
@@ -50,7 +52,7 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
                         SizedBox(width: 3),
                         Text("|"),
                         SizedBox(width: 3),
-                        Text("အမြတ်"),
+                        Text(subVal == "mostBuy-item" || subVal == "mostBuy-itemCat" ? "အ၀ယ်" : "အမြတ်"),
                       ],
                     )
                   ]))),

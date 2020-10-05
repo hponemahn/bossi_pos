@@ -106,4 +106,42 @@ class ChartQuery {
       }
           """;
   }
+
+  String getBuy({String filter, String startDate, String endDate}) {
+    return """
+      {
+  buyChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
+    total
+    day
+    year
+    month
+    months
+  }
+}
+    """;
+  }
+
+  String getMostBuyingItem() {
+    return """
+        {
+          mostBuyingItemChart { 
+            name
+            qty
+            total
+          }
+        }
+    """;
+  }
+
+  String getMostBuyingItemCat() {
+    return """
+        {
+          mostBuyingItemCatChart { 
+            catName
+            qty
+            total
+          }
+        }
+    """;
+  }
 }

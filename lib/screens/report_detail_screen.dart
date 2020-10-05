@@ -70,6 +70,30 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "buy") {
+      Provider.of<Chart>(context).fetchBuyData(_filterText, _startDate, _endDate).then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    } else if (_arguments['subVal'] == "mostBuy-item") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchMostBuyingItemData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    } else if (_arguments['subVal'] == "mostBuy-itemCat") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchMostBuyingItemCatData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -89,6 +113,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       Provider.of<Chart>(context, listen: false).fetchBestSellingItemData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
       Provider.of<Chart>(context, listen: false).fetchWorstSellingItemData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "buy") {
+      Provider.of<Chart>(context, listen: false).fetchBuyData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -138,6 +164,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
       _widgetBody =
           TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).worstSellingItem);
+    } else if (_arguments['subVal'] == "buy") {
+      _widgetBody =
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).buy);
+    } else if (_arguments['subVal'] == "mostBuy-item") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItem);
+    } else if (_arguments['subVal'] == "mostBuy-itemCat") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItemCat);
     }
 
     return _widgetBody;
@@ -156,7 +191,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           actionsIconTheme: IconThemeData(
               size: 30.0, color: Theme.of(context).accentColor, opacity: 10.0),
           actions: <Widget>[
-            GestureDetector(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" ? GestureDetector(
               onTap: () async {
                 final List picked =
                     await DateRagePicker.showDatePicker(
@@ -178,14 +213,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 Icons.filter_list,
                 size: 26.0,
               ),
-            ),
-            PopupMenuButton(
+            ) : Text(""),
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" ? PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 onSelected: (val) {
                   setState(() {
                     _filterText = val;
-                    // _startDate = "0";
-                    // _endDate = "0";
                   });
 
                   _fetchFilterData();
@@ -242,7 +275,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                           ),
                         ),
                       ),
-                    ]),
+                    ]) : Text(""),
           ],
         ),
         body: _widget()
