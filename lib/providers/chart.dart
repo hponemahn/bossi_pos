@@ -18,6 +18,9 @@ class Chart with ChangeNotifier {
   List<ChartModel> _buyData = [];
   List<ChartModel> _mostBuyingItemData = [];
   List<ChartModel> _mostBuyingItemCatData = [];
+  List<ChartModel> _leastBuyingItemData = [];
+  List<ChartModel> _leastBuyingItemCatData = [];
+  List<ChartModel> _totalItemData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
@@ -29,6 +32,9 @@ class Chart with ChangeNotifier {
   List<ChartModel> get buy => [..._buyData];
   List<ChartModel> get mostBuyingItem => [..._mostBuyingItemData];
   List<ChartModel> get mostBuyingItemCat => [..._mostBuyingItemCatData];
+  List<ChartModel> get leastBuyingItem => [..._leastBuyingItemData];
+  List<ChartModel> get leastBuyingItemCat => [..._leastBuyingItemCatData];
+  List<ChartModel> get totalItem => [..._totalItemData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -369,6 +375,107 @@ class Chart with ChangeNotifier {
         }
 
         _mostBuyingItemCatData = _loadedMostBuyingItemCatData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchLeastBuyingItemData() async {
+    try {
+      final List<ChartModel> _loadedLeastBuyingItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getLeastBuyingItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["leastBuyingItemChart"].length; i++) {
+          _loadedLeastBuyingItemData.add(
+            ChartModel(
+                name: result.data["leastBuyingItemChart"][i]['name'],
+                qty: result.data["leastBuyingItemChart"][i]['qty'],
+                total: result.data["leastBuyingItemChart"][i]['total'].toString(),
+              ),
+          );
+        }
+
+        _leastBuyingItemData = _loadedLeastBuyingItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchLeastBuyingItemCatData() async {
+    try {
+      final List<ChartModel> _loadedLeastBuyingItemCatData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getLeastBuyingItemCat()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["leastBuyingItemCatChart"].length; i++) {
+          _loadedLeastBuyingItemCatData.add(
+            ChartModel(
+                catName: result.data["leastBuyingItemCatChart"][i]['catName'],
+                qty: result.data["leastBuyingItemCatChart"][i]['qty'],
+                total: result.data["leastBuyingItemCatChart"][i]['total'].toString(),
+              ),
+          );
+        }
+
+        _leastBuyingItemCatData = _loadedLeastBuyingItemCatData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchTotalItemData() async {
+    try {
+      final List<ChartModel> _loadedTotalItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getTotalItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["totalItemChart"].length; i++) {
+          _loadedTotalItemData.add(
+            ChartModel(
+                name: result.data["totalItemChart"][i]['name'],
+                qty: result.data["totalItemChart"][i]['qty'],
+              ),
+          );
+        }
+
+        _totalItemData = _loadedTotalItemData;
         notifyListeners();
       } else {
         print('exception');

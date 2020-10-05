@@ -1,20 +1,36 @@
+import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CommonReportDetailItem extends StatelessWidget {
-  final String total;
-  final String day;
-  final String month;
-  final String year;
+  final String subVal;
+  final ChartModel data;
   
-  const CommonReportDetailItem(
-      this.total, this.day, this.month, this.year);
+  const CommonReportDetailItem(this.subVal, this.data);
+
+  Widget _rightContent () {
+    Widget _widget;
+    if (subVal != "totalItem") {
+      _widget = Text(NumberFormat.currency(symbol: '').format(int.parse(data.total)),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          );
+    } else if (subVal == "totalItem") {
+      _widget = Text(data.qty,
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          );      
+    } else {
+      _widget = Text("");
+    }
+
+    return _widget;
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final String d = day == null ? "" : day;
-    final String m = month == null ? "" : month;
-    final String y = year == null ? "" : year;
+    final String d = data.day == null ? "" : data.day;
+    final String m = data.month == null ? "" : data.month;
+    final String y = data.year == null ? "" : data.year;
 
     return Card(
       margin: EdgeInsets.symmetric(
@@ -26,13 +42,10 @@ class CommonReportDetailItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
           // title: Text(double.parse(total).toStringAsFixed(2)),
-          title: Text(y + " " + m + " " + d),
+          title: Text(subVal != "totalItem" ? y + " " + m + " " + d : data.name[0].toUpperCase() + data.name.substring(1)),
           // subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
-          trailing: Text(
-            total.isEmpty ? "" : double.parse(total).toStringAsFixed(2),
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-          ),
+          trailing: _rightContent(),
           ),
     );
   }

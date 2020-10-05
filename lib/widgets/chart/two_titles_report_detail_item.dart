@@ -1,5 +1,6 @@
 import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TwoTitlesReportDetailItem extends StatelessWidget {
   final String subVal;
@@ -22,8 +23,8 @@ class TwoTitlesReportDetailItem extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
-          // title: Text(double.parse(total).toStringAsFixed(2)),
-          title: Text(subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat" || subVal == "mostBuy-itemCat" ? data.catName : data.name),
+          // title: Text(double.parse(total).toStringAsFixed(2)),  
+          title: Text(subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat" || subVal == "mostBuy-itemCat" || subVal == "leastBuy-itemCat" ? data.catName[0].toUpperCase() + data.catName.substring(1) : data.name[0].toUpperCase() + data.name.substring(1)),
           subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
           trailing: Wrap(
@@ -36,7 +37,9 @@ class TwoTitlesReportDetailItem extends StatelessWidget {
               Text(
                 data.total.isEmpty
                     ? ""
-                    : double.parse(data.total).toStringAsFixed(2),
+                    : 
+                    NumberFormat.currency(symbol: '').format(int.parse(data.total)),
+                    // double.parse(data.total).toStringAsFixed(2),
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ],

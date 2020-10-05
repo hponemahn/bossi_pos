@@ -16,9 +16,9 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
     String _title;
     if (subVal == "itemCat-profit" || subVal == "bestSellingItemCat" || subVal == "worstSellingItemCat") {
       _title = "အမျိုးအမည် - ရက်စွဲ";
-    } else if (subVal == "mostBuy-itemCat") {
+    } else if (subVal == "mostBuy-itemCat" || subVal == "leastBuy-itemCat") {
       _title = "အမျိုးအမည်";
-    } else if (subVal == "mostBuy-item") {
+    } else if (subVal == "mostBuy-item" || subVal == "leastBuy-item") {
       _title = "အမည်";
     } else {
       _title = "အမည် - ရက်စွဲ";
@@ -52,7 +52,7 @@ class TwoTitlesReportDetailBody extends StatelessWidget {
                         SizedBox(width: 3),
                         Text("|"),
                         SizedBox(width: 3),
-                        Text(subVal == "mostBuy-item" || subVal == "mostBuy-itemCat" ? "အ၀ယ်" : "အမြတ်"),
+                        Text(subVal == "mostBuy-item" || subVal == "mostBuy-itemCat" || subVal == "leastBuy-item" || subVal == "leastBuy-itemCat" ? "အ၀ယ်" : "အမြတ်"),
                       ],
                     )
                   ]))),

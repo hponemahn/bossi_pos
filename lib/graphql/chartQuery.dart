@@ -144,4 +144,39 @@ class ChartQuery {
         }
     """;
   }
+
+  String getLeastBuyingItem() {
+    return """
+        {
+          leastBuyingItemChart { 
+            name
+            qty
+            total
+          }
+        }
+    """;
+  }
+
+  String getLeastBuyingItemCat() {
+    return """
+        {
+          leastBuyingItemCatChart { 
+            catName
+            qty
+            total
+          }
+        }
+    """;
+  }
+
+  String getTotalItem() {
+    return """
+        {
+          totalItemChart { 
+            name
+            qty
+          }
+        }
+    """;
+  }
 }

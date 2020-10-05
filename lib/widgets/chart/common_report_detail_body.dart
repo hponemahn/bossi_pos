@@ -17,6 +17,8 @@ class CommonReportDetailBody extends StatelessWidget {
       _rT = "အရောင်း";
     } else if (subVal == "buy") {
       _rT = "အ၀ယ်";
+    } else if (subVal == "totalItem") {
+      _rT = "အရေအတွက်";
     } else {
       _rT = "အရင်း";
     }
@@ -39,14 +41,14 @@ class CommonReportDetailBody extends StatelessWidget {
               padding: const EdgeInsets.only(left: 40, right: 40, top: 10),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("ရက်စွဲ"), 
+                  children: [
+                    Text(subVal != "totalItem" ? "ရက်စွဲ" : "အမည်"), 
                   Text(_rightTitle())
                   ]))),
       SliverList(
           delegate: SliverChildBuilderDelegate(
         (context, i) {
-          return CommonReportDetailItem(
-              data[i].total, data[i].day, data[i].month, data[i].year);
+          return CommonReportDetailItem(subVal, data[i]);
         },
         childCount: data.length,
       )),

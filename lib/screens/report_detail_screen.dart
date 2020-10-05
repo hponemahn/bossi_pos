@@ -94,6 +94,33 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "leastBuy-item") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchLeastBuyingItemData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    } else if (_arguments['subVal'] == "leastBuy-itemCat") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchLeastBuyingItemCatData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    } else if (_arguments['subVal'] == "totalItem") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchTotalItemData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -173,6 +200,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "mostBuy-itemCat") {
       _widgetBody =
           TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItemCat);
+    } else if (_arguments['subVal'] == "leastBuy-item") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).leastBuyingItem);
+    } else if (_arguments['subVal'] == "leastBuy-itemCat") {
+      _widgetBody =
+          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).leastBuyingItemCat);
+    } else if (_arguments['subVal'] == "totalItem") {
+      _widgetBody =
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).totalItem);
     }
 
     return _widgetBody;
@@ -191,7 +227,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           actionsIconTheme: IconThemeData(
               size: 30.0, color: Theme.of(context).accentColor, opacity: 10.0),
           actions: <Widget>[
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" ? GestureDetector(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" ? GestureDetector(
               onTap: () async {
                 final List picked =
                     await DateRagePicker.showDatePicker(
@@ -214,7 +250,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 size: 26.0,
               ),
             ) : Text(""),
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" ? PopupMenuButton(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" ? PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 onSelected: (val) {
                   setState(() {

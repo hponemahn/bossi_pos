@@ -36,13 +36,13 @@ class ReportScreen extends StatelessWidget {
                 {"subTile": 'အ၀ယ် စုစုပေါင်း', "subVal": "buy"},
                 {"subTile": 'အ၀ယ်တန်ဖိုး အများဆုံး ကုန်ပစ္စည်း', "subVal": "mostBuy-item"},
                 {"subTile": 'အ၀ယ်တန်ဖိုး အများဆုံး အမျိုးအစား', "subVal": "mostBuy-itemCat"},
-                {"subTile": 'အ၀ယ်တန်ဖိုး အနည်းဆုံး ကုန်ပစ္စည်း'},
-                {"subTile": 'အ၀ယ်တန်ဖိုး အနည်းဆုံး အမျိုးအစား'}
+                {"subTile": 'အ၀ယ်တန်ဖိုး အနည်းဆုံး ကုန်ပစ္စည်း', "subVal": "leastBuy-item"},
+                {"subTile": 'အ၀ယ်တန်ဖိုး အနည်းဆုံး အမျိုးအစား', "subVal": "leastBuy-itemCat"},
               ]),
           ReportExpansion('ကုန်ပစ္စည်း', Icons.store_mall_directory,
               // အရောင်း၀င်ငွေ စုစုပေါင်း
               [
-                {"subTile": 'ကုန်ပစ္စည်း စုစုပေါင်း'},
+                {"subTile": 'ကုန်ပစ္စည်း စုစုပေါင်း', "subVal": "totalItem"},
                 {"subTile": 'အရေအတွက်နည်းနေသော ကုန်ပစ္စည်း'},
                 {"subTile": 'အရေအတွက်များနေသော ကုန်ပစ္စည်း'},
                 {"subTile": 'ပျက်စီး'},
