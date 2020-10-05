@@ -21,6 +21,8 @@ class Chart with ChangeNotifier {
   List<ChartModel> _leastBuyingItemData = [];
   List<ChartModel> _leastBuyingItemCatData = [];
   List<ChartModel> _totalItemData = [];
+  List<ChartModel> _mostItemData = [];
+  List<ChartModel> _leastItemData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
@@ -35,6 +37,8 @@ class Chart with ChangeNotifier {
   List<ChartModel> get leastBuyingItem => [..._leastBuyingItemData];
   List<ChartModel> get leastBuyingItemCat => [..._leastBuyingItemCatData];
   List<ChartModel> get totalItem => [..._totalItemData];
+  List<ChartModel> get mostItem => [..._mostItemData];
+  List<ChartModel> get leastItem => [..._leastItemData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -476,6 +480,72 @@ class Chart with ChangeNotifier {
         }
 
         _totalItemData = _loadedTotalItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchMostItemData() async {
+    try {
+      final List<ChartModel> _loadedMostItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getMostItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["mostItemChart"].length; i++) {
+          _loadedMostItemData.add(
+            ChartModel(
+                name: result.data["mostItemChart"][i]['name'],
+                qty: result.data["mostItemChart"][i]['qty'],
+              ),
+          );
+        }
+
+        _mostItemData = _loadedMostItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchLeastItemData() async {
+    try {
+      final List<ChartModel> _loadedLeastItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getLeastItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["leastItemChart"].length; i++) {
+          _loadedLeastItemData.add(
+            ChartModel(
+                name: result.data["leastItemChart"][i]['name'],
+                qty: result.data["leastItemChart"][i]['qty'],
+              ),
+          );
+        }
+
+        _leastItemData = _loadedLeastItemData;
         notifyListeners();
       } else {
         print('exception');

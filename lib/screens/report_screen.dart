@@ -43,8 +43,8 @@ class ReportScreen extends StatelessWidget {
               // အရောင်း၀င်ငွေ စုစုပေါင်း
               [
                 {"subTile": 'ကုန်ပစ္စည်း စုစုပေါင်း', "subVal": "totalItem"},
-                {"subTile": 'အရေအတွက်နည်းနေသော ကုန်ပစ္စည်း'},
-                {"subTile": 'အရေအတွက်များနေသော ကုန်ပစ္စည်း'},
+                {"subTile": 'အရေအတွက်နည်းနေသော ကုန်ပစ္စည်း', "subVal": "leastItem"},
+                {"subTile": 'အရေအတွက်များနေသော ကုန်ပစ္စည်း', "subVal": "mostItem"},
                 {"subTile": 'ပျက်စီး'},
                 {"subTile": 'ပျောက်ဆုံး'},
                 {"subTile": 'ဒိတ်လွန်နေသော ကုန်ပစ္စည်း'}

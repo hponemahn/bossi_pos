@@ -179,4 +179,26 @@ class ChartQuery {
         }
     """;
   }
+
+  String getMostItem() {
+    return """
+        {
+          mostItemChart { 
+            name
+            qty
+          }
+        }
+    """;
+  }
+
+  String getLeastItem() {
+    return """
+        {
+          leastItemChart { 
+            name
+            qty
+          }
+        }
+    """;
+  }
 }

@@ -10,11 +10,11 @@ class CommonReportDetailItem extends StatelessWidget {
 
   Widget _rightContent () {
     Widget _widget;
-    if (subVal != "totalItem") {
+    if (subVal != "totalItem" && subVal != "mostItem" && subVal != "leastItem") {
       _widget = Text(NumberFormat.currency(symbol: '').format(int.parse(data.total)),
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           );
-    } else if (subVal == "totalItem") {
+    } else if (subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem") {
       _widget = Text(data.qty,
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           );      
@@ -42,7 +42,7 @@ class CommonReportDetailItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
           // title: Text(double.parse(total).toStringAsFixed(2)),
-          title: Text(subVal != "totalItem" ? y + " " + m + " " + d : data.name[0].toUpperCase() + data.name.substring(1)),
+          title: Text(subVal != "totalItem" && subVal != "mostItem" && subVal != "leastItem" ? y + " " + m + " " + d : data.name[0].toUpperCase() + data.name.substring(1)),
           // subtitle: Text(y + " " + m + " " + d),
           isThreeLine: false,
           trailing: _rightContent(),
