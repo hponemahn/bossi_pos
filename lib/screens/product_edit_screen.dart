@@ -650,7 +650,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                           });
                         },
                       ),
-                      Text("ဒိတ်လွန် နေပါသလား ? $isExpiredSwitched"),
+                      Text("ဒိတ်လွန် နေပါသလား ?"),
                     ],
                   ),
                   TextFormField(

@@ -1,4 +1,3 @@
-import 'package:bossi_pos/screens/dashboard_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/report_screen.dart';
@@ -50,14 +49,6 @@ class Drawlet extends StatelessWidget {
           //     Navigator.pushNamed(context, '/transaction');
           //   },
           // ),
-          ListTile(
-            leading: Icon(Icons.report),
-            title: Text("အစီရင်ခံစာ"),
-            onTap: () {
-              Navigator.pushReplacementNamed(
-                  context, DashboardScreen.routeName);
-            },
-          ),
           ListTile(
             leading: Icon(Icons.report),
             title: Text("အစီရင်ခံစာ - report"),
