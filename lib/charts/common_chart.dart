@@ -29,7 +29,7 @@ class CommonChart extends StatelessWidget {
               .add(CommonModel(data[i].name, double.parse(data[i].total)));
         }
       }
-    } else if (subVal == "bestSellingItem" || subVal == "worstSellingItem" || subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem" || subVal == "damagedItem") {
+    } else if (subVal == "bestSellingItem" || subVal == "worstSellingItem" || subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem" || subVal == "damagedItem" || subVal == "lostItem" || subVal == "expiredItem") {
       for (var i = 0; i < data.length; i++) {
         if (i < 4) {
           commonData

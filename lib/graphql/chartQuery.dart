@@ -212,4 +212,26 @@ class ChartQuery {
         }
     """;
   }
+
+  String getLostItem() {
+    return """
+        {
+          lostItemChart { 
+            name
+            qty
+          }
+        }
+    """;
+  }
+
+  String getExpiredItem() {
+    return """
+        {
+          expiredItemChart { 
+            name
+            qty
+          }
+        }
+    """;
+  }
 }

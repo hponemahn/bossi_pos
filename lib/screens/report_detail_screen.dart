@@ -148,6 +148,24 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "lostItem") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchLostItemData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    } else if (_arguments['subVal'] == "expiredItem") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchExpiredItemData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -245,6 +263,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "damagedItem") {
       _widgetBody =
           CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).damagedItem);
+    } else if (_arguments['subVal'] == "lostItem") {
+      _widgetBody =
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).lostItem);
+    } else if (_arguments['subVal'] == "expiredItem") {
+      _widgetBody =
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).expiredItem);
     }
 
     return _widgetBody;
@@ -263,7 +287,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           actionsIconTheme: IconThemeData(
               size: 30.0, color: Theme.of(context).accentColor, opacity: 10.0),
           actions: <Widget>[
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" ? GestureDetector(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" && _arguments['subVal'] != "lostItem" && _arguments['subVal'] != "expiredItem" ? GestureDetector(
               onTap: () async {
                 final List picked =
                     await DateRagePicker.showDatePicker(
@@ -286,7 +310,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 size: 26.0,
               ),
             ) : Text(""),
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" ? PopupMenuButton(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" && _arguments['subVal'] != "lostItem" && _arguments['subVal'] != "expiredItem" ? PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 onSelected: (val) {
                   setState(() {

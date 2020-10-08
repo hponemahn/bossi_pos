@@ -24,6 +24,8 @@ class Chart with ChangeNotifier {
   List<ChartModel> _mostItemData = [];
   List<ChartModel> _leastItemData = [];
   List<ChartModel> _damagedItemData = [];
+  List<ChartModel> _lostItemData = [];
+  List<ChartModel> _expiredItemData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
@@ -41,6 +43,8 @@ class Chart with ChangeNotifier {
   List<ChartModel> get mostItem => [..._mostItemData];
   List<ChartModel> get leastItem => [..._leastItemData];
   List<ChartModel> get damagedItem => [..._damagedItemData];
+  List<ChartModel> get lostItem => [..._lostItemData];
+  List<ChartModel> get expiredItem => [..._expiredItemData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -581,6 +585,72 @@ class Chart with ChangeNotifier {
         }
 
         _damagedItemData = _loadedDamagedItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchLostItemData() async {
+    try {
+      final List<ChartModel> _loadedLostItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getLostItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["lostItemChart"].length; i++) {
+          _loadedLostItemData.add(
+            ChartModel(
+                name: result.data["lostItemChart"][i]['name'],
+                qty: result.data["lostItemChart"][i]['qty'],
+              ),
+          );
+        }
+
+        _lostItemData = _loadedLostItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchExpiredItemData() async {
+    try {
+      final List<ChartModel> _loadedExpiredItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getExpiredItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["expiredItemChart"].length; i++) {
+          _loadedExpiredItemData.add(
+            ChartModel(
+                name: result.data["expiredItemChart"][i]['name'],
+                qty: result.data["expiredItemChart"][i]['qty'],
+              ),
+          );
+        }
+
+        _expiredItemData = _loadedExpiredItemData;
         notifyListeners();
       } else {
         print('exception');

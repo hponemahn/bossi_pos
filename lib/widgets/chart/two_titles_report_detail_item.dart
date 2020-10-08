@@ -1,6 +1,6 @@
 import 'package:bossi_pos/charts/chart_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class TwoTitlesReportDetailItem extends StatelessWidget {
   final String subVal;
@@ -38,8 +38,8 @@ class TwoTitlesReportDetailItem extends StatelessWidget {
                 data.total.isEmpty
                     ? ""
                     : 
-                    NumberFormat.currency(symbol: '').format(int.parse(data.total)),
-                    // double.parse(data.total).toStringAsFixed(2),
+                    // NumberFormat.currency(symbol: '').format(int.parse(data.total)),
+                    double.parse(data.total).toStringAsFixed(2),
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ],

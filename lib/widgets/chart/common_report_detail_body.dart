@@ -17,7 +17,7 @@ class CommonReportDetailBody extends StatelessWidget {
       _rT = "အရောင်း";
     } else if (subVal == "buy") {
       _rT = "အ၀ယ်";
-    } else if (subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem" || subVal == "damagedItem") {
+    } else if (subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem" || subVal == "damagedItem" || subVal == "lostItem" || subVal == "expiredItem") {
       _rT = "အရေအတွက်";
     } else {
       _rT = "အရင်း";
@@ -42,7 +42,7 @@ class CommonReportDetailBody extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem" || subVal == "damagedItem" ? "အမည်" : "ရက်စွဲ"), 
+                    Text(subVal == "totalItem" || subVal == "mostItem" || subVal == "leastItem" || subVal == "damagedItem" || subVal == "lostItem" || subVal == "expiredItem" ? "အမည်" : "ရက်စွဲ"), 
                   Text(_rightTitle())
                   ]))),
       SliverList(
