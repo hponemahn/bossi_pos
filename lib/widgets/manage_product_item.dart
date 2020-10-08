@@ -18,7 +18,7 @@ class ManageProductItem extends StatelessWidget {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("ဖျက်မှာ သေချာပါသလား?"),
+          title: Text("$id ဖျက်မှာ သေချာပါသလား?"),
           content: Text(
               "ဤကုန်ပစ္စည်းကို ဖျက်လိုက်မည်ဆိုပါက ပြန်ရနိုင်တော့မည် မဟုတ်ပါ။​"),
           actions: <Widget>[

@@ -205,7 +205,7 @@ class CartScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.fromLTRB(100, 30, 100, 30),
                 child: RaisedButton(
-                  elevation: 20,
+                  elevation: 5,
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),

@@ -139,6 +139,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _isLoading = false;
         });
       });
+    } else if (_arguments['subVal'] == "damagedItem") {
+      setState(() {
+        _filterText = "none";
+      });
+      Provider.of<Chart>(context).fetchDamagedItemData().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
   }
 
@@ -233,6 +242,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "leastItem") {
       _widgetBody =
           CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).leastItem);
+    } else if (_arguments['subVal'] == "damagedItem") {
+      _widgetBody =
+          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).damagedItem);
     }
 
     return _widgetBody;
@@ -251,7 +263,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           actionsIconTheme: IconThemeData(
               size: 30.0, color: Theme.of(context).accentColor, opacity: 10.0),
           actions: <Widget>[
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" ? GestureDetector(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" ? GestureDetector(
               onTap: () async {
                 final List picked =
                     await DateRagePicker.showDatePicker(
@@ -274,7 +286,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 size: 26.0,
               ),
             ) : Text(""),
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" ? PopupMenuButton(
+            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" ? PopupMenuButton(
                 icon: Icon(Icons.more_vert),
                 onSelected: (val) {
                   setState(() {

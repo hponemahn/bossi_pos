@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
             // headline:    TextStyle(fontSize: 36px, ... ),
             // title:       TextStyle(fontSize: 24px, ... ),
             // body:        TextStyle(fontSize: 12px, ... ),
-            button: TextStyle(color: Colors.black, fontSize: 17),
+            button: TextStyle(color: Colors.black, fontSize: 14),
           ),
         ),
         // home: Principal(),

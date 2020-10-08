@@ -23,6 +23,7 @@ class Chart with ChangeNotifier {
   List<ChartModel> _totalItemData = [];
   List<ChartModel> _mostItemData = [];
   List<ChartModel> _leastItemData = [];
+  List<ChartModel> _damagedItemData = [];
 
   List<ChartModel> get cap => [..._capData];
   List<ChartModel> get sale => [..._saleData];
@@ -39,6 +40,7 @@ class Chart with ChangeNotifier {
   List<ChartModel> get totalItem => [..._totalItemData];
   List<ChartModel> get mostItem => [..._mostItemData];
   List<ChartModel> get leastItem => [..._leastItemData];
+  List<ChartModel> get damagedItem => [..._damagedItemData];
 
   Future<void> fetchCapData(String filter, String startDate, String endDate) async {
     try {
@@ -546,6 +548,39 @@ class Chart with ChangeNotifier {
         }
 
         _leastItemData = _loadedLeastItemData;
+        notifyListeners();
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchDamagedItemData() async {
+    try {
+      final List<ChartModel> _loadedDamagedItemData = [];
+
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(_query.getDamagedItem()),
+        ),
+      );
+
+      if (!result.hasException) {
+        for (var i = 0; i < result.data["damagedItemChart"].length; i++) {
+          _loadedDamagedItemData.add(
+            ChartModel(
+                name: result.data["damagedItemChart"][i]['name'],
+                qty: result.data["damagedItemChart"][i]['qty'],
+              ),
+          );
+        }
+
+        _damagedItemData = _loadedDamagedItemData;
         notifyListeners();
       } else {
         print('exception');

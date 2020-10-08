@@ -306,7 +306,7 @@ class _OrderScreenState extends State<OrderScreen> {
             Container(
               padding: EdgeInsets.fromLTRB(140, 50, 140, 40),
               child: RaisedButton(
-                elevation: 20,
+                elevation: 5,
                 clipBehavior: Clip.antiAlias,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),

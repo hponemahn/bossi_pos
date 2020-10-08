@@ -18,17 +18,18 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   Product _newProduct = Product(
       id: null,
       name: null,
-      category: null,
-      price: null,
-      qty: null,
-      buyPrice: null,
+      category: "0",
+      price: 0,
+      qty: 0,
+      buyPrice: 0,
       sku: null,
       desc: null,
-      discountPrice: null,
+      discountPrice: 0,
       barcode: null,
-      isDamage: null);
+      isDamage: false);
 
   bool isSwitched = false;
+  // bool isDamagedSwitched = false;
 
   final _buyPriceFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
@@ -49,7 +50,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     "desc": null,
     "discountPrice": 0,
     "barcode": null,
-    "isDamage": null
+    "isDamage": false
   };
 
   String dropdownValue;
@@ -103,8 +104,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                     _newCat = Category(
                         id: _newCat.id, category: _textFieldController.text);
 
-                    String _newCatId = Provider.of<Categories>(context, listen: false)
-                        .addAndGetID(_newCat);
+                    String _newCatId =
+                        Provider.of<Categories>(context, listen: false)
+                            .addAndGetID(_newCat);
 
                     dropdownValue = _newCatId;
 
@@ -149,6 +151,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
         Product _product =
             Provider.of<Products>(context, listen: false).findById(id);
         _newProduct = _product;
+
         _initVal = {
           "id": _product.id,
           "name": _product.name,
@@ -162,6 +165,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           "barcode": _product.barcode,
           "isDamage": _product.isDamage
         };
+
+        if (_product.isDamage == true) {
+          setState(() {
+            isSwitched = _product.isDamage;
+          });
+        }
         setState(() {
           dropdownValue = _product.category;
         });
@@ -194,17 +203,17 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     } else {
       _formKey.currentState.save();
 
-      print(_newProduct.id);
-      print(_newProduct.name);
-      print(_newProduct.category);
-      print(_newProduct.price);
-      print(_newProduct.qty);
-      print(_newProduct.buyPrice);
-      print(_newProduct.sku);
-      print(_newProduct.desc);
-      print(_newProduct.discountPrice);
-      print(_newProduct.barcode);
-      print(_newProduct.isDamage);
+      print("id  ${_newProduct.id}");
+      print("name  ${_newProduct.name}");
+      print("category  ${_newProduct.category}");
+      print("price  ${_newProduct.price.toString()}");
+      print("qty ${_newProduct.qty.toString()}");
+      print("buyPrice ${_newProduct.buyPrice.toString()}");
+      print("sku ${_newProduct.sku}");
+      print("desc ${_newProduct.desc}");
+      print("discount price ${_newProduct.discountPrice.toString()}");
+      print("barcode ${_newProduct.barcode}");
+      print("isDamage ${_newProduct.isDamage.toString()}");
 
       if (_initVal['id'] == null) {
         Provider.of<Products>(context, listen: false).add(_newProduct);
@@ -284,6 +293,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                   value: cat.id, child: new Text(cat.category));
                             }).toList(),
                             onChanged: (val) {
+                              print("cat val");
+                              print(val);
                               setState(() {
                                 _newProduct = Product(
                                     id: _newProduct.id,
@@ -296,7 +307,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                     discountPrice: _newProduct.discountPrice,
                                     barcode: _newProduct.barcode,
                                     isDamage: _newProduct.isDamage,
-                                    category: val.toString());
+                                    category: val == "" ? "0" : val.toString());
 
                                 dropdownValue = val.toString();
                                 state.didChange(val);
@@ -321,12 +332,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                   ),
 
                   TextFormField(
-                    initialValue: _initVal['qty'] == 0 ? '' : _initVal['qty'].toString(),
+                    initialValue:
+                        _initVal['qty'] == 0 ? '' : _initVal['qty'].toString(),
                     decoration: InputDecoration(
                       icon: Icon(Icons.confirmation_number),
                       labelText: "အရေအတွက်",
                       hintText: "ဥပမာ။  ။ 50 (English Number ဖြစ်ရပါမည်)",
-                      
                     ),
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) =>
@@ -359,12 +370,13 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   TextFormField(
-                    initialValue: _initVal['buyPrice'] == 0 ? '' : _initVal['buyPrice'].toString(),
+                    initialValue: _initVal['buyPrice'] == 0
+                        ? ''
+                        : _initVal['buyPrice'].toString(),
                     decoration: InputDecoration(
                         icon: Icon(Icons.attach_money),
                         labelText: "၀ယ်ရင်းစျေး",
-                        hintText: "ဥပမာ။  ။ 5000 (English Number ဖြစ်ရပါမည်)"
-                        ),
+                        hintText: "ဥပမာ။  ။ 5000 (English Number ဖြစ်ရပါမည်)"),
                     keyboardType: TextInputType.number,
                     focusNode: _buyPriceFocusNode,
                     textInputAction: TextInputAction.next,
@@ -397,12 +409,13 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   TextFormField(
-                    initialValue: _initVal['price'] == 0 ? '' : _initVal['price'].toString(),
+                    initialValue: _initVal['price'] == 0
+                        ? ''
+                        : _initVal['price'].toString(),
                     decoration: InputDecoration(
                         icon: Icon(Icons.attach_money),
                         labelText: "ရောင်းစျေး",
-                        hintText: "ဥပမာ။  ။ 7000 (English Number ဖြစ်ရပါမည်)"
-                        ),
+                        hintText: "ဥပမာ။  ။ 7000 (English Number ဖြစ်ရပါမည်)"),
                     keyboardType: TextInputType.number,
                     focusNode: _priceFocusNode,
                     textInputAction: TextInputAction.next,
@@ -435,30 +448,37 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   TextFormField(
-                    initialValue: _initVal['discountPrice'] == 0 ? '' : _initVal['discountPrice'].toString(),
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.attach_money),
-                      labelText: "လျှော့စျေး (လျှော့စျေး ရှိပါက ထည့်သွင်းပေးပါ)",
-                      hintText: "ဥပမာ။  ။ 6500 (English Number ဖြစ်ရပါမည်)",
-                    ),
-                    keyboardType: TextInputType.number,
-                    focusNode: _discountFocusNode,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_skuFocusNode),
-                    onSaved: (val) => _newProduct = Product(
-                        id: _newProduct.id,
-                        name: _newProduct.name,
-                        price: _newProduct.price,
-                        qty: _newProduct.qty,
-                        buyPrice: _newProduct.buyPrice,
-                        sku: _newProduct.sku,
-                        desc: _newProduct.desc,
-                        discountPrice: double.parse(val),
-                        barcode: _newProduct.barcode,
-                        isDamage: _newProduct.isDamage,
-                        category: _newProduct.category),
-                  ),
+                      initialValue: _initVal['discountPrice'] == 0
+                          ? ''
+                          : _initVal['discountPrice'].toString(),
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.attach_money),
+                        labelText:
+                            "လျှော့စျေး (လျှော့စျေး ရှိပါက ထည့်သွင်းပေးပါ)",
+                        hintText: "ဥပမာ။  ။ 6500 (English Number ဖြစ်ရပါမည်)",
+                      ),
+                      keyboardType: TextInputType.number,
+                      focusNode: _discountFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).requestFocus(_skuFocusNode),
+                      onSaved: (val) {
+                        print("discount price");
+                        print(val);
+                        _newProduct = Product(
+                            id: _newProduct.id,
+                            name: _newProduct.name,
+                            price: _newProduct.price,
+                            qty: _newProduct.qty,
+                            buyPrice: _newProduct.buyPrice,
+                            sku: _newProduct.sku,
+                            desc: _newProduct.desc,
+                            // discountPrice: val == null ? 0 : double.parse(val),
+                            discountPrice: val == "" ? 0 : double.parse(val),
+                            barcode: _newProduct.barcode,
+                            isDamage: _newProduct.isDamage,
+                            category: _newProduct.category);
+                      }),
                   TextFormField(
                     initialValue: _initVal['sku'],
                     decoration: InputDecoration(
@@ -516,6 +536,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       Switch(
                         value: isSwitched,
                         onChanged: (value) {
+                          print("is swithed");
+                          print(isSwitched.toString());
                           setState(() {
                             isSwitched = value;
                             _newProduct = Product(
@@ -533,11 +555,58 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                           });
                         },
                       ),
-                      Text("ပျက်စီး၊ ပျောက်ဆုံး နေပါသလား ?"),
+                      Text("ပျက်စီး နေပါသလား ?"),
                     ],
                   ),
-                  // SizedBox(
-                  //   height: 20,
+                  // Row(
+                  //   children: <Widget>[
+                  //     Switch(
+                  //       value: isSwitched,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           isSwitched = value;
+                  //           _newProduct = Product(
+                  //               id: _newProduct.id,
+                  //               name: _newProduct.name,
+                  //               price: _newProduct.price,
+                  //               qty: _newProduct.qty,
+                  //               buyPrice: _newProduct.buyPrice,
+                  //               sku: _newProduct.sku,
+                  //               desc: _newProduct.desc,
+                  //               discountPrice: _newProduct.discountPrice,
+                  //               barcode: _newProduct.barcode,
+                  //               isDamage: isSwitched,
+                  //               category: _newProduct.category);
+                  //         });
+                  //       },
+                  //     ),
+                  //     Text("ပျောက်ဆုံး နေပါသလား ?"),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: <Widget>[
+                  //     Switch(
+                  //       value: isSwitched,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           isSwitched = value;
+                  //           _newProduct = Product(
+                  //               id: _newProduct.id,
+                  //               name: _newProduct.name,
+                  //               price: _newProduct.price,
+                  //               qty: _newProduct.qty,
+                  //               buyPrice: _newProduct.buyPrice,
+                  //               sku: _newProduct.sku,
+                  //               desc: _newProduct.desc,
+                  //               discountPrice: _newProduct.discountPrice,
+                  //               barcode: _newProduct.barcode,
+                  //               isDamage: isSwitched,
+                  //               category: _newProduct.category);
+                  //         });
+                  //       },
+                  //     ),
+                  //     Text("ဒိတ်လွန် နေပါသလား ?"),
+                  //   ],
                   // ),
                   TextFormField(
                     initialValue: _initVal['desc'],
@@ -563,9 +632,17 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         category: _newProduct.category),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 40,
                   ),
                   RaisedButton(
+                    elevation: 5,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 4.0,
+                      horizontal: 34.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
                     onPressed: _submitForm,
                     color: Theme.of(context).accentColor,
                     child: Text(
@@ -574,7 +651,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 60,
+                    height: 40,
                   ),
                 ],
               ),

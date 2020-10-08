@@ -201,4 +201,15 @@ class ChartQuery {
         }
     """;
   }
+
+  String getDamagedItem() {
+    return """
+        {
+          damagedItemChart { 
+            name
+            qty
+          }
+        }
+    """;
+  }
 }

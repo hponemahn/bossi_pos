@@ -13,7 +13,6 @@ class ManageProductsScreen extends StatefulWidget {
 }
 
 class _ManageProductsScreenState extends State<ManageProductsScreen> {
-  
   var _isInit = true;
   var _isLoading = false;
 
@@ -35,22 +34,31 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
-    print("product screen");
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("ကုန်ပစ္စည်းစာရင်း"),
       ),
       drawer: const Drawlet(),
-      body: _isLoading ? Center(child: CircularProgressIndicator()) : 
-      ManageProductsBody(),
-      
-      
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ManageProductsBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () =>
-            Navigator.pushNamed(context, ProductEditScreen.routeName),
+            Navigator.pushNamed(context, ProductEditScreen.routeName)
+                .then((value) {
+          if (_isInit) {
+            setState(() {
+              _isLoading = true;
+            });
+            Provider.of<Products>(context).fetchProducts().then((_) {
+              setState(() {
+                _isLoading = false;
+              });
+            });
+          }
+          _isInit = false;
+        }),
       ),
     );
   }
