@@ -46,8 +46,8 @@ class ReportScreen extends StatelessWidget {
                 {"subTile": 'အရေအတွက်နည်းနေသော ကုန်ပစ္စည်း', "subVal": "leastItem"},
                 {"subTile": 'အရေအတွက်များနေသော ကုန်ပစ္စည်း', "subVal": "mostItem"},
                 {"subTile": 'ပျက်စီးနေသော ကုန်ပစ္စည်း', "subVal": "damagedItem"},
-                {"subTile": 'ပျောက်ဆုံးနေသော ကုန်ပစ္စည်း'},
-                {"subTile": 'ဒိတ်လွန်နေသော ကုန်ပစ္စည်း'}
+                {"subTile": 'ပျောက်ဆုံးနေသော ကုန်ပစ္စည်း', "subVal": "lostItem"},
+                {"subTile": 'ဒိတ်လွန်နေသော ကုန်ပစ္စည်း', "subVal": "expiredItem"}
               ]),
           SizedBox(height: 20)
         ],

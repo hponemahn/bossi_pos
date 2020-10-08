@@ -1,4 +1,5 @@
 class ProductQueryMutation {
+  
   String getAll() {
     return """ 
       {
@@ -10,6 +11,7 @@ class ProductQueryMutation {
     ]) {
           id
           name
+          category_id
           stock
           buy_price
           sell_price
@@ -17,6 +19,8 @@ class ProductQueryMutation {
           sku
           barcode
           is_damaged
+          is_lost
+          is_expired
           remark
         }
       }
@@ -33,6 +37,8 @@ class ProductQueryMutation {
       String sku,
       String barcode,
       int isDamaged,
+      int isLost,
+      int isExpired,
       String remark) {
     return """
       mutation {
@@ -46,6 +52,8 @@ class ProductQueryMutation {
           sku: "$sku"
           barcode: "$barcode"
           is_damaged: $isDamaged
+          is_lost: $isLost
+          is_expired: $isExpired
           remark: "$remark"
         ) {
           id
@@ -78,6 +86,8 @@ class ProductQueryMutation {
       String sku,
       String barcode,
       int isDamaged,
+      int isLost,
+      int isExpired,
       String remark) {
     return """
       mutation {
@@ -92,6 +102,8 @@ class ProductQueryMutation {
           sku: "$sku"
           barcode: "$barcode"
           is_damaged: $isDamaged
+          is_lost: $isLost
+          is_expired: $isExpired
           remark: "$remark"
   ) {
     id

@@ -18,7 +18,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   Product _newProduct = Product(
       id: null,
       name: null,
-      category: "0",
+      category: 0,
       price: 0,
       qty: 0,
       buyPrice: 0,
@@ -26,10 +26,14 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       desc: null,
       discountPrice: 0,
       barcode: null,
-      isDamage: false);
+      isDamage: false,
+      isLost: false,
+      isExpired: false
+    );
 
   bool isSwitched = false;
-  // bool isDamagedSwitched = false;
+  bool isLostSwitched = false;
+  bool isExpiredSwitched = false;
 
   final _buyPriceFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
@@ -50,14 +54,16 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     "desc": null,
     "discountPrice": 0,
     "barcode": null,
-    "isDamage": false
+    "isDamage": false,
+    "isLost": false,
+    "isExpired": false
   };
 
   String dropdownValue;
 
   Category _newCat = Category(
     id: null,
-    category: null,
+    category: "0",
   );
   TextEditingController _textFieldController = TextEditingController();
   bool _isValid = false;
@@ -121,7 +127,9 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
-                        category: _newCatId);
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
+                        category: int.parse(_newCatId));
                   });
 
                   _textFieldController.text = '';
@@ -163,16 +171,31 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           "desc": _product.desc,
           "discountPrice": _product.discountPrice,
           "barcode": _product.barcode,
-          "isDamage": _product.isDamage
+          "isDamage": _product.isDamage,
+          "isLost": _product.isLost,
+          "isExpired": _product.isExpired
         };
 
         if (_product.isDamage == true) {
           setState(() {
             isSwitched = _product.isDamage;
           });
+        } 
+        
+        if (_product.isLost == true) {
+          setState(() {
+            isLostSwitched = _product.isLost;
+          });
         }
+        
+        if (_product.isExpired == true) {
+          setState(() {
+            isExpiredSwitched = _product.isExpired;
+          });
+        }
+
         setState(() {
-          dropdownValue = _product.category;
+          dropdownValue = _product.category.toString();
         });
       }
     }
@@ -195,10 +218,16 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   }
 
   void _submitForm() {
+
     if (!_formKey.currentState.validate()) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text("တချို့အချက်အလက်များကို ထည့်သွင်းရန် လိုအပ်ပါသည်။​"),
+      ));
+    } else if (dropdownValue == null) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text("အမျိုးအစား ရွေးချယ်ရန် လိုအပ်ပါသည်။​"),
       ));
     } else {
       _formKey.currentState.save();
@@ -214,6 +243,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       print("discount price ${_newProduct.discountPrice.toString()}");
       print("barcode ${_newProduct.barcode}");
       print("isDamage ${_newProduct.isDamage.toString()}");
+      print("isLost ${_newProduct.isLost.toString()}");
+      print("isExpired ${_newProduct.isExpired.toString()}");
 
       if (_initVal['id'] == null) {
         Provider.of<Products>(context, listen: false).add(_newProduct);
@@ -270,6 +301,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   SizedBox(
@@ -293,8 +326,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                   value: cat.id, child: new Text(cat.category));
                             }).toList(),
                             onChanged: (val) {
-                              print("cat val");
-                              print(val);
                               setState(() {
                                 _newProduct = Product(
                                     id: _newProduct.id,
@@ -307,13 +338,13 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                     discountPrice: _newProduct.discountPrice,
                                     barcode: _newProduct.barcode,
                                     isDamage: _newProduct.isDamage,
-                                    category: val == "" ? "0" : val.toString());
+                                    isLost: _newProduct.isLost,
+                                    isExpired: _newProduct.isExpired,
+                                    category: val == "" ? 0 : int.parse(val));
 
                                 dropdownValue = val.toString();
                                 state.didChange(val);
                               });
-                              print("id: $val");
-                              print(dropdownValue);
                             },
                           ),
                         ),
@@ -367,6 +398,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   TextFormField(
@@ -406,6 +439,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   TextFormField(
@@ -445,6 +480,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   TextFormField(
@@ -463,8 +500,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       onFieldSubmitted: (_) =>
                           FocusScope.of(context).requestFocus(_skuFocusNode),
                       onSaved: (val) {
-                        print("discount price");
-                        print(val);
                         _newProduct = Product(
                             id: _newProduct.id,
                             name: _newProduct.name,
@@ -477,6 +512,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                             discountPrice: val == "" ? 0 : double.parse(val),
                             barcode: _newProduct.barcode,
                             isDamage: _newProduct.isDamage,
+                            isLost: _newProduct.isLost,
+                            isExpired: _newProduct.isExpired,
                             category: _newProduct.category);
                       }),
                   TextFormField(
@@ -500,6 +537,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   // SizedBox(
@@ -526,6 +565,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: val,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   SizedBox(
@@ -536,8 +577,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       Switch(
                         value: isSwitched,
                         onChanged: (value) {
-                          print("is swithed");
-                          print(isSwitched.toString());
                           setState(() {
                             isSwitched = value;
                             _newProduct = Product(
@@ -551,6 +590,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                                 discountPrice: _newProduct.discountPrice,
                                 barcode: _newProduct.barcode,
                                 isDamage: isSwitched,
+                                isLost: _newProduct.isLost,
+                                isExpired: _newProduct.isExpired,
                                 category: _newProduct.category);
                           });
                         },
@@ -558,56 +599,60 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       Text("ပျက်စီး နေပါသလား ?"),
                     ],
                   ),
-                  // Row(
-                  //   children: <Widget>[
-                  //     Switch(
-                  //       value: isSwitched,
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           isSwitched = value;
-                  //           _newProduct = Product(
-                  //               id: _newProduct.id,
-                  //               name: _newProduct.name,
-                  //               price: _newProduct.price,
-                  //               qty: _newProduct.qty,
-                  //               buyPrice: _newProduct.buyPrice,
-                  //               sku: _newProduct.sku,
-                  //               desc: _newProduct.desc,
-                  //               discountPrice: _newProduct.discountPrice,
-                  //               barcode: _newProduct.barcode,
-                  //               isDamage: isSwitched,
-                  //               category: _newProduct.category);
-                  //         });
-                  //       },
-                  //     ),
-                  //     Text("ပျောက်ဆုံး နေပါသလား ?"),
-                  //   ],
-                  // ),
-                  // Row(
-                  //   children: <Widget>[
-                  //     Switch(
-                  //       value: isSwitched,
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           isSwitched = value;
-                  //           _newProduct = Product(
-                  //               id: _newProduct.id,
-                  //               name: _newProduct.name,
-                  //               price: _newProduct.price,
-                  //               qty: _newProduct.qty,
-                  //               buyPrice: _newProduct.buyPrice,
-                  //               sku: _newProduct.sku,
-                  //               desc: _newProduct.desc,
-                  //               discountPrice: _newProduct.discountPrice,
-                  //               barcode: _newProduct.barcode,
-                  //               isDamage: isSwitched,
-                  //               category: _newProduct.category);
-                  //         });
-                  //       },
-                  //     ),
-                  //     Text("ဒိတ်လွန် နေပါသလား ?"),
-                  //   ],
-                  // ),
+                  Row(
+                    children: <Widget>[
+                      Switch(
+                        value: isLostSwitched,
+                        onChanged: (value) {
+                          setState(() {
+                            isLostSwitched = value;
+                            _newProduct = Product(
+                                id: _newProduct.id,
+                                name: _newProduct.name,
+                                price: _newProduct.price,
+                                qty: _newProduct.qty,
+                                buyPrice: _newProduct.buyPrice,
+                                sku: _newProduct.sku,
+                                desc: _newProduct.desc,
+                                discountPrice: _newProduct.discountPrice,
+                                barcode: _newProduct.barcode,
+                                isDamage: _newProduct.isDamage,
+                                isLost: isLostSwitched,
+                                isExpired: _newProduct.isExpired,
+                                category: _newProduct.category);
+                          });
+                        },
+                      ),
+                      Text("ပျောက်ဆုံး နေပါသလား ?"),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Switch(
+                        value: isExpiredSwitched,
+                        onChanged: (value) {
+                          setState(() {
+                            isExpiredSwitched = value;
+                            _newProduct = Product(
+                                id: _newProduct.id,
+                                name: _newProduct.name,
+                                price: _newProduct.price,
+                                qty: _newProduct.qty,
+                                buyPrice: _newProduct.buyPrice,
+                                sku: _newProduct.sku,
+                                desc: _newProduct.desc,
+                                discountPrice: _newProduct.discountPrice,
+                                barcode: _newProduct.barcode,
+                                isDamage: _newProduct.isDamage,
+                                isLost: _newProduct.isLost,
+                                isExpired: isExpiredSwitched,
+                                category: _newProduct.category);
+                          });
+                        },
+                      ),
+                      Text("ဒိတ်လွန် နေပါသလား ? $isExpiredSwitched"),
+                    ],
+                  ),
                   TextFormField(
                     initialValue: _initVal['desc'],
                     decoration: InputDecoration(
@@ -629,6 +674,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
                         isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
                         category: _newProduct.category),
                   ),
                   SizedBox(

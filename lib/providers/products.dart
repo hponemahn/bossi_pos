@@ -37,7 +37,10 @@ class Products with ChangeNotifier {
         desc: _pr.desc,
         barcode: _pr.barcode,
         discountPrice: _pr.discountPrice,
-        isDamage: _pr.isDamage);
+        isDamage: _pr.isDamage,
+        isLost: _pr.isLost,
+        isExpired: _pr.isExpired,
+        );
     _products.add(product);
     notifyListeners();
 
@@ -51,7 +54,8 @@ class Products with ChangeNotifier {
   }
 
   Product findById(String id) {
-    return _products.firstWhere((pr) => pr.id == id);
+    Product _pr = _products.firstWhere((pr) => pr.id == id);
+    return _pr;
   }
 
   void edit(Product _pr) {
@@ -73,7 +77,7 @@ class Products with ChangeNotifier {
         MutationOptions(
           documentNode: gql(addMutation.addProduct(
               _pr.name,
-              int.parse(_pr.category),
+              _pr.category,
               _pr.qty,
               _pr.buyPrice,
               _pr.price,
@@ -81,6 +85,8 @@ class Products with ChangeNotifier {
               _pr.sku,
               _pr.barcode,
               _pr.isDamage == true ? 1 : 0,
+              _pr.isLost == true ? 1 : 0,
+              _pr.isExpired == true ? 1 : 0,
               _pr.desc)),
         ),
       );
@@ -100,7 +106,7 @@ class Products with ChangeNotifier {
           documentNode: gql(addMutation.editProduct(
               _pr.id,
               _pr.name,
-              int.parse(_pr.category),
+              _pr.category,
               _pr.qty,
               _pr.buyPrice,
               _pr.price,
@@ -108,13 +114,9 @@ class Products with ChangeNotifier {
               _pr.sku,
               _pr.barcode,
               _pr.isDamage == true ? 1 : 0,
+              _pr.isLost == true ? 1 : 0,
+              _pr.isExpired == true ? 1 : 0,
               _pr.desc)),
-          // document: addMutation.editPerson(
-          //   txtId.text,
-          //   txtName.text,
-          //   txtLastName.text,
-          //   int.parse(txtAge.text),
-          // ),
         ),
       );
 
@@ -142,6 +144,7 @@ class Products with ChangeNotifier {
         print('no exception');
 
         for (var i = 0; i < result.data["products"].length; i++) {
+
           loadedProducts.add(Product(
             id: result.data["products"][i]['id'],
             name: result.data["products"][i]['name'],
@@ -158,8 +161,9 @@ class Products with ChangeNotifier {
                 : result.data["products"][i]['discount_price'],
             sku: result.data["products"][i]['sku'],
             barcode: result.data["products"][i]['barcode'],
-            isDamage: result.data["products"][i]['barcode'] == 0 ? false : true,
-            // isDamage: result.data["products"][i]['is_damaged'],
+            isDamage: result.data["products"][i]['is_damaged'] == 0 ? false : true,
+            isLost: result.data["products"][i]['is_lost'] == 0 ? false : true,
+            isExpired: result.data["products"][i]['is_expired'] == 0 ? false : true,
             desc: result.data["products"][i]['remark'],
           ));
 
