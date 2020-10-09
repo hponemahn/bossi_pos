@@ -3,6 +3,7 @@ import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ProductEditScreen extends StatefulWidget {
@@ -70,14 +71,35 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
   TextEditingController barcodeController = TextEditingController();
   String barcodeScanRes;
-  Future scan() async {
-    var result = await BarcodeScanner.scan();
+  
+  Future scan () async {
+    var result;
+    try {
+      result = await BarcodeScanner.scan();
+    } on PlatformException catch (e) {
+      var errorResult = ScanResult(
+        type: ResultType.Error,
+        format: BarcodeFormat.unknown,
+      );
+
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
+        setState(() {
+          errorResult.rawContent = 'The user did not grant the camera permission!';
+        });
+      } else {
+        errorResult.rawContent = 'Unknown error: $e';
+      }
+      
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(errorResult.rawContent),
+      ));
+    }
 
     setState(() {
       barcodeScanRes = result.rawContent;
       barcodeController.text = result.rawContent;
     });
-  
   }
 
   TextField textField() {
