@@ -35,19 +35,14 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("ကုန်ပစ္စည်းစာရင်း"),
-      ),
+      appBar: AppBar(title: const Text("ကုန်ပစ္စည်းစာရင်း")),
       drawer: const Drawlet(),
-      body: 
-      _isLoading
+      body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : ManageProductsBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: 
-        
-        () =>
+        onPressed: () =>
             Navigator.pushNamed(context, ProductEditScreen.routeName)
                 .then((value) {
           if (_isInit) {

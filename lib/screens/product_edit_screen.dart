@@ -1,3 +1,4 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/product.dart';
 import 'package:bossi_pos/providers/products.dart';
@@ -28,8 +29,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       barcode: null,
       isDamage: false,
       isLost: false,
-      isExpired: false
-    );
+      isExpired: false);
 
   bool isSwitched = false;
   bool isLostSwitched = false;
@@ -67,6 +67,18 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   );
   TextEditingController _textFieldController = TextEditingController();
   bool _isValid = false;
+
+  TextEditingController barcodeController = TextEditingController();
+  String barcodeScanRes;
+  Future scan() async {
+    var result = await BarcodeScanner.scan();
+
+    setState(() {
+      barcodeScanRes = result.rawContent;
+      barcodeController.text = result.rawContent;
+    });
+  
+  }
 
   TextField textField() {
     return TextField(
@@ -180,14 +192,14 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
           setState(() {
             isSwitched = _product.isDamage;
           });
-        } 
-        
+        }
+
         if (_product.isLost == true) {
           setState(() {
             isLostSwitched = _product.isLost;
           });
         }
-        
+
         if (_product.isExpired == true) {
           setState(() {
             isExpiredSwitched = _product.isExpired;
@@ -196,6 +208,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
         setState(() {
           dropdownValue = _product.category.toString();
+          barcodeController.text = _product.barcode;
         });
       }
     }
@@ -213,12 +226,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
     _descFocusNode.dispose();
 
     _textFieldController.dispose();
+    barcodeController.dispose();
 
     super.dispose();
   }
 
   void _submitForm() {
-
     if (!_formKey.currentState.validate()) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         backgroundColor: Colors.red,
@@ -270,7 +283,18 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(title: Text("ကုန်ပစ္စည်းအသစ် ထည့်ရန်")),
+        appBar:
+            AppBar(title: Text("ကုန်ပစ္စည်းအသစ် ထည့်ရန်"), actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: scan,
+                child: Icon(
+                  Icons.qr_code_scanner,
+                  size: 26.0,
+                ),
+              )),
+        ]),
         body: Padding(
           padding: EdgeInsets.all(10),
           child: Form(
@@ -300,6 +324,35 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         desc: _newProduct.desc,
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
+                        isDamage: _newProduct.isDamage,
+                        isLost: _newProduct.isLost,
+                        isExpired: _newProduct.isExpired,
+                        category: _newProduct.category),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    // initialValue: _initVal['barcode'],
+                    controller: barcodeController,
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.qr_code_scanner),
+                        labelText: "ဘားကုဒ်",
+                        hintText: "ဘားကုဒ် ထည့်သွင်းပါ"),
+                    focusNode: _barFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) =>
+                        FocusScope.of(context).requestFocus(_descFocusNode),
+                    onSaved: (val) => _newProduct = Product(
+                        id: _newProduct.id,
+                        name: _newProduct.name,
+                        price: _newProduct.price,
+                        qty: _newProduct.qty,
+                        buyPrice: _newProduct.buyPrice,
+                        sku: _newProduct.sku,
+                        desc: _newProduct.desc,
+                        discountPrice: _newProduct.discountPrice,
+                        barcode: val,
                         isDamage: _newProduct.isDamage,
                         isLost: _newProduct.isLost,
                         isExpired: _newProduct.isExpired,
@@ -536,34 +589,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                         desc: _newProduct.desc,
                         discountPrice: _newProduct.discountPrice,
                         barcode: _newProduct.barcode,
-                        isDamage: _newProduct.isDamage,
-                        isLost: _newProduct.isLost,
-                        isExpired: _newProduct.isExpired,
-                        category: _newProduct.category),
-                  ),
-                  // SizedBox(
-                  //   height: 20,
-                  // ),
-                  TextFormField(
-                    initialValue: _initVal['barcode'],
-                    decoration: InputDecoration(
-                        icon: Icon(Icons.donut_large),
-                        labelText: "ဘားကုဒ်",
-                        hintText: "ဘားကုဒ် ထည့်သွင်းပါ"),
-                    focusNode: _barFocusNode,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) =>
-                        FocusScope.of(context).requestFocus(_descFocusNode),
-                    onSaved: (val) => _newProduct = Product(
-                        id: _newProduct.id,
-                        name: _newProduct.name,
-                        price: _newProduct.price,
-                        qty: _newProduct.qty,
-                        buyPrice: _newProduct.buyPrice,
-                        sku: _newProduct.sku,
-                        desc: _newProduct.desc,
-                        discountPrice: _newProduct.discountPrice,
-                        barcode: val,
                         isDamage: _newProduct.isDamage,
                         isLost: _newProduct.isLost,
                         isExpired: _newProduct.isExpired,
