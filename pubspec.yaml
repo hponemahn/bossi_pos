@@ -36,6 +36,7 @@ dependencies:
   charts_flutter: ^0.9.0
   graphql_flutter: ^3.0.1
   date_range_picker: ^1.0.5
+  barcode_scan: ^3.0.1
   
 dev_dependencies:
   flutter_test:
