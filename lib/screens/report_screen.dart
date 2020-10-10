@@ -17,11 +17,11 @@ class ReportScreen extends StatelessWidget {
         padding: const EdgeInsets.only(top: 16),
         // physics: BouncingScrollPhysics(),
         children: [
-          ReportExpansion('အရင်း၊ အမြတ်', Icons.account_balance, [
+          ReportExpansion('အရင်း၊ အမြတ် မှတ်တမ်း', Icons.account_balance, [
             {"subTile": 'အရင်း ငွေစုစုပေါင်း', "subVal": "capital"},
             {"subTile": 'အရောင်း၊ အမြတ် ငွေစုစုပေါင်း', "subVal": "sell&profit"},
           ]),
-          ReportExpansion('အရောင်း', Icons.shopping_cart, [
+          ReportExpansion('အရောင်း မှတ်တမ်း', Icons.shopping_cart, [
             {"subTile": 'အရောင်း စုစုပေါင်း', "subVal": "total-sell"},
             {"subTile": 'ကုန်ပစ္စည်းအလိုက် အမြတ်', "subVal": "item-profit"},
             {"subTile": 'ကုန်ပစ္စည်းအမျိုးအစားအလိုက် အမြတ်', "subVal": "itemCat-profit"},
@@ -30,16 +30,16 @@ class ReportScreen extends StatelessWidget {
             {"subTile": 'ရောင်းအားအနည်းဆုံး ကုန်ပစ္စည်း', "subVal": "worstSellingItem"},
             {"subTile": 'ရောင်းအားအနည်းဆုံး အမျိုးအစား', "subVal": "worstSellingItemCat"}
           ]),
-          ReportExpansion('အ၀ယ်', Icons.attach_money,
+          ReportExpansion('အ၀ယ် မှတ်တမ်း', Icons.attach_money,
               // အရောင်း၀င်ငွေ စုစုပေါင်း
               [
-                {"subTile": 'အ၀ယ် စုစုပေါင်း', "subVal": "buy"},
+                {"subTile": 'အ၀ယ် စုစုပေါင်း မှတ်တမ်း', "subVal": "buy"},
                 {"subTile": 'အ၀ယ်တန်ဖိုး အများဆုံး ကုန်ပစ္စည်း', "subVal": "mostBuy-item"},
                 {"subTile": 'အ၀ယ်တန်ဖိုး အများဆုံး အမျိုးအစား', "subVal": "mostBuy-itemCat"},
                 {"subTile": 'အ၀ယ်တန်ဖိုး အနည်းဆုံး ကုန်ပစ္စည်း', "subVal": "leastBuy-item"},
                 {"subTile": 'အ၀ယ်တန်ဖိုး အနည်းဆုံး အမျိုးအစား', "subVal": "leastBuy-itemCat"},
               ]),
-          ReportExpansion('ကုန်ပစ္စည်း', Icons.store_mall_directory,
+          ReportExpansion('ကုန်ပစ္စည်း မှတ်တမ်း', Icons.store_mall_directory,
               // အရောင်း၀င်ငွေ စုစုပေါင်း
               [
                 {"subTile": 'ကုန်ပစ္စည်း စုစုပေါင်း', "subVal": "totalItem"}, 

@@ -51,7 +51,7 @@ class Drawlet extends StatelessWidget {
           // ),
           ListTile(
             leading: Icon(Icons.report),
-            title: Text("အစီရင်ခံစာ - report"),
+            title: Text("အစီရင်ခံစာ"),
             onTap: () {
               Navigator.pushReplacementNamed(context, ReportScreen.routeName);
             },
