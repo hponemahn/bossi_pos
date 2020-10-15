@@ -1,12 +1,12 @@
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/chart.dart';
+import 'package:bossi_pos/providers/login.dart';
 import 'package:bossi_pos/providers/products.dart';
 import 'package:bossi_pos/providers/registers.dart';
-import 'package:bossi_pos/providers/roles.dart';
-import 'package:bossi_pos/providers/state_town.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
 import 'package:bossi_pos/screens/dashboard_screen.dart';
+import 'package:bossi_pos/screens/login_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: StateProvider()),
         ChangeNotifierProvider.value(value: TownshipProvider()),
         ChangeNotifierProvider.value(value: RegisterProvider()),
+        ChangeNotifierProvider.value(value: LoginProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(
@@ -50,9 +51,12 @@ class MyApp extends StatelessWidget {
         ),
         // home: Principal(),
         // home: SellScreen(),
-        home: RegisterPage(),
+        home: LoginPage(),
         debugShowCheckedModeBanner: false,
         routes: {
+          RegisterPage.routeName: (ctx) => RegisterPage(),
+          LoginPage.routeName: (ctx) => LoginPage(),
+          SellScreen.routeName: (ctx) => SellScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrderScreen.routeName: (ctx) => OrderScreen(),
           DashboardScreen.routeName: (ctx) => DashboardScreen(),

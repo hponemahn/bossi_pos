@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SellScreen extends StatefulWidget {
+  static const routeName = "sell";
   SellScreen({Key key}) : super(key: key);
 
   @override

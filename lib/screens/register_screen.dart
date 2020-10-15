@@ -1,16 +1,15 @@
 import 'package:bossi_pos/auths/widgets/bezierContainer.dart';
 import 'package:bossi_pos/auths/widgets/multis_select.dart';
 import 'package:bossi_pos/auths/widgets/text_title.dart';
-import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/registers.dart';
-import 'package:bossi_pos/providers/roles.dart';
-import 'package:bossi_pos/providers/state_town.dart';
 import 'package:flutter/material.dart';
 import 'package:bossi_pos/auths/widgets/register_widget.dart' as widget;
 import 'package:bossi_pos/auths/utils.dart' as utils;
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
+  static const routeName = "register";
+
   RegisterPage({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -189,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               onTap: () {
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
-                                  Provider.of<RegisterProvider>(context, listen: false).singUps(
+                                  Provider.of<RegisterProvider>(context, listen: false).singUps(context,
                                   utils.name, int.parse(_selectedRole) , utils.shopName, utils.myActivitiesResult, utils.phone, utils.email,
                                    utils.password,
                                   int.parse(_selectedTownship), int.parse(_selectedState), utils.address);

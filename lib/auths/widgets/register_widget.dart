@@ -70,6 +70,23 @@ Widget emailWidget() {
     );
 }
 
+Widget loginEmailWidget() {
+  return TextFormField(
+      autofocus: false,
+      initialValue: '',
+      decoration: const InputDecoration(
+        hintText: 'အီမောလ်(သို့)ဖုန်းနံပါတ်',
+        labelText: 'အီမောလ်(သို့)ဖုန်းနံပါတ်',
+      ),
+      keyboardType: TextInputType.emailAddress,
+      validator: (val) => val.isEmpty ? 'အီမေလ်(သို့)ဖုန်းနံပါတ်ရိုက်တည့်ရပါမည်' : null,
+      onSaved: (val) {
+        utils.email = !val.contains('@') ? null : val;
+        utils.phone = val.contains('@') ? null : val;
+      },
+    );
+}
+
 Widget passwordWidget(){
   return TextFormField(
     obscureText: true,
@@ -78,7 +95,7 @@ Widget passwordWidget(){
       hintText: 'လျှို့ဝှက်နံပါတ်',
       labelText: 'လျှို့ဝှက်နံပါတ်',
     ),
-    validator: (val) => val.length <= 6 ? 'လျှို့ဝှက်နံပါတ်အနည်းဆုံး၆လုံးတည့်ရပါမည်' : null ,
+    validator: (val) => val.length <= 5 ? 'လျှို့ဝှက်နံပါတ်အနည်းဆုံး၆လုံးတည့်ရပါမည်' : null ,
     onSaved: (val) => utils.password = val,
   );
 }
