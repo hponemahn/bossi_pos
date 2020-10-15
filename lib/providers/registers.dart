@@ -1,4 +1,5 @@
 
+import 'package:bossi_pos/graphql/authQueryMutation.dart';
 import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,42 +31,8 @@ class Registers {
       this.address});
 }
 
-String singUp(
-    String name,
-    int roleID,
-    String businessName,
-    String businessCatID,
-    String phone,
-    String email,
-    String password,
-    int townshipID,
-    int stateID,
-    String address) {
-  return """
-          mutation {
-                signup(
-                  name:"$name"
-                  role_id:$roleID
-                  business_name:"$businessName"
-                  business_cat_id: "$businessCatID"
-                  phone:"$phone"
-                  email:"$email"
-                  password : "$password"
-                  township_id: $townshipID
-                  state_id: $stateID
-                  address: "$address"
-                  
-                ){
-                  id
-                  name
-                  email
-                  api_token
-                }
-            } 
-  """;
-}
-
 class RegisterProvider with ChangeNotifier {
+  AuthQueryMutation queryMutation = AuthQueryMutation();
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
   Future<void> singUps(
     BuildContext context,
@@ -82,7 +49,7 @@ class RegisterProvider with ChangeNotifier {
     try {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.mutate(MutationOptions(
-          documentNode: gql(singUp(name, roleID , businessName, businessCatID, phone,
+          documentNode: gql(queryMutation.singUp(name, roleID , businessName, businessCatID, phone,
               email, password, townshipID, stateID, address))));
       if (!result.hasException) {
         utils.accessToken = result.data['signup']['api_token'];
@@ -108,19 +75,8 @@ class Roles {
   Roles({@required this.id, @required this.name});
 }
 
-String roles() {
-  return """ 
-       {
-        roles{
-          id
-          name
-          display_name
-        }
-      }
-    """;
-}
-
 class RoleProvider with ChangeNotifier {
+  AuthQueryMutation queryMutation = AuthQueryMutation();
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
   
   List<Roles> _roleprovider = [];
@@ -131,7 +87,7 @@ class RoleProvider with ChangeNotifier {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(roles()),
+          documentNode: gql(queryMutation.roles()),
         ),
       );
 
@@ -166,18 +122,8 @@ class States {
   States({@required this.id, @required this.name});
 }
 
-String states() {
-  return """
-        {
-          states{
-            id
-            name
-          }
-        }
-  """;
-}
-
 class StateProvider with ChangeNotifier {
+  AuthQueryMutation queryMutation = AuthQueryMutation();
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
   List<States> _stateprovider = [];
@@ -187,7 +133,7 @@ class StateProvider with ChangeNotifier {
       final List<States> loadeStates = [];
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result =
-          await _client.query(QueryOptions(documentNode: gql(states())));
+          await _client.query(QueryOptions(documentNode: gql(queryMutation.states())));
 
       if (!result.hasException) {
         for (var i = 0; i < result.data['states'].length; i++) {
@@ -221,19 +167,8 @@ class Townships {
   Townships({@required this.id, @required this.name});
 }
 
-String township(int stateId) {
-  return """ 
-       {
-        townships(state_id: $stateId){
-          id
-          name
-          
-        }
-      }
-    """;
-}
-
 class TownshipProvider with ChangeNotifier {
+  AuthQueryMutation queryMutation = AuthQueryMutation();
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
 
   List<Townships> _townprovider = [];
@@ -244,7 +179,7 @@ class TownshipProvider with ChangeNotifier {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(township(id)),
+          documentNode: gql(queryMutation.township(id)),
         ),
       );
       if (!result.hasException) {

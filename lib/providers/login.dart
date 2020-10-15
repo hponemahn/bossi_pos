@@ -1,4 +1,5 @@
 import 'package:bossi_pos/auths/utils.dart' as utils;
+import 'package:bossi_pos/graphql/authQueryMutation.dart';
 import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,31 +13,16 @@ class Logins {
   Logins({this.name, this.email, this.apiToken});
 }
 
-String login(String email, String phone, String password) {
-  return """ 
-  mutation {
-            login (email :"$email"
-                  phone :"$phone"
-                  password :"$password")
-              {
-              id
-              name
-              remember_token
-              api_token
-
-            }
-          }
-  """;
-}
 
 class LoginProvider with ChangeNotifier {
+  AuthQueryMutation queryMutation = AuthQueryMutation();
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
   Future<void> logins(
       BuildContext context, String email, String phone, String password) async {
     try {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.mutate(
-          MutationOptions(documentNode: gql(login(email, phone, password))));
+          MutationOptions(documentNode: gql(queryMutation.login(email, phone, password))));
       if (!result.hasException) {
         utils.accessToken = result.data['login']['api_token'];
         
