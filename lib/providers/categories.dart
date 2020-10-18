@@ -61,16 +61,27 @@ class Categories with ChangeNotifier {
     }
   }
 
-  Future<void> fetchCats([int page]) async {
+  Future<void> fetchCats({int page, String search}) async {
     try {
       final List<Category> loadedCats = [];
 
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
+      QueryResult result;
+
+      if (search.isEmpty) {
+        result = await _client.query(
         QueryOptions(
           documentNode: gql(addMutation.getCat(first: 15, page: page)),
         ),
       );
+      } else {
+        print("fetch with search");
+        result = await _client.query(
+        QueryOptions(
+          documentNode: gql(addMutation.getCatSearch(name: search, first: 15, page: page)),
+        ),
+      );
+      }
 
       if (!result.hasException) {
         print('no exception');

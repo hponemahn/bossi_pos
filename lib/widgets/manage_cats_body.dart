@@ -21,35 +21,28 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
       _page += 1;
       present = present + perPage;
     });
-    Provider.of<Categories>(context, listen: false).fetchCats(_page);
+
+    if (_searchText.isNotEmpty) {
+      Provider.of<Categories>(context, listen: false)
+          .fetchCats(page: _page, search: _searchText);
+    } else {
+      Provider.of<Categories>(context, listen: false)
+          .fetchCats(page: _page, search: "");
+    }
   }
 
   Widget _productListView(cats) {
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < cats.length; i++) {
-        if (cats[i]
-            .category
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(cats[i]);
-        }
-      }
-      cats = tempList;
-    }
-
     return Expanded(
       child: ListView.builder(
           padding: EdgeInsets.all(10),
           shrinkWrap: true,
-          // itemCount: cats.length,
           itemCount: (present <= cats.length) ? cats.length + 1 : cats.length,
           itemBuilder: (ctx, i) {
             return (i == cats.length)
                 ? Container(
                     // color: Colors.greenAccent,
                     child: FlatButton(
-                      child: Icon(Icons.refresh),
+                      child: CircularProgressIndicator(),
                       onPressed: loadMore,
                       // onPressed: () => print("load"),
                     ),
@@ -68,17 +61,11 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
     return NotificationListener<ScrollNotification>(
       onNotification: (scrollState) {
 
-        // if (scrollState is ScrollStartNotification) {
-        //           print("start");
-        //         } else if (scrollState is ScrollUpdateNotification) {
-        //           print("updat");
-        //         } else 
-                
-                if (scrollState is ScrollEndNotification &&
+        if (scrollState is ScrollEndNotification &&
             scrollState.metrics.pixels != 160) {
-                  print("end");
-                  loadMore();
-                }
+          print("end");
+          loadMore();
+        }
 
         return false;
       },
@@ -98,7 +85,19 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
                 onChanged: (val) {
                   setState(() {
                     _searchText = val;
+                    _page = 1;
+                    perPage = 15;
+                    present = 15;
                   });
+
+                  if (_searchText.isNotEmpty) {
+                    print("search");
+                    Provider.of<Categories>(context, listen: false)
+                        .fetchCats(page: _page, search: _searchText);
+                  } else {
+                    Provider.of<Categories>(context, listen: false)
+                        .fetchCats(page: _page, search: "");
+                  }
                 },
                 decoration: new InputDecoration(
                     prefixIcon: new Icon(Icons.search),

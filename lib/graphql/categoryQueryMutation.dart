@@ -11,4 +11,17 @@ class CategoryQueryMutation {
       }
     """;
   }
+
+  String getCatSearch({String name, int first, int page}) {
+    return """ 
+      {
+        categories (name: "$name", first: $first, page: $page) {
+          data {
+            id
+            name
+          }
+        }
+      }
+    """;
+  }
 }
