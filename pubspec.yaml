@@ -37,6 +37,9 @@ dependencies:
   graphql_flutter: ^3.0.1
   date_range_picker: ^1.0.5
   barcode_scan: ^3.0.1
+  google_fonts: ^1.1.0
+  multiselect_formfield: ^0.1.3
+  font_awesome_flutter: ^8.8.1
   
 dev_dependencies:
   flutter_test:
