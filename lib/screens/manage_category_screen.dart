@@ -28,7 +28,7 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Categories>(context).fetchCats().then((_) {
+      Provider.of<Categories>(context).fetchCats(1).then((_) {
         setState(() {
           _isLoading = false;
         });

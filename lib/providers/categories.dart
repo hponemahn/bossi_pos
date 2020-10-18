@@ -75,7 +75,24 @@ class Categories with ChangeNotifier {
       if (!result.hasException) {
         print('no exception');
 
-        for (var i = 0; i < result.data["categories"]["data"].length; i++) {
+        if (page > 1) {
+          for (var i = 0; i < result.data["categories"]["data"].length; i++) {
+
+          _categories.add(
+            Category(
+              id: result.data["categories"]['data'][i]['id'],
+              category: result.data["categories"]['data'][i]['name'],
+            )
+          );
+
+          print("fetch load more");
+          print(result.data["categories"]['data'][i]['id']);
+
+          // _categories = loadedCats;
+          notifyListeners();
+        }
+        } else {
+          for (var i = 0; i < result.data["categories"]["data"].length; i++) {
 
           loadedCats.add(
             Category(
@@ -87,9 +104,13 @@ class Categories with ChangeNotifier {
           print("fetch");
           print(result.data["categories"]['data'][i]['id']);
 
+          _categories = [];
           _categories = loadedCats;
           notifyListeners();
         }
+        }
+
+        
       } else {
         print('exception');
         print(result.exception);

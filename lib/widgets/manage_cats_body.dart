@@ -12,6 +12,17 @@ class ManageCatsBody extends StatefulWidget {
 
 class _ManageCatsBodyState extends State<ManageCatsBody> {
   String _searchText = "";
+  int perPage = 15;
+  int present = 15;
+  int _page = 1;
+
+  void loadMore() {
+    setState(() {
+      _page += 1;
+      present = present + perPage;
+    });
+    Provider.of<Categories>(context, listen: false).fetchCats(_page);
+  }
 
   Widget _productListView(cats) {
     if (_searchText.isNotEmpty) {
@@ -31,19 +42,47 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
       child: ListView.builder(
           padding: EdgeInsets.all(10),
           shrinkWrap: true,
-          itemCount: cats.length,
-          itemBuilder: (ctx, i) =>
-              // Text(cats[i].category),
-              ManageCategoryItem(cats[i].id, cats[i].category)),
+          // itemCount: cats.length,
+          itemCount: (present <= cats.length) ? cats.length + 1 : cats.length,
+          itemBuilder: (ctx, i) {
+            return (i == cats.length)
+                ? Container(
+                    // color: Colors.greenAccent,
+                    child: FlatButton(
+                      child: Icon(Icons.refresh),
+                      onPressed: loadMore,
+                      // onPressed: () => print("load"),
+                    ),
+                  )
+                : ManageCategoryItem(cats[i].id, cats[i].category);
+          }
+          // Text(cats[i].category),
+          ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     List<Category> _cats = Provider.of<Categories>(context).categories;
-    
-    return GestureDetector(
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: (scrollState) {
+
+        // if (scrollState is ScrollStartNotification) {
+        //           print("start");
+        //         } else if (scrollState is ScrollUpdateNotification) {
+        //           print("updat");
+        //         } else 
+                
+                if (scrollState is ScrollEndNotification &&
+            scrollState.metrics.pixels != 160) {
+                  print("end");
+                  loadMore();
+                }
+
+        return false;
+      },
+      child: GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -72,6 +111,7 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
             _productListView(_cats),
           ],
         ),
-      );
+      ),
+    );
   }
 }
