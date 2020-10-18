@@ -1,6 +1,6 @@
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/widgets/drawlet.dart';
-import 'package:bossi_pos/widgets/manage_category_item.dart';
+import 'package:bossi_pos/widgets/manage_cats_body.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,9 @@ class ManageCategoryScreen extends StatefulWidget {
 }
 
 class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
-  String _searchText = "";
+  
+  var _isInit = true;
+  var _isLoading = false;
   Category _newEditCat = Category(
     id: null,
     category: null,
@@ -20,29 +22,20 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
   TextEditingController _textFieldController = TextEditingController();
   bool _isValid = false;
 
-  Widget _productListView(cats) {
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < cats.length; i++) {
-        if (cats[i]
-            .category
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(cats[i]);
-        }
-      }
-      cats = tempList;
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Categories>(context).fetchCats().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
     }
-
-    return Expanded(
-      child: ListView.builder(
-          padding: EdgeInsets.all(10),
-          shrinkWrap: true,
-          itemCount: cats.length,
-          itemBuilder: (ctx, i) =>
-              // Text(cats[i].category),
-              ManageCategoryItem(cats[i].id, cats[i].category)),
-    );
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   TextField textField() {
@@ -111,45 +104,14 @@ class _ManageCategoryScreenState extends State<ManageCategoryScreen> {
   @override
   Widget build(BuildContext context) {
 
-    print("cat screen");
-
-    List<Category> _cats = Provider.of<Categories>(context).categories;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("အမျိုးအစား စာရင်း"),
       ),
       drawer: const Drawlet(),
-      body: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: TextField(
-                onChanged: (val) {
-                  setState(() {
-                    _searchText = val;
-                  });
-                },
-                decoration: new InputDecoration(
-                    prefixIcon: new Icon(Icons.search),
-                    hintText: 'အမည်ဖြင့် ရှာရန် ...'),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            _productListView(_cats),
-          ],
-        ),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ManageCatsBody(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () =>
