@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:device_info/device_info.dart';
 
 String name;
 String shopName;
@@ -21,3 +22,11 @@ getToken() {
 String getPrettyJSONString(Object jsonObject) {
   return const JsonEncoder.withIndent('  ').convert(jsonObject);
 }
+
+DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  Future<String> getDeviceId() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    return androidInfo.id;
+    // print('Running on ${androidInfo.id}');
+    // print('Running on ${androidInfo.model}');
+  }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:bossi_pos/auths/widgets/register_widget.dart' as widget;
 import 'package:bossi_pos/auths/utils.dart' as utils;
 import 'package:provider/provider.dart';
+import 'package:device_info/device_info.dart';
 
 class RegisterPage extends StatefulWidget {
   static const routeName = "register";
@@ -24,12 +25,22 @@ class _RegisterPageState extends State<RegisterPage> {
   String _selectedState;
   String _selectedTownship;
 
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
   @override
   void initState() {
     super.initState();
     Provider.of<RoleProvider>(context, listen: false).fetchRoles();
     Provider.of<StateProvider>(context, listen: false).fetchStates();
   }
+
+   
+   Future<String> getDeviceId() async {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.id;
+      // print('Running id ${androidInfo.id}');
+      // print('Running on ${androidInfo.model}');
+    }
 
   Widget role() {
     RoleProvider _roles = Provider.of<RoleProvider>(context);
@@ -137,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -185,13 +197,25 @@ class _RegisterPageState extends State<RegisterPage> {
                               height: 20,
                             ),
                             InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 if (_formKey.currentState.validate()) {
                                   _formKey.currentState.save();
-                                  Provider.of<RegisterProvider>(context, listen: false).singUps(context,
-                                  utils.name, int.parse(_selectedRole) , utils.shopName, utils.myActivitiesResult, utils.phone, utils.email,
-                                   utils.password,
-                                  int.parse(_selectedTownship), int.parse(_selectedState), utils.address);
+                                  var device = await getDeviceId();
+                                  Provider.of<RegisterProvider>(context,
+                                          listen: false)
+                                      .singUps(
+                                          context,
+                                          utils.name,
+                                          device,
+                                          int.parse(_selectedRole),
+                                          utils.shopName,
+                                          utils.myActivitiesResult,
+                                          utils.phone,
+                                          utils.email,
+                                          utils.password,
+                                          int.parse(_selectedTownship),
+                                          int.parse(_selectedState),
+                                          utils.address);
                                 }
                               },
                               child: _submitButton(),

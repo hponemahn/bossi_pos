@@ -1,6 +1,7 @@
 class AuthQueryMutation {
   String singUp(
     String name,
+    String deviceID,
     int roleID,
     String businessName,
     String businessCatID,
@@ -14,6 +15,7 @@ class AuthQueryMutation {
           mutation {
                 signup(
                   name:"$name"
+                  device_ID:"$deviceID"
                   role_id:$roleID
                   business_name:"$businessName"
                   business_cat_id: "$businessCatID"

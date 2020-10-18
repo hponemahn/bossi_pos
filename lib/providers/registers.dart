@@ -37,6 +37,7 @@ class RegisterProvider with ChangeNotifier {
   Future<void> singUps(
     BuildContext context,
       String name,
+      String deviceID,
       int roleID,
       String businessName,
       String businessCatID,
@@ -49,7 +50,7 @@ class RegisterProvider with ChangeNotifier {
     try {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.mutate(MutationOptions(
-          documentNode: gql(queryMutation.singUp(name, roleID , businessName, businessCatID, phone,
+          documentNode: gql(queryMutation.singUp(name, deviceID, roleID , businessName, businessCatID, phone,
               email, password, townshipID, stateID, address))));
       if (!result.hasException) {
         utils.accessToken = result.data['signup']['api_token'];
