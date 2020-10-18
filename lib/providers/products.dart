@@ -6,7 +6,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Products with ChangeNotifier {
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
-  ProductQueryMutation addMutation = ProductQueryMutation();
+  ProductQueryMutation addMutation = ProductQueryMutation(); 
 
   List<Product> _products = [
     /*

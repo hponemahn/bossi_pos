@@ -1,4 +1,7 @@
+import 'package:bossi_pos/graphql/categoryQueryMutation.dart';
+import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:flutter/foundation.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Category {
   final String id;
@@ -8,12 +11,16 @@ class Category {
 }
 
 class Categories with ChangeNotifier {
+  
+  GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
+  CategoryQueryMutation addMutation = CategoryQueryMutation();
+
   List<Category> _categories = [
-    Category(id: "1", category: "Food"),
-    Category(id: "2", category: "IT"),
-    Category(id: "3", category: "Clothing"),
-    Category(id: "4", category: "Accessory"),
-    Category(id: "5", category: "Fashion"),
+    // Category(id: "1", category: "Food"),
+    // Category(id: "2", category: "IT"),
+    // Category(id: "3", category: "Clothing"),
+    // Category(id: "4", category: "Accessory"),
+    // Category(id: "5", category: "Fashion"),
   ];
 
   List<Category> get categories {
@@ -51,6 +58,45 @@ class Categories with ChangeNotifier {
       notifyListeners();
     } else {
       print("...");
+    }
+  }
+
+  Future<void> fetchCats([int page]) async {
+    try {
+      final List<Category> loadedCats = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(addMutation.getCat(first: 15, page: page)),
+        ),
+      );
+
+      if (!result.hasException) {
+        print('no exception');
+
+        for (var i = 0; i < result.data["categories"]["data"].length; i++) {
+
+          loadedCats.add(
+            Category(
+              id: result.data["categories"]['data'][i]['id'],
+              category: result.data["categories"]['data'][i]['name'],
+            )
+          );
+
+          print("fetch");
+          print(result.data["categories"]['data'][i]['id']);
+
+          _categories = loadedCats;
+          notifyListeners();
+        }
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
     }
   }
 }
