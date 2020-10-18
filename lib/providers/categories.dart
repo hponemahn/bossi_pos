@@ -11,7 +11,6 @@ class Category {
 }
 
 class Categories with ChangeNotifier {
-  
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
   CategoryQueryMutation addMutation = CategoryQueryMutation();
 
@@ -30,17 +29,50 @@ class Categories with ChangeNotifier {
   void delete(String id) {
     _categories.removeWhere((pr) => pr.id == id);
     notifyListeners();
+
+    _deleteGraphQL(id);
+  }
+
+  Future<void> _deleteGraphQL(String id) async {
+    GraphQLClient _client = graphQLConfiguration.clientToQuery();
+    QueryResult result = await _client.mutate(
+      MutationOptions(
+        documentNode: gql(addMutation.deleteCat(int.parse(id))),
+      ),
+    );
+
+    print(result.exception);
   }
 
   Category findById(String id) {
     return _categories.firstWhere((pr) => pr.id == id);
   }
 
-  void add(Category _pr) {
+  void add(Category _cat) async {
+    String _id = await _addGraphQL(_cat.category);
     var category =
-        Category(id: DateTime.now().toString(), category: _pr.category);
-    _categories.add(category);
+        Category(id: _id, category: _cat.category);
+    _categories.insert(0, category);
     notifyListeners();
+  }
+
+  Future<String> _addGraphQL(String _cat) async {
+    try {
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.mutate(
+        MutationOptions(
+          documentNode: gql(addMutation.addCat(
+            _cat,
+          )),
+        ),
+      );
+
+      print(result.exception);
+      return result.data['createCat']['id'];
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
   }
 
   String addAndGetID(Category _pr) {
@@ -51,13 +83,34 @@ class Categories with ChangeNotifier {
     return category.id;
   }
 
-  void edit(Category _pr) {
-    int index = _categories.indexWhere((pr) => pr.id == _pr.id);
+  void edit(Category _cat) {
+    int index = _categories.indexWhere((pr) => pr.id == _cat.id);
     if (index >= 0) {
-      _categories[index] = _pr;
+      _categories[index] = _cat;
       notifyListeners();
+
+      _updateGraphQL(_cat);
     } else {
       print("...");
+    }
+  }
+
+  Future<void> _updateGraphQL(Category _cat) async {
+    try {
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.mutate(
+        MutationOptions(
+          documentNode: gql(addMutation.updateCat(
+            int.parse(_cat.id),
+            _cat.category,
+          )),
+        ),
+      );
+
+      print(result.exception);
+    } catch (e) {
+      print(e);
+      throw (e);
     }
   }
 
@@ -70,17 +123,18 @@ class Categories with ChangeNotifier {
 
       if (search.isEmpty) {
         result = await _client.query(
-        QueryOptions(
-          documentNode: gql(addMutation.getCat(first: 15, page: page)),
-        ),
-      );
+          QueryOptions(
+            documentNode: gql(addMutation.getCat(first: 15, page: page)),
+          ),
+        );
       } else {
         print("fetch with search");
         result = await _client.query(
-        QueryOptions(
-          documentNode: gql(addMutation.getCatSearch(name: search, first: 15, page: page)),
-        ),
-      );
+          QueryOptions(
+            documentNode: gql(
+                addMutation.getCatSearch(name: search, first: 15, page: page)),
+          ),
+        );
       }
 
       if (!result.hasException) {
@@ -88,40 +142,32 @@ class Categories with ChangeNotifier {
 
         if (page > 1) {
           for (var i = 0; i < result.data["categories"]["data"].length; i++) {
-
-          _categories.add(
-            Category(
+            _categories.add(Category(
               id: result.data["categories"]['data'][i]['id'],
               category: result.data["categories"]['data'][i]['name'],
-            )
-          );
+            ));
 
-          print("fetch load more");
-          print(result.data["categories"]['data'][i]['id']);
+            print("fetch load more");
+            print(result.data["categories"]['data'][i]['id']);
 
-          // _categories = loadedCats;
-          notifyListeners();
-        }
+            // _categories = loadedCats;
+            notifyListeners();
+          }
         } else {
           for (var i = 0; i < result.data["categories"]["data"].length; i++) {
-
-          loadedCats.add(
-            Category(
+            loadedCats.add(Category(
               id: result.data["categories"]['data'][i]['id'],
               category: result.data["categories"]['data'][i]['name'],
-            )
-          );
+            ));
 
-          print("fetch");
-          print(result.data["categories"]['data'][i]['id']);
+            print("fetch");
+            print(result.data["categories"]['data'][i]['id']);
 
-          _categories = [];
-          _categories = loadedCats;
-          notifyListeners();
+            _categories = [];
+            _categories = loadedCats;
+            notifyListeners();
+          }
         }
-        }
-
-        
       } else {
         print('exception');
         print(result.exception);

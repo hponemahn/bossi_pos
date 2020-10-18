@@ -124,7 +124,7 @@ class _ManageCategoryItemState extends State<ManageCategoryItem> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: ListTile(
           title: Text(widget.category),
-          subtitle: Text(widget.id),
+          // subtitle: Text(widget.id),
           // subtitle: Text("$qty Qty  -  $price MMK"),
           // subtitle: Text("အရေအတွက်: 25 | စျေးနှုန်း: 2,500"),
           trailing: Container(
