@@ -37,6 +37,17 @@ class CategoryQueryMutation {
     """;
   }
 
+  String getAllCat() {
+    return """ 
+      {
+        allCat {
+          id
+          name
+        }
+      }
+    """;
+  }
+
   String addCat(String name) {
     return """
       mutation {

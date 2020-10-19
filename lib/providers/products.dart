@@ -25,9 +25,10 @@ class Products with ChangeNotifier {
     return [..._products];
   }
 
-  void add(Product _pr) {
+  void add(Product _pr) async {
+    String _id = await _addGraphQL(_pr);
     var product = Product(
-        id: DateTime.now().toString(),
+        id: _id,
         name: _pr.name,
         category: _pr.category,
         price: _pr.price,
@@ -43,8 +44,35 @@ class Products with ChangeNotifier {
         );
     _products.add(product);
     notifyListeners();
+  }
 
-    _addGraphQL(_pr);
+  Future<String> _addGraphQL(Product _pr) async {
+    try {
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.mutate(
+        MutationOptions(
+          documentNode: gql(addMutation.addProduct(
+              _pr.name,
+              _pr.category,
+              _pr.qty,
+              _pr.buyPrice,
+              _pr.price,
+              _pr.discountPrice,
+              _pr.sku,
+              _pr.barcode,
+              _pr.isDamage == true ? 1 : 0,
+              _pr.isLost == true ? 1 : 0,
+              _pr.isExpired == true ? 1 : 0,
+              _pr.desc)),
+        ),
+      );
+
+      print(result.exception);
+      return result.data['createProduct']['id'];
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
   }
 
   void delete(String id) {
@@ -67,34 +95,6 @@ class Products with ChangeNotifier {
       _editGraphQL(_pr);
     } else {
       print("...");
-    }
-  }
-
-  Future<void> _addGraphQL(Product _pr) async {
-    try {
-      GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.mutate(
-        MutationOptions(
-          documentNode: gql(addMutation.addProduct(
-              _pr.name,
-              _pr.category,
-              _pr.qty,
-              _pr.buyPrice,
-              _pr.price,
-              _pr.discountPrice,
-              _pr.sku,
-              _pr.barcode,
-              _pr.isDamage == true ? 1 : 0,
-              _pr.isLost == true ? 1 : 0,
-              _pr.isExpired == true ? 1 : 0,
-              _pr.desc)),
-        ),
-      );
-
-      print(result.exception);
-    } catch (e) {
-      print(e);
-      throw (e);
     }
   }
 

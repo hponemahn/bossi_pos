@@ -71,8 +71,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
   TextEditingController barcodeController = TextEditingController();
   String barcodeScanRes;
-  
-  Future scan () async {
+
+  Future scan() async {
     var result;
     try {
       result = await BarcodeScanner.scan();
@@ -84,12 +84,13 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
       if (e.code == BarcodeScanner.cameraAccessDenied) {
         setState(() {
-          errorResult.rawContent = 'The user did not grant the camera permission!';
+          errorResult.rawContent =
+              'The user did not grant the camera permission!';
         });
       } else {
         errorResult.rawContent = 'Unknown error: $e';
       }
-      
+
       _scaffoldKey.currentState.showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text(errorResult.rawContent),
@@ -136,17 +137,18 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
             FlatButton(
               child: Text("ထည့်မည်"),
-              onPressed: () {
+              onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
+                  
+                  _newCat = Category(
+                      id: _newCat.id, category: _textFieldController.text);
+
+                  String _newCatId =
+                      await Provider.of<Categories>(context, listen: false)
+                          .addAndGetID(_newCat);
+
                   setState(() {
                     _isValid = false;
-
-                    _newCat = Category(
-                        id: _newCat.id, category: _textFieldController.text);
-
-                    String _newCatId =
-                        Provider.of<Categories>(context, listen: false)
-                            .addAndGetID(_newCat);
 
                     dropdownValue = _newCatId;
 
@@ -188,6 +190,8 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       String id = ModalRoute.of(context).settings.arguments as String;
+
+      Provider.of<Categories>(context).fetchAllCat();
 
       if (id != null) {
         Product _product =
@@ -293,7 +297,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Categories _cats = Provider.of<Categories>(context);
+    List<Category> _cats = Provider.of<Categories>(context).categories;
 
     return GestureDetector(
       onTap: () {
@@ -396,7 +400,7 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                             hint: Text('အမျိုးအစား ရွေးချယ်ပါ'),
                             value: dropdownValue,
                             isDense: true,
-                            items: _cats.categories.map((Category cat) {
+                            items: _cats.map((Category cat) {
                               return new DropdownMenuItem<String>(
                                   value: cat.id, child: new Text(cat.category));
                             }).toList(),
@@ -436,7 +440,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       style: TextStyle(color: Colors.blue, fontSize: 13),
                     ),
                   ),
-
                   TextFormField(
                     initialValue:
                         _initVal['qty'] == 0 ? '' : _initVal['qty'].toString(),

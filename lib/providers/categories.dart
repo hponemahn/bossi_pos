@@ -50,8 +50,7 @@ class Categories with ChangeNotifier {
 
   void add(Category _cat) async {
     String _id = await _addGraphQL(_cat.category);
-    var category =
-        Category(id: _id, category: _cat.category);
+    var category = Category(id: _id, category: _cat.category);
     _categories.insert(0, category);
     notifyListeners();
   }
@@ -75,12 +74,14 @@ class Categories with ChangeNotifier {
     }
   }
 
-  String addAndGetID(Category _pr) {
-    var category =
-        Category(id: DateTime.now().toString(), category: _pr.category);
-    _categories.add(category);
+  Future<String> addAndGetID(Category _cat) async {
+    
+    String _id = await _addGraphQL(_cat.category);
+    var category = Category(id: _id, category: _cat.category);
+    _categories.insert(0, category);
     notifyListeners();
-    return category.id;
+
+    return _id;
   }
 
   void edit(Category _cat) {
@@ -167,6 +168,43 @@ class Categories with ChangeNotifier {
             _categories = loadedCats;
             notifyListeners();
           }
+        }
+      } else {
+        print('exception');
+        print(result.exception);
+      }
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
+
+  Future<void> fetchAllCat() async {
+    try {
+      final List<Category> loadedAllCat = [];
+
+      GraphQLClient _client = graphQLConfiguration.clientToQuery();
+      QueryResult result = await _client.query(
+        QueryOptions(
+          documentNode: gql(addMutation.getAllCat()),
+          // document: queryMutation.getAll(),
+        ),
+      );
+
+      if (!result.hasException) {
+        print('no exception');
+
+        for (var i = 0; i < result.data["allCat"].length; i++) {
+
+          loadedAllCat.add(
+            Category(
+              id: result.data["allCat"][i]['id'],
+              category: result.data["allCat"][i]['name'],
+            )
+            );
+
+          _categories = loadedAllCat;
+          notifyListeners();
         }
       } else {
         print('exception');
