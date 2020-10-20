@@ -16,7 +16,7 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
   int present = 15;
   int _page = 1;
 
-  void loadMore() {
+  void loadMore() { 
     setState(() {
       _page += 1;
       present = present + perPage;
@@ -58,7 +58,7 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
   Widget build(BuildContext context) {
     List<Category> _cats = Provider.of<Categories>(context).categories;
 
-    return NotificationListener<ScrollNotification>(
+    return _cats.isEmpty ? Center(child: Text('အမျိုးအစား မရှိသေးပါ'),) : NotificationListener<ScrollNotification>(
       onNotification: (scrollState) {
 
         if (scrollState is ScrollEndNotification &&

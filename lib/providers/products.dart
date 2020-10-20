@@ -6,7 +6,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Products with ChangeNotifier {
   GraphQLConfiguration graphQLConfiguration = GraphQLConfiguration();
-  ProductQueryMutation addMutation = ProductQueryMutation(); 
+  ProductQueryMutation addMutation = ProductQueryMutation();
 
   List<Product> _products = [
     /*
@@ -28,21 +28,22 @@ class Products with ChangeNotifier {
   void add(Product _pr) async {
     String _id = await _addGraphQL(_pr);
     var product = Product(
-        id: _id,
-        name: _pr.name,
-        category: _pr.category,
-        price: _pr.price,
-        qty: _pr.qty,
-        buyPrice: _pr.buyPrice,
-        sku: _pr.sku,
-        desc: _pr.desc,
-        barcode: _pr.barcode,
-        discountPrice: _pr.discountPrice,
-        isDamage: _pr.isDamage,
-        isLost: _pr.isLost,
-        isExpired: _pr.isExpired,
-        );
-    _products.add(product);
+      id: _id,
+      name: _pr.name,
+      category: _pr.category,
+      price: _pr.price,
+      qty: _pr.qty,
+      buyPrice: _pr.buyPrice,
+      sku: _pr.sku,
+      desc: _pr.desc,
+      barcode: _pr.barcode,
+      discountPrice: _pr.discountPrice,
+      isDamage: _pr.isDamage,
+      isLost: _pr.isLost,
+      isExpired: _pr.isExpired,
+    );
+    // _products.add(product);
+    _products.insert(0, product);
     notifyListeners();
   }
 
@@ -127,48 +128,107 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProducts({int page, String search}) async {
     try {
       final List<Product> loadedProducts = [];
 
       ProductQueryMutation queryMutation = ProductQueryMutation();
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
-        QueryOptions(
-          documentNode: gql(queryMutation.getAll()),
-          // document: queryMutation.getAll(),
-        ),
-      );
+      QueryResult result;
+
+      if (search.isEmpty) {
+        result = await _client.query(
+          QueryOptions(
+            documentNode: gql(queryMutation.getAll(page)),
+          ),
+        );
+      } else {
+        print("fetch with search");
+        result = await _client.query(
+          QueryOptions(
+            documentNode:
+                gql(queryMutation.getAllSearch(name: search, page: page)),
+          ),
+        );
+      }
 
       if (!result.hasException) {
         print('no exception');
 
-        for (var i = 0; i < result.data["products"].length; i++) {
+        if (page > 1) {
+          for (var i = 0; i < result.data["products"]['data'].length; i++) {
+            print("load more  ${result.data["products"]['data'][i]['id']}");
 
-          loadedProducts.add(Product(
-            id: result.data["products"][i]['id'],
-            name: result.data["products"][i]['name'],
-            category: result.data["products"][i]['category_id'],
-            qty: result.data["products"][i]['stock'],
-            buyPrice: result.data["products"][i]['buy_price'] is int
-                ? result.data["products"][i]['buy_price'].toDouble()
-                : result.data["products"][i]['buy_price'],
-            price: result.data["products"][i]['sell_price'] is int
-                ? result.data["products"][i]['sell_price'].toDouble()
-                : result.data["products"][i]['sell_price'],
-            discountPrice: result.data["products"][i]['discount_price'] is int
-                ? result.data["products"][i]['discount_price'].toDouble()
-                : result.data["products"][i]['discount_price'],
-            sku: result.data["products"][i]['sku'],
-            barcode: result.data["products"][i]['barcode'],
-            isDamage: result.data["products"][i]['is_damaged'] == 0 ? false : true,
-            isLost: result.data["products"][i]['is_lost'] == 0 ? false : true,
-            isExpired: result.data["products"][i]['is_expired'] == 0 ? false : true,
-            desc: result.data["products"][i]['remark'],
-          ));
+            _products.add(Product(
+              id: result.data["products"]['data'][i]['id'],
+              name: result.data["products"]['data'][i]['name'],
+              category: result.data["products"]['data'][i]['category_id'],
+              qty: result.data["products"]['data'][i]['stock'],
+              buyPrice: result.data["products"]['data'][i]['buy_price'] is int
+                  ? result.data["products"]['data'][i]['buy_price'].toDouble()
+                  : result.data["products"]['data'][i]['buy_price'],
+              price: result.data["products"]['data'][i]['sell_price'] is int
+                  ? result.data["products"]['data'][i]['sell_price'].toDouble()
+                  : result.data["products"]['data'][i]['sell_price'],
+              discountPrice:
+                  result.data["products"]['data'][i]['discount_price'] is int
+                      ? result.data["products"]['data'][i]['discount_price']
+                          .toDouble()
+                      : result.data["products"]['data'][i]['discount_price'],
+              sku: result.data["products"]['data'][i]['sku'],
+              barcode: result.data["products"]['data'][i]['barcode'],
+              isDamage: result.data["products"]['data'][i]['is_damaged'] == 0
+                  ? false
+                  : true,
+              isLost: result.data["products"]['data'][i]['is_lost'] == 0
+                  ? false
+                  : true,
+              isExpired: result.data["products"]['data'][i]['is_expired'] == 0
+                  ? false
+                  : true,
+              desc: result.data["products"]['data'][i]['remark'],
+            ));
 
-          _products = loadedProducts;
-          notifyListeners();
+            notifyListeners();
+          }
+        } else {
+          for (var i = 0; i < result.data["products"]['data'].length; i++) {
+            print("start  ${result.data["products"]['data'][i]['id']}");
+
+            loadedProducts.add(Product(
+              id: result.data["products"]['data'][i]['id'],
+              name: result.data["products"]['data'][i]['name'],
+              category: result.data["products"]['data'][i]['category_id'],
+              qty: result.data["products"]['data'][i]['stock'],
+              buyPrice: result.data["products"]['data'][i]['buy_price'] is int
+                  ? result.data["products"]['data'][i]['buy_price'].toDouble()
+                  : result.data["products"]['data'][i]['buy_price'],
+              price: result.data["products"]['data'][i]['sell_price'] is int
+                  ? result.data["products"]['data'][i]['sell_price'].toDouble()
+                  : result.data["products"]['data'][i]['sell_price'],
+              discountPrice:
+                  result.data["products"]['data'][i]['discount_price'] is int
+                      ? result.data["products"]['data'][i]['discount_price']
+                          .toDouble()
+                      : result.data["products"]['data'][i]['discount_price'],
+              sku: result.data["products"]['data'][i]['sku'],
+              barcode: result.data["products"]['data'][i]['barcode'],
+              isDamage: result.data["products"]['data'][i]['is_damaged'] == 0
+                  ? false
+                  : true,
+              isLost: result.data["products"]['data'][i]['is_lost'] == 0
+                  ? false
+                  : true,
+              isExpired: result.data["products"]['data'][i]['is_expired'] == 0
+                  ? false
+                  : true,
+              desc: result.data["products"]['data'][i]['remark'],
+            ));
+
+            _products = [];
+            _products = loadedProducts;
+            notifyListeners();
+          }
         }
       } else {
         print('exception');

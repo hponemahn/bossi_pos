@@ -8,36 +8,53 @@ class ManageProductsBody extends StatefulWidget {
   ManageProductsBody({Key key}) : super(key: key);
 
   @override
-  _ManageProductsBodyState createState() => _ManageProductsBodyState();
+  _ManageProductsBodyState createState() => _ManageProductsBodyState();  
 }
 
 class _ManageProductsBodyState extends State<ManageProductsBody> {
 
   String _searchText = "";
+  int perPage = 15;
+  int present = 15;
+  int _page = 1;
+
+  void loadMore() {
+    setState(() {
+      _page += 1;
+      present = present + perPage;
+    });
+
+    if (_searchText.isNotEmpty) {
+      Provider.of<Products>(context, listen: false)
+          .fetchProducts(page: _page, search: _searchText);
+    } else {
+      print("load more $_page");
+      Provider.of<Products>(context, listen: false)
+          .fetchProducts(page: _page, search: "");
+    }
+  }
 
   Widget _productListView(products) {
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < products.length; i++) {
-        if (products[i]
-            .name
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(products[i]);
-        }
-      }
-      products = tempList;
-    }
-
-    products = products.reversed.toList();
 
     return Expanded(
       child: ListView.builder(
           padding: EdgeInsets.all(10),
           shrinkWrap: true,
-          itemCount: products.length,
-          itemBuilder: (ctx, i) => ManageProductItem(products[i].id,
-              products[i].name, products[i].qty, products[i].price)),
+          itemCount: (present <= products.length) ? products.length + 1 : products.length,
+          itemBuilder: (ctx, i) {
+            return (i == products.length)
+                ? Container(
+                    // color: Colors.greenAccent,
+                    child: FlatButton(
+                      child: CircularProgressIndicator(),
+                      onPressed: loadMore,
+                      // onPressed: () => print("load"),
+                    ),
+                  )
+                : ManageProductItem(products[i].id,
+              products[i].name, products[i].qty, products[i].price);
+          }
+          ),
     );
   }
   
@@ -45,8 +62,23 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
   Widget build(BuildContext context) {
 
     List<Product> _products = Provider.of<Products>(context).products;
+
+    return 
     
-    return _products.isEmpty ? Center(child: Text('ကုန်ပစ္စည်းမရှိသေးပါ'),) : 
+    _products.isEmpty ? Center(child: Text('ကုန်ပစ္စည်းမရှိသေးပါ'),) : 
+
+    NotificationListener<ScrollNotification>(
+      onNotification: (scrollState) {
+
+        if (scrollState is ScrollEndNotification &&
+            scrollState.metrics.pixels != 160) {
+          print("end");
+          loadMore();
+        }
+
+        return false;
+      },
+      child: 
     
     GestureDetector(
         onTap: () {
@@ -64,7 +96,19 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
                 onChanged: (val) {
                   setState(() {
                     _searchText = val;
+                    _page = 1;
+                    perPage = 15;
+                    present = 15;
                   });
+
+                  if (_searchText.isNotEmpty) {
+                    print("search");
+                    Provider.of<Products>(context, listen: false)
+                        .fetchProducts(page: _page, search: _searchText);
+                  } else {
+                    Provider.of<Products>(context, listen: false)
+                        .fetchProducts(page: _page, search: "");
+                  }
                 },
                 decoration: new InputDecoration(
                     prefixIcon: new Icon(Icons.search),
@@ -77,6 +121,7 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
             _productListView(_products),
           ],
         ),
-      );
+      ),
+    );
   }
 }

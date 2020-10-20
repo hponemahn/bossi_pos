@@ -22,9 +22,9 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Products>(context).fetchProducts().then((_) {
+      Provider.of<Products>(context).fetchProducts(page: 1, search: "").then((_) {
         setState(() {
-          _isLoading = false;
+          _isLoading = false; 
         });
       });
     }
@@ -49,7 +49,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
             setState(() {
               _isLoading = true;
             });
-            Provider.of<Products>(context).fetchProducts().then((_) {
+            Provider.of<Products>(context).fetchProducts(page: 1, search: "").then((_) {
               setState(() {
                 _isLoading = false;
               });

@@ -1,27 +1,62 @@
 class ProductQueryMutation {
   
-  String getAll() {
+  String getAll(int page) {  
     return """ 
       {
         products (orderBy: [
-        {
-          field: "id"
-          order: ASC
+              {
+                field: "id"
+                order: DESC
+              }
+        ], first: 15, page: $page) {
+          data {
+            id
+            name
+            category_id
+            stock
+            buy_price
+            sell_price
+            discount_price
+            sku
+            barcode
+            is_damaged
+            is_lost
+            is_expired
+            remark
+          }
         }
-    ]) {
-          id
-          name
-          category_id
-          stock
-          buy_price
-          sell_price
-          discount_price
-          sku
-          barcode
-          is_damaged
-          is_lost
-          is_expired
-          remark
+      }
+    """;
+  }
+
+  String getAllSearch({String name, int page}) {
+    return """ 
+      {
+        products (name: "$name", orderBy: [
+              {
+                field: "id"
+                order: DESC
+              }
+        ], first: 15, page: $page) {
+          paginatorInfo {
+            total
+            hasMorePages
+          }
+          data {
+            id
+            name
+            category_id
+            stock
+            buy_price
+            sell_price
+            discount_price
+            sku
+            barcode
+            is_damaged
+            is_lost
+            is_expired
+            remark
+          }
         }
       }
     """;
