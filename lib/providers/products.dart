@@ -128,7 +128,7 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts({int page, String search}) async {
+  Future<void> fetchProducts({int first, int page, String search}) async {
     try {
       final List<Product> loadedProducts = [];
 
@@ -139,7 +139,7 @@ class Products with ChangeNotifier {
       if (search.isEmpty) {
         result = await _client.query(
           QueryOptions(
-            documentNode: gql(queryMutation.getAll(page)),
+            documentNode: gql(queryMutation.getAll(search: "", first: first, page: page)),
           ),
         );
       } else {
@@ -147,7 +147,7 @@ class Products with ChangeNotifier {
         result = await _client.query(
           QueryOptions(
             documentNode:
-                gql(queryMutation.getAllSearch(name: search, page: page)),
+                gql(queryMutation.getAll(search: search, first: first, page: page)),
           ),
         );
       }

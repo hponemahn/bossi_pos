@@ -1,14 +1,17 @@
 class ProductQueryMutation {
   
-  String getAll(int page) {  
-    return """ 
+  String getAll({String search, int first, int page}) {  
+    if (search == "") {
+      return """ 
       {
-        products (orderBy: [
+        products (
+          search: null,
+          orderBy: [
               {
                 field: "id"
                 order: DESC
               }
-        ], first: 15, page: $page) {
+        ], first: $first, page: $page) {
           data {
             id
             name
@@ -27,21 +30,17 @@ class ProductQueryMutation {
         }
       }
     """;
-  }
-
-  String getAllSearch({String name, int page}) {
-    return """ 
+    } else {
+      return """ 
       {
-        products (name: "$name", orderBy: [
+        products (
+          search: "$search",
+          orderBy: [
               {
                 field: "id"
                 order: DESC
               }
-        ], first: 15, page: $page) {
-          paginatorInfo {
-            total
-            hasMorePages
-          }
+        ], first: $first, page: $page) {
           data {
             id
             name
@@ -60,6 +59,7 @@ class ProductQueryMutation {
         }
       }
     """;
+    }
   }
 
   String addProduct(

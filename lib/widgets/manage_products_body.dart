@@ -13,7 +13,7 @@ class ManageProductsBody extends StatefulWidget {
 
 class _ManageProductsBodyState extends State<ManageProductsBody> {
 
-  String _searchText = "";
+  String _searchText = ""; 
   int perPage = 15;
   int present = 15;
   int _page = 1;
@@ -26,11 +26,11 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
 
     if (_searchText.isNotEmpty) {
       Provider.of<Products>(context, listen: false)
-          .fetchProducts(page: _page, search: _searchText);
+          .fetchProducts(first: 15, page: _page, search: _searchText);
     } else {
       print("load more $_page");
       Provider.of<Products>(context, listen: false)
-          .fetchProducts(page: _page, search: "");
+          .fetchProducts(first: 15, page: _page, search: "");
     }
   }
 
@@ -104,10 +104,10 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
                   if (_searchText.isNotEmpty) {
                     print("search");
                     Provider.of<Products>(context, listen: false)
-                        .fetchProducts(page: _page, search: _searchText);
+                        .fetchProducts(first: 15, page: _page, search: _searchText);
                   } else {
                     Provider.of<Products>(context, listen: false)
-                        .fetchProducts(page: _page, search: "");
+                        .fetchProducts(first: 15, page: _page, search: "");
                   }
                 },
                 decoration: new InputDecoration(
