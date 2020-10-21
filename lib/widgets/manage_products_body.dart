@@ -8,12 +8,11 @@ class ManageProductsBody extends StatefulWidget {
   ManageProductsBody({Key key}) : super(key: key);
 
   @override
-  _ManageProductsBodyState createState() => _ManageProductsBodyState();  
+  _ManageProductsBodyState createState() => _ManageProductsBodyState();
 }
 
 class _ManageProductsBodyState extends State<ManageProductsBody> {
-
-  String _searchText = ""; 
+  String _searchText = "";
   int perPage = 15;
   int present = 15;
   int _page = 1;
@@ -35,12 +34,13 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
   }
 
   Widget _productListView(products) {
-
     return Expanded(
       child: ListView.builder(
           padding: EdgeInsets.all(10),
           shrinkWrap: true,
-          itemCount: (present <= products.length) ? products.length + 1 : products.length,
+          itemCount: (present <= products.length)
+              ? products.length + 1
+              : products.length,
           itemBuilder: (ctx, i) {
             return (i == products.length)
                 ? Container(
@@ -51,77 +51,88 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
                       // onPressed: () => print("load"),
                     ),
                   )
-                : ManageProductItem(products[i].id,
-              products[i].name, products[i].qty, products[i].price);
-          }
-          ),
+                : ManageProductItem(products[i].id, products[i].name,
+                    products[i].qty, products[i].price);
+          }),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
-
     List<Product> _products = Provider.of<Products>(context).products;
 
-    return 
-    
-    _products.isEmpty ? Center(child: Text('ကုန်ပစ္စည်းမရှိသေးပါ'),) : 
+    return _products.isEmpty
+        ? Center(
+            child: Text('ကုန်ပစ္စည်းမရှိသေးပါ'),
+          )
+        : RefreshIndicator(
+            child: NotificationListener<ScrollNotification>(
+            onNotification: (scrollState) {
 
-    NotificationListener<ScrollNotification>(
-      onNotification: (scrollState) {
+              if (scrollState is ScrollEndNotification &&
+                  scrollState.metrics.pixels != 160) {
+                print("end");
+                loadMore();
+              }
 
-        if (scrollState is ScrollEndNotification &&
-            scrollState.metrics.pixels != 160) {
-          print("end");
-          loadMore();
-        }
+              return false;
+            },
+            child: GestureDetector(
+              onTap: () {
+                FocusScopeNode currentFocus = FocusScope.of(context);
 
-        return false;
-      },
-      child: 
-    
-    GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
+              },
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    child: TextField(
+                      onChanged: (val) {
+                        setState(() {
+                          _searchText = val;
+                          _page = 1;
+                          perPage = 15;
+                          present = 15;
+                        });
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: TextField(
-                onChanged: (val) {
-                  setState(() {
-                    _searchText = val;
-                    _page = 1;
-                    perPage = 15;
-                    present = 15;
-                  });
-
-                  if (_searchText.isNotEmpty) {
-                    print("search");
-                    Provider.of<Products>(context, listen: false)
-                        .fetchProducts(first: 15, page: _page, search: _searchText);
-                  } else {
-                    Provider.of<Products>(context, listen: false)
-                        .fetchProducts(first: 15, page: _page, search: "");
-                  }
-                },
-                decoration: new InputDecoration(
-                    prefixIcon: new Icon(Icons.search),
-                    hintText: 'အမည်ဖြင့် ရှာရန် ...'),
+                        if (_searchText.isNotEmpty) {
+                          print("search");
+                          Provider.of<Products>(context, listen: false)
+                              .fetchProducts(
+                                  first: 15, page: _page, search: _searchText);
+                        } else {
+                          Provider.of<Products>(context, listen: false)
+                              .fetchProducts(
+                                  first: 15, page: _page, search: "");
+                        }
+                      },
+                      decoration: new InputDecoration(
+                          prefixIcon: new Icon(Icons.search),
+                          hintText: 'အမည်ဖြင့် ရှာရန် ...'),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  _productListView(_products),
+                ],
               ),
             ),
-            SizedBox(
-              height: 30,
-            ),
-            _productListView(_products),
-          ],
-        ),
-      ),
-    );
+          ),
+            onRefresh: () async {
+
+              setState(() {
+                _page = 1;
+                perPage = 30;
+                present = 30;
+              });
+
+              Provider.of<Products>(context, listen: false)
+                  .fetchProducts(first: 30, page: _page, search: "");
+            },
+          );
   }
 }

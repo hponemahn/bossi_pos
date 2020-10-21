@@ -44,13 +44,14 @@ class _SellScreenState extends State<SellScreen> {
     });
     print(barcodeScanRes);
 
-    // if (barcodeScanRes.isNotEmpty) {
-    //   print("search");
+    if (barcodeScanRes.isNotEmpty) {
+      print("search by barcode");
+      Provider.of<Products>(context, listen: false)
+          .fetchProducts(first: 30, page: 1, search: barcodeScanRes);
+    }
+    //  else {
     //   Provider.of<Products>(context, listen: false)
-    //       .fetchProducts(first: 30, page: _page, search: barcodeScanRes);
-    // } else {
-    //   Provider.of<Products>(context, listen: false)
-    //       .fetchProducts(first: 30, page: _page, search: "");
+    //       .fetchProducts(first: 30, page: 1, search: "");
     // }
   }
 

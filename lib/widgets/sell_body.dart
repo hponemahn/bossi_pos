@@ -129,57 +129,72 @@ class _SellBodyState extends State<SellBody> {
         ? Center(
             child: Text('ရောင်းရန် ပစ္စည်းမရှိသေးပါ'),
           )
-        : NotificationListener<ScrollNotification>(
-            onNotification: (scrollState) {
-              if (scrollState is ScrollEndNotification &&
-                  scrollState.metrics.pixels != 160) {
-                print("end");
-                loadMore();
-              }
-
-              return false;
-            },
-            child: GestureDetector(
-              onTap: () {
-                FocusScopeNode currentFocus = FocusScope.of(context);
-
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
+        : RefreshIndicator(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollState) {
+                if (scrollState is ScrollEndNotification &&
+                    scrollState.metrics.pixels != 160) {
+                  print("end");
+                  loadMore();
                 }
-              },
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      onChanged: (val) {
-                        setState(() {
-                          _searchText = val;
-                          _page = 1;
-                          perPage = 30;
-                          present = 30;
-                        });
 
-                        if (_searchText.isNotEmpty) {
-                          print("search");
-                          Provider.of<Products>(context, listen: false)
-                              .fetchProducts(
-                                  first: 30, page: _page, search: _searchText);
-                        } else {
-                          Provider.of<Products>(context, listen: false)
-                              .fetchProducts(
-                                  first: 30, page: _page, search: "");
-                        }
-                      },
-                      decoration: new InputDecoration(
-                          prefixIcon: new Icon(Icons.search),
-                          hintText: 'ရောင်းမည့်ပစ္စည်းရှာရန် ...'),
+                return false;
+              },
+              child: GestureDetector(
+                onTap: () {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                },
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(
+                        onChanged: (val) {
+                          setState(() {
+                            _searchText = val;
+                            _page = 1;
+                            perPage = 30;
+                            present = 30;
+                          });
+
+                          if (_searchText.isNotEmpty) {
+                            print("search");
+                            Provider.of<Products>(context, listen: false)
+                                .fetchProducts(
+                                    first: 30,
+                                    page: _page,
+                                    search: _searchText);
+                          } else {
+                            Provider.of<Products>(context, listen: false)
+                                .fetchProducts(
+                                    first: 30, page: _page, search: "");
+                          }
+                        },
+                        decoration: new InputDecoration(
+                            prefixIcon: new Icon(Icons.search),
+                            hintText: 'ရောင်းမည့်ပစ္စည်းရှာရန် ...'),
+                      ),
                     ),
-                  ),
-                  _grid(_products.products, _cart),
-                ],
+                    _grid(_products.products, _cart),
+                  ],
+                ),
               ),
             ),
+            onRefresh: () async {
+
+              setState(() {
+                _page = 1;
+                perPage = 30;
+                present = 30;
+              });
+
+              Provider.of<Products>(context, listen: false)
+                  .fetchProducts(first: 30, page: _page, search: "");
+            },
           );
   }
 }

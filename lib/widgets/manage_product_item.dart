@@ -55,7 +55,7 @@ class ManageProductItem extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       child: ListTile(
-          title: Text(id + name),
+          title: Text(name),
           subtitle: Text("$qty Qty  -  $price MMK"),
           // subtitle: Text("အရေအတွက်: 25 | စျေးနှုန်း: 2,500"),
           trailing: Container(

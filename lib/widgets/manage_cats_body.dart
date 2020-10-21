@@ -16,7 +16,7 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
   int present = 15;
   int _page = 1;
 
-  void loadMore() { 
+  void loadMore() {
     setState(() {
       _page += 1;
       present = present + perPage;
@@ -58,59 +58,74 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
   Widget build(BuildContext context) {
     List<Category> _cats = Provider.of<Categories>(context).categories;
 
-    return _cats.isEmpty ? Center(child: Text('အမျိုးအစား မရှိသေးပါ'),) : NotificationListener<ScrollNotification>(
-      onNotification: (scrollState) {
+    return _cats.isEmpty
+        ? Center(
+            child: Text('အမျိုးအစား မရှိသေးပါ'),
+          )
+        : RefreshIndicator(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollState) {
+                if (scrollState is ScrollEndNotification &&
+                    scrollState.metrics.pixels != 160) {
+                  print("end");
+                  loadMore();
+                }
 
-        if (scrollState is ScrollEndNotification &&
-            scrollState.metrics.pixels != 160) {
-          print("end");
-          loadMore();
-        }
+                return false;
+              },
+              child: GestureDetector(
+                onTap: () {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
 
-        return false;
-      },
-      child: GestureDetector(
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              child: TextField(
-                onChanged: (val) {
-                  setState(() {
-                    _searchText = val;
-                    _page = 1;
-                    perPage = 15;
-                    present = 15;
-                  });
-
-                  if (_searchText.isNotEmpty) {
-                    print("search");
-                    Provider.of<Categories>(context, listen: false)
-                        .fetchCats(page: _page, search: _searchText);
-                  } else {
-                    Provider.of<Categories>(context, listen: false)
-                        .fetchCats(page: _page, search: "");
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
                   }
                 },
-                decoration: new InputDecoration(
-                    prefixIcon: new Icon(Icons.search),
-                    hintText: 'အမည်ဖြင့် ရှာရန် ...'),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: TextField(
+                        onChanged: (val) {
+                          setState(() {
+                            _searchText = val;
+                            _page = 1;
+                            perPage = 15;
+                            present = 15;
+                          });
+
+                          if (_searchText.isNotEmpty) {
+                            print("search");
+                            Provider.of<Categories>(context, listen: false)
+                                .fetchCats(page: _page, search: _searchText);
+                          } else {
+                            Provider.of<Categories>(context, listen: false)
+                                .fetchCats(page: _page, search: "");
+                          }
+                        },
+                        decoration: new InputDecoration(
+                            prefixIcon: new Icon(Icons.search),
+                            hintText: 'အမည်ဖြင့် ရှာရန် ...'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    _productListView(_cats),
+                  ],
+                ),
               ),
             ),
-            SizedBox(
-              height: 30,
-            ),
-            _productListView(_cats),
-          ],
-        ),
-      ),
-    );
+            onRefresh: () async {
+              setState(() {
+                _page = 1;
+                perPage = 30;
+                present = 30;
+              });
+
+              Provider.of<Categories>(context, listen: false)
+                  .fetchCats(page: _page, search: "");
+            },
+          );
   }
 }
