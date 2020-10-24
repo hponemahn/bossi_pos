@@ -25,53 +25,96 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _startDate = "0";
   String _endDate = "0";
   Map _arguments;
+  int perPage = 15;
+  int present = 15;
+  int _page = 1;
+
+  void loadMore() {
+    setState(() {
+      _page += 1;
+      present = present + perPage;
+    });
+
+    print("body page $_page");
+
+    Provider.of<Chart>(context, listen: false).fetchCapData(
+        filter: _filterText,
+        startDate: _startDate,
+        endDate: _endDate,
+        first: 15,
+        page: _page);
+  }
 
   void _fetchDataOnCondition() {
     if (_arguments['subVal'] == "sell&profit") {
-      Provider.of<Chart>(context).fetchSaleData(_filterText, _startDate, _endDate);
-      Provider.of<Chart>(context).fetchProfitData(_filterText, _startDate, _endDate).then((_) {
+      Provider.of<Chart>(context)
+          .fetchSaleData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context)
+          .fetchProfitData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
     } else if (_arguments['subVal'] == "capital") {
-      Provider.of<Chart>(context).fetchCapData(_filterText, _startDate, _endDate).then((_) {
+      Provider.of<Chart>(context)
+          .fetchCapData(
+              filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 15,
+              page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
     } else if (_arguments['subVal'] == "total-sell") {
-      Provider.of<Chart>(context).fetchSaleData(_filterText, _startDate, _endDate).then((_) {
+      Provider.of<Chart>(context)
+          .fetchSaleData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
     } else if (_arguments['subVal'] == "item-profit") {
-      Provider.of<Chart>(context).fetchItemProfitData(_filterText, _startDate, _endDate).then((_) {
+      Provider.of<Chart>(context)
+          .fetchItemProfitData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
     } else if (_arguments['subVal'] == "itemCat-profit") {
-      Provider.of<Chart>(context).fetchItemCatProfitData(_filterText, _startDate, _endDate).then((_) {
+      Provider.of<Chart>(context)
+          .fetchItemCatProfitData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
-    } else if (_arguments['subVal'] == "bestSellingItem" || _arguments['subVal'] == "bestSellingItemCat") {
-      Provider.of<Chart>(context).fetchBestSellingItemData(_filterText, _startDate, _endDate).then((_) {
+    } else if (_arguments['subVal'] == "bestSellingItem" ||
+        _arguments['subVal'] == "bestSellingItemCat") {
+      Provider.of<Chart>(context)
+          .fetchBestSellingItemData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
-    } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
-      Provider.of<Chart>(context).fetchWorstSellingItemData(_filterText, _startDate, _endDate).then((_) {
+    } else if (_arguments['subVal'] == "worstSellingItem" ||
+        _arguments['subVal'] == "worstSellingItemCat") {
+      Provider.of<Chart>(context)
+          .fetchWorstSellingItemData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
       });
     } else if (_arguments['subVal'] == "buy") {
-      Provider.of<Chart>(context).fetchBuyData(_filterText, _startDate, _endDate).then((_) {
+      Provider.of<Chart>(context)
+          .fetchBuyData(_filterText, _startDate, _endDate)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -170,23 +213,43 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   void _fetchFilterData() {
+    setState(() {
+      _page = 1;
+      perPage = 15;
+      present = 15;
+    });
     if (_arguments['subVal'] == "sell&profit") {
-      Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText, _startDate, _endDate);
-      Provider.of<Chart>(context, listen: false).fetchProfitData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false)
+          .fetchSaleData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false)
+          .fetchProfitData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "capital") {
-      Provider.of<Chart>(context, listen: false).fetchCapData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchCapData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: 1);
     } else if (_arguments['subVal'] == "total-sell") {
-      Provider.of<Chart>(context, listen: false).fetchSaleData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false)
+          .fetchSaleData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "item-profit") {
-      Provider.of<Chart>(context, listen: false).fetchItemProfitData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false)
+          .fetchItemProfitData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "itemCat-profit") {
-      Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(_filterText, _startDate, _endDate);
-    } else if (_arguments['subVal'] == "bestSellingItem" || _arguments['subVal'] == "bestSellingItemCat") {
-      Provider.of<Chart>(context, listen: false).fetchBestSellingItemData(_filterText, _startDate, _endDate);
-    } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
-      Provider.of<Chart>(context, listen: false).fetchWorstSellingItemData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false)
+          .fetchItemCatProfitData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "bestSellingItem" ||
+        _arguments['subVal'] == "bestSellingItemCat") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchBestSellingItemData(_filterText, _startDate, _endDate);
+    } else if (_arguments['subVal'] == "worstSellingItem" ||
+        _arguments['subVal'] == "worstSellingItemCat") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchWorstSellingItemData(_filterText, _startDate, _endDate);
     } else if (_arguments['subVal'] == "buy") {
-      Provider.of<Chart>(context, listen: false).fetchBuyData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false)
+          .fetchBuyData(_filterText, _startDate, _endDate);
     }
   }
 
@@ -219,62 +282,64 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       _widgetBody = SellProfitBody(_title, _filterText,
           Provider.of<Chart>(context).sale, Provider.of<Chart>(context).profit);
     } else if (_arguments['subVal'] == "capital") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).cap);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).cap);
     } else if (_arguments['subVal'] == "total-sell") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).sale);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).sale);
     } else if (_arguments['subVal'] == "item-profit") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).itemProfit);
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).itemProfit);
     } else if (_arguments['subVal'] == "itemCat-profit") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).itemCatProfit);
-    } else if (_arguments['subVal'] == "bestSellingItem" || _arguments['subVal'] == "bestSellingItemCat") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).bestSellingItem);
-    } else if (_arguments['subVal'] == "worstSellingItem" || _arguments['subVal'] == "worstSellingItemCat") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).worstSellingItem);
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).itemCatProfit);
+    } else if (_arguments['subVal'] == "bestSellingItem" ||
+        _arguments['subVal'] == "bestSellingItemCat") {
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).bestSellingItem);
+    } else if (_arguments['subVal'] == "worstSellingItem" ||
+        _arguments['subVal'] == "worstSellingItemCat") {
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).worstSellingItem);
     } else if (_arguments['subVal'] == "buy") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).buy);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).buy);
     } else if (_arguments['subVal'] == "mostBuy-item") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItem);
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItem);
     } else if (_arguments['subVal'] == "mostBuy-itemCat") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItemCat);
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).mostBuyingItemCat);
     } else if (_arguments['subVal'] == "leastBuy-item") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).leastBuyingItem);
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).leastBuyingItem);
     } else if (_arguments['subVal'] == "leastBuy-itemCat") {
-      _widgetBody =
-          TwoTitlesReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).leastBuyingItemCat);
+      _widgetBody = TwoTitlesReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).leastBuyingItemCat);
     } else if (_arguments['subVal'] == "totalItem") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).totalItem);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).totalItem);
     } else if (_arguments['subVal'] == "mostItem") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).mostItem);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).mostItem);
     } else if (_arguments['subVal'] == "leastItem") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).leastItem);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).leastItem);
     } else if (_arguments['subVal'] == "damagedItem") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).damagedItem);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).damagedItem);
     } else if (_arguments['subVal'] == "lostItem") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).lostItem);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).lostItem);
     } else if (_arguments['subVal'] == "expiredItem") {
-      _widgetBody =
-          CommonReportDetailBody(_title, _filterText, _arguments['subVal'], Provider.of<Chart>(context).expiredItem);
+      _widgetBody = CommonReportDetailBody(_title, _filterText,
+          _arguments['subVal'], Provider.of<Chart>(context).expiredItem);
     }
 
     return _widgetBody;
   }
 
-  String _convertDateTime (val) {
+  String _convertDateTime(val) {
     var newFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     return newFormat.format(DateFormat("yyyy-MM-dd HH:mm:ss").parse(val));
   }
@@ -287,94 +352,142 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           actionsIconTheme: IconThemeData(
               size: 30.0, color: Theme.of(context).accentColor, opacity: 10.0),
           actions: <Widget>[
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" && _arguments['subVal'] != "lostItem" && _arguments['subVal'] != "expiredItem" ? GestureDetector(
-              onTap: () async {
-                final List picked =
-                    await DateRagePicker.showDatePicker(
-                        context: context,
-                        initialFirstDate: new DateTime.now(),
-                        initialLastDate:
-                            (new DateTime.now()).add(new Duration(days: 7)),
-                        firstDate: new DateTime(DateTime.now().year - 50),
-                        lastDate: new DateTime(DateTime.now().year + 50));
-                if (picked != null && picked.length == 2) {
-                  setState(() {
-                    _startDate = _convertDateTime(picked[0].toString());
-                    _endDate = _convertDateTime(picked[1].toString());
-                  });
-                  _fetchFilterData();
-                }
-              },
-              child: Icon(
-                Icons.filter_list,
-                size: 26.0,
-              ),
-            ) : Text(""),
-            _arguments['subVal'] != "mostBuy-item" && _arguments['subVal'] != "mostBuy-itemCat" && _arguments['subVal'] != "leastBuy-item" && _arguments['subVal'] != "leastBuy-itemCat" && _arguments['subVal'] != "totalItem" && _arguments['subVal'] != "mostItem" && _arguments['subVal'] != "leastItem" && _arguments['subVal'] != "damagedItem" && _arguments['subVal'] != "lostItem" && _arguments['subVal'] != "expiredItem" ? PopupMenuButton(
-                icon: Icon(Icons.more_vert),
-                onSelected: (val) {
-                  setState(() {
-                    _filterText = val;
-                  });
+            _arguments['subVal'] != "mostBuy-item" &&
+                    _arguments['subVal'] != "mostBuy-itemCat" &&
+                    _arguments['subVal'] != "leastBuy-item" &&
+                    _arguments['subVal'] != "leastBuy-itemCat" &&
+                    _arguments['subVal'] != "totalItem" &&
+                    _arguments['subVal'] != "mostItem" &&
+                    _arguments['subVal'] != "leastItem" &&
+                    _arguments['subVal'] != "damagedItem" &&
+                    _arguments['subVal'] != "lostItem" &&
+                    _arguments['subVal'] != "expiredItem"
+                ? GestureDetector(
+                    onTap: () async {
+                      final List picked = await DateRagePicker.showDatePicker(
+                          context: context,
+                          initialFirstDate: new DateTime.now(),
+                          initialLastDate:
+                              (new DateTime.now()).add(new Duration(days: 7)),
+                          firstDate: new DateTime(DateTime.now().year - 50),
+                          lastDate: new DateTime(DateTime.now().year + 50));
+                      if (picked != null && picked.length == 2) {
+                        setState(() {
+                          _startDate = _convertDateTime(picked[0].toString());
+                          _endDate = _convertDateTime(picked[1].toString());
+                        });
+                        _fetchFilterData();
+                      }
+                    },
+                    child: Icon(
+                      Icons.filter_list,
+                      size: 26.0,
+                    ),
+                  )
+                : Text(""),
+            _arguments['subVal'] != "mostBuy-item" &&
+                    _arguments['subVal'] != "mostBuy-itemCat" &&
+                    _arguments['subVal'] != "leastBuy-item" &&
+                    _arguments['subVal'] != "leastBuy-itemCat" &&
+                    _arguments['subVal'] != "totalItem" &&
+                    _arguments['subVal'] != "mostItem" &&
+                    _arguments['subVal'] != "leastItem" &&
+                    _arguments['subVal'] != "damagedItem" &&
+                    _arguments['subVal'] != "lostItem" &&
+                    _arguments['subVal'] != "expiredItem"
+                ? PopupMenuButton(
+                    icon: Icon(Icons.more_vert),
+                    onSelected: (val) {
+                      setState(() {
+                        _filterText = val;
+                      });
 
-                  _fetchFilterData();
-                },
-                itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Text(
-                          "ကြည့်ရှုရန်",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: "d",
-                        child: Container(
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                size: 20,
-                              ),
-                              SizedBox(width: 8),
-                              Text("ရက်အလိုက်"),
-                            ],
+                      _fetchFilterData();
+                    },
+                    itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Text(
+                              "ကြည့်ရှုရန်",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: "m",
-                        child: Container(
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                size: 20,
+                          PopupMenuItem(
+                            value: "d",
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text("ရက်အလိုက်"),
+                                ],
                               ),
-                              SizedBox(width: 8),
-                              Text("လအလိုက်"),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: "y",
-                        child: Container(
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                size: 20,
+                          PopupMenuItem(
+                            value: "m",
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text("လအလိုက်"),
+                                ],
                               ),
-                              SizedBox(width: 8),
-                              Text("နှစ်အလိုက်"),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ]) : Text(""),
+                          PopupMenuItem(
+                            value: "y",
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text("နှစ်အလိုက်"),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ])
+                : Text(""),
           ],
         ),
-        body: _widget()
+        body: RefreshIndicator(
+          child: NotificationListener<ScrollNotification>(
+              onNotification: (scrollState) {
+                if (scrollState is ScrollEndNotification &&
+                    scrollState.metrics.pixels != 160) {
+                  print("end");
+                  loadMore();
+                }
+
+                return false;
+              },
+              child: _widget()),
+          onRefresh: () async {
+            setState(() {
+              _page = 1;
+              perPage = 30;
+              present = 30;
+            });
+
+            Provider.of<Chart>(context, listen: false).fetchCapData(
+                filter: "m",
+                startDate: "0",
+                endDate: "0",
+                first: 15,
+                page: _page);
+          },
+        )
+
         // bottomNavigationBar: ReportDetailButton(Provider.of<Chart>(context).profit)
         );
   }

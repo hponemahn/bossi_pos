@@ -1,13 +1,17 @@
 class ChartQuery {
-  String getCapital({String filter, String startDate, String endDate}) {
+  String getCapital(
+      {String filter, String startDate, String endDate, int first, int page}) {
+        print("query $page");
     return """
       {
-  capital(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-    total
-    day
-    year
-    month
-    months
+  capital(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+    data {
+      total
+      day
+      year
+      month
+      months
+    }
   }
 }
     """;
@@ -90,7 +94,8 @@ class ChartQuery {
           """;
   }
 
-  String getWorstSellingItem({String filter, String startDate, String endDate}) {
+  String getWorstSellingItem(
+      {String filter, String startDate, String endDate}) {
     return """
       {
         worstSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   

@@ -46,30 +46,56 @@ class Chart with ChangeNotifier {
   List<ChartModel> get lostItem => [..._lostItemData];
   List<ChartModel> get expiredItem => [..._expiredItemData];
 
-  Future<void> fetchCapData(String filter, String startDate, String endDate) async {
+  Future<void> fetchCapData({String filter, String startDate, String endDate,
+      int first, int page}) async {
+        print("fetch $page");
     try {
       final List<ChartModel> _loadedCapData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
+      QueryResult result;
+
+      result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getCapital(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getCapital(
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["capital"].length; i++) {
-          _loadedCapData.add(
-            ChartModel(
-                total: result.data["capital"][i]['total'].toString(),
-                day: result.data["capital"][i]['day'],
-                month: result.data["capital"][i]['month'],
-                year: result.data["capital"][i]['year']),
-          );
-        }
+        if (page > 1) {
+          for (var i = 0; i < result.data["capital"]["data"].length; i++) {
+            print("load more  ${result.data["capital"]["data"][i]['month']}");
+            _capData.add(
+              ChartModel(
+                  total: result.data["capital"]["data"][i]['total'].toString(),
+                  day: result.data["capital"]["data"][i]['day'],
+                  month: result.data["capital"]["data"][i]['month'],
+                  year: result.data["capital"]["data"][i]['year']),
+            );
+            print("year ${result.data["capital"]["data"][i]['year']} + month ${result.data["capital"]["data"][i]['month']}");
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["capital"]["data"].length; i++) {
+            print("start  ${result.data["capital"]["data"][i]['month']}");
+            _loadedCapData.add(
+              ChartModel(
+                  total: result.data["capital"]["data"][i]['total'].toString(),
+                  day: result.data["capital"]["data"][i]['day'],
+                  month: result.data["capital"]["data"][i]['month'],
+                  year: result.data["capital"]["data"][i]['year']),
+            );
+          }
 
-        _capData = _loadedCapData;
-        notifyListeners();
+          _capData = [];
+          _capData = _loadedCapData;
+          notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -80,14 +106,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchSaleData(String filter, String startDate, String endDate) async {
+  Future<void> fetchSaleData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedSaleData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getSale(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getSale(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -114,14 +142,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProfitData(String filter, String startDate, String endDate) async {
+  Future<void> fetchProfitData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedProfitData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getProfit(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getProfit(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -148,14 +178,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchItemProfitData(String filter, String startDate, String endDate) async {
+  Future<void> fetchItemProfitData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedItemProfitData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getItemProfit(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getItemProfit(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -163,12 +195,12 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["itemProfitChart"].length; i++) {
           _loadedItemProfitData.add(
             ChartModel(
-              name: result.data["itemProfitChart"][i]['name'],
-              qty: result.data["itemProfitChart"][i]['qty'],
-              total: result.data["itemProfitChart"][i]['total'].toString(),
-              day: result.data["itemProfitChart"][i]['day'],
-              month: result.data["itemProfitChart"][i]['month'],
-              year: result.data["itemProfitChart"][i]['year']),
+                name: result.data["itemProfitChart"][i]['name'],
+                qty: result.data["itemProfitChart"][i]['qty'],
+                total: result.data["itemProfitChart"][i]['total'].toString(),
+                day: result.data["itemProfitChart"][i]['day'],
+                month: result.data["itemProfitChart"][i]['month'],
+                year: result.data["itemProfitChart"][i]['year']),
           );
         }
 
@@ -184,14 +216,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchItemCatProfitData(String filter, String startDate, String endDate) async {
+  Future<void> fetchItemCatProfitData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedItemCatProfitData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getItemCatProfit(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getItemCatProfit(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -199,12 +233,12 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["itemCatProfitChart"].length; i++) {
           _loadedItemCatProfitData.add(
             ChartModel(
-              name: result.data["itemCatProfitChart"][i]['name'],
-              qty: result.data["itemCatProfitChart"][i]['qty'],
-              total: result.data["itemCatProfitChart"][i]['total'].toString(),
-              day: result.data["itemCatProfitChart"][i]['day'],
-              month: result.data["itemCatProfitChart"][i]['month'],
-              year: result.data["itemCatProfitChart"][i]['year']),
+                name: result.data["itemCatProfitChart"][i]['name'],
+                qty: result.data["itemCatProfitChart"][i]['qty'],
+                total: result.data["itemCatProfitChart"][i]['total'].toString(),
+                day: result.data["itemCatProfitChart"][i]['day'],
+                month: result.data["itemCatProfitChart"][i]['month'],
+                year: result.data["itemCatProfitChart"][i]['year']),
           );
         }
 
@@ -220,14 +254,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchBestSellingItemData(String filter, String startDate, String endDate) async {
+  Future<void> fetchBestSellingItemData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedBestSellingItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getBestSellingItem(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getBestSellingItem(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -235,13 +271,14 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["bestSellingItemChart"].length; i++) {
           _loadedBestSellingItemData.add(
             ChartModel(
-              name: result.data["bestSellingItemChart"][i]['name'],
-              catName: result.data["bestSellingItemChart"][i]['catName'],
-              qty: result.data["bestSellingItemChart"][i]['qty'],
-              total: result.data["bestSellingItemChart"][i]['total'].toString(),
-              day: result.data["bestSellingItemChart"][i]['day'],
-              month: result.data["bestSellingItemChart"][i]['month'],
-              year: result.data["bestSellingItemChart"][i]['year']),
+                name: result.data["bestSellingItemChart"][i]['name'],
+                catName: result.data["bestSellingItemChart"][i]['catName'],
+                qty: result.data["bestSellingItemChart"][i]['qty'],
+                total:
+                    result.data["bestSellingItemChart"][i]['total'].toString(),
+                day: result.data["bestSellingItemChart"][i]['day'],
+                month: result.data["bestSellingItemChart"][i]['month'],
+                year: result.data["bestSellingItemChart"][i]['year']),
           );
         }
 
@@ -257,14 +294,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchWorstSellingItemData(String filter, String startDate, String endDate) async {
+  Future<void> fetchWorstSellingItemData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedWorstSellingItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getWorstSellingItem(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getWorstSellingItem(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -272,13 +311,14 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["worstSellingItemChart"].length; i++) {
           _loadedWorstSellingItemData.add(
             ChartModel(
-              name: result.data["worstSellingItemChart"][i]['name'],
-              catName: result.data["worstSellingItemChart"][i]['catName'],
-              qty: result.data["worstSellingItemChart"][i]['qty'],
-              total: result.data["worstSellingItemChart"][i]['total'].toString(),
-              day: result.data["worstSellingItemChart"][i]['day'],
-              month: result.data["worstSellingItemChart"][i]['month'],
-              year: result.data["worstSellingItemChart"][i]['year']),
+                name: result.data["worstSellingItemChart"][i]['name'],
+                catName: result.data["worstSellingItemChart"][i]['catName'],
+                qty: result.data["worstSellingItemChart"][i]['qty'],
+                total:
+                    result.data["worstSellingItemChart"][i]['total'].toString(),
+                day: result.data["worstSellingItemChart"][i]['day'],
+                month: result.data["worstSellingItemChart"][i]['month'],
+                year: result.data["worstSellingItemChart"][i]['year']),
           );
         }
 
@@ -294,14 +334,16 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchBuyData(String filter, String startDate, String endDate) async {
+  Future<void> fetchBuyData(
+      String filter, String startDate, String endDate) async {
     try {
       final List<ChartModel> _loadedBuyData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getBuy(filter: filter, startDate: startDate, endDate: endDate)),
+          documentNode: gql(_query.getBuy(
+              filter: filter, startDate: startDate, endDate: endDate)),
         ),
       );
 
@@ -343,10 +385,10 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["mostBuyingItemChart"].length; i++) {
           _loadedMostBuyingItemData.add(
             ChartModel(
-                name: result.data["mostBuyingItemChart"][i]['name'],
-                qty: result.data["mostBuyingItemChart"][i]['qty'],
-                total: result.data["mostBuyingItemChart"][i]['total'].toString(),
-              ),
+              name: result.data["mostBuyingItemChart"][i]['name'],
+              qty: result.data["mostBuyingItemChart"][i]['qty'],
+              total: result.data["mostBuyingItemChart"][i]['total'].toString(),
+            ),
           );
         }
 
@@ -377,10 +419,11 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["mostBuyingItemCatChart"].length; i++) {
           _loadedMostBuyingItemCatData.add(
             ChartModel(
-                catName: result.data["mostBuyingItemCatChart"][i]['catName'],
-                qty: result.data["mostBuyingItemCatChart"][i]['qty'],
-                total: result.data["mostBuyingItemCatChart"][i]['total'].toString(),
-              ),
+              catName: result.data["mostBuyingItemCatChart"][i]['catName'],
+              qty: result.data["mostBuyingItemCatChart"][i]['qty'],
+              total:
+                  result.data["mostBuyingItemCatChart"][i]['total'].toString(),
+            ),
           );
         }
 
@@ -411,10 +454,10 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["leastBuyingItemChart"].length; i++) {
           _loadedLeastBuyingItemData.add(
             ChartModel(
-                name: result.data["leastBuyingItemChart"][i]['name'],
-                qty: result.data["leastBuyingItemChart"][i]['qty'],
-                total: result.data["leastBuyingItemChart"][i]['total'].toString(),
-              ),
+              name: result.data["leastBuyingItemChart"][i]['name'],
+              qty: result.data["leastBuyingItemChart"][i]['qty'],
+              total: result.data["leastBuyingItemChart"][i]['total'].toString(),
+            ),
           );
         }
 
@@ -442,13 +485,16 @@ class Chart with ChangeNotifier {
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["leastBuyingItemCatChart"].length; i++) {
+        for (var i = 0;
+            i < result.data["leastBuyingItemCatChart"].length;
+            i++) {
           _loadedLeastBuyingItemCatData.add(
             ChartModel(
-                catName: result.data["leastBuyingItemCatChart"][i]['catName'],
-                qty: result.data["leastBuyingItemCatChart"][i]['qty'],
-                total: result.data["leastBuyingItemCatChart"][i]['total'].toString(),
-              ),
+              catName: result.data["leastBuyingItemCatChart"][i]['catName'],
+              qty: result.data["leastBuyingItemCatChart"][i]['qty'],
+              total:
+                  result.data["leastBuyingItemCatChart"][i]['total'].toString(),
+            ),
           );
         }
 
@@ -479,9 +525,9 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["totalItemChart"].length; i++) {
           _loadedTotalItemData.add(
             ChartModel(
-                name: result.data["totalItemChart"][i]['name'],
-                qty: result.data["totalItemChart"][i]['qty'],
-              ),
+              name: result.data["totalItemChart"][i]['name'],
+              qty: result.data["totalItemChart"][i]['qty'],
+            ),
           );
         }
 
@@ -512,9 +558,9 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["mostItemChart"].length; i++) {
           _loadedMostItemData.add(
             ChartModel(
-                name: result.data["mostItemChart"][i]['name'],
-                qty: result.data["mostItemChart"][i]['qty'],
-              ),
+              name: result.data["mostItemChart"][i]['name'],
+              qty: result.data["mostItemChart"][i]['qty'],
+            ),
           );
         }
 
@@ -545,9 +591,9 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["leastItemChart"].length; i++) {
           _loadedLeastItemData.add(
             ChartModel(
-                name: result.data["leastItemChart"][i]['name'],
-                qty: result.data["leastItemChart"][i]['qty'],
-              ),
+              name: result.data["leastItemChart"][i]['name'],
+              qty: result.data["leastItemChart"][i]['qty'],
+            ),
           );
         }
 
@@ -578,9 +624,9 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["damagedItemChart"].length; i++) {
           _loadedDamagedItemData.add(
             ChartModel(
-                name: result.data["damagedItemChart"][i]['name'],
-                qty: result.data["damagedItemChart"][i]['qty'],
-              ),
+              name: result.data["damagedItemChart"][i]['name'],
+              qty: result.data["damagedItemChart"][i]['qty'],
+            ),
           );
         }
 
@@ -611,9 +657,9 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["lostItemChart"].length; i++) {
           _loadedLostItemData.add(
             ChartModel(
-                name: result.data["lostItemChart"][i]['name'],
-                qty: result.data["lostItemChart"][i]['qty'],
-              ),
+              name: result.data["lostItemChart"][i]['name'],
+              qty: result.data["lostItemChart"][i]['qty'],
+            ),
           );
         }
 
@@ -644,9 +690,9 @@ class Chart with ChangeNotifier {
         for (var i = 0; i < result.data["expiredItemChart"].length; i++) {
           _loadedExpiredItemData.add(
             ChartModel(
-                name: result.data["expiredItemChart"][i]['name'],
-                qty: result.data["expiredItemChart"][i]['qty'],
-              ),
+              name: result.data["expiredItemChart"][i]['name'],
+              qty: result.data["expiredItemChart"][i]['qty'],
+            ),
           );
         }
 

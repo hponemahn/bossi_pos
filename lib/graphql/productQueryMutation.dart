@@ -1,6 +1,5 @@
 class ProductQueryMutation {
-  
-  String getAll({String search, int first, int page}) {  
+  String getAll({String search, int first, int page}) { 
     if (search == "") {
       return """ 
       {

@@ -128,7 +128,7 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts({int first, int page, String search}) async {
+  Future<void> fetchProducts({int first, int page, String search}) async { 
     try {
       final List<Product> loadedProducts = [];
 
