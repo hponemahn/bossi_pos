@@ -315,7 +315,11 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchItemCatProfitData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedItemCatProfitData = [];
 
@@ -323,25 +327,44 @@ class Chart with ChangeNotifier {
       QueryResult result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getItemCatProfit(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["itemCatProfitChart"].length; i++) {
-          _loadedItemCatProfitData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["itemCatProfitChart"]["data"].length; i++) {
+          _itemCatProfitData.add(
             ChartModel(
-                name: result.data["itemCatProfitChart"][i]['name'],
-                qty: result.data["itemCatProfitChart"][i]['qty'],
-                total: result.data["itemCatProfitChart"][i]['total'].toString(),
-                day: result.data["itemCatProfitChart"][i]['day'],
-                month: result.data["itemCatProfitChart"][i]['month'],
-                year: result.data["itemCatProfitChart"][i]['year']),
+                name: result.data["itemCatProfitChart"]["data"][i]['name'],
+                qty: result.data["itemCatProfitChart"]["data"][i]['qty'],
+                total: result.data["itemCatProfitChart"]["data"][i]['total'].toString(),
+                day: result.data["itemCatProfitChart"]["data"][i]['day'],
+                month: result.data["itemCatProfitChart"]["data"][i]['month'],
+                year: result.data["itemCatProfitChart"]["data"][i]['year']),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["itemCatProfitChart"]["data"].length; i++) {
+          _loadedItemCatProfitData.add(
+            ChartModel(
+                name: result.data["itemCatProfitChart"]["data"][i]['name'],
+                qty: result.data["itemCatProfitChart"]["data"][i]['qty'],
+                total: result.data["itemCatProfitChart"]["data"][i]['total'].toString(),
+                day: result.data["itemCatProfitChart"]["data"][i]['day'],
+                month: result.data["itemCatProfitChart"]["data"][i]['month'],
+                year: result.data["itemCatProfitChart"]["data"][i]['year']),
+          );
+        }
+        _itemCatProfitData = [];
         _itemCatProfitData = _loadedItemCatProfitData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);

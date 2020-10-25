@@ -71,17 +71,20 @@ class ChartQuery {
           """;
   }
 
-  String getItemCatProfit({String filter, String startDate, String endDate}) {
+  String getItemCatProfit(
+      {String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
-        itemCatProfitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-          name
-          qty
-          total
-          day
-          year
-          month
-          months
+        itemCatProfitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+          data {
+            name
+            qty
+            total
+            day
+            year
+            month
+            months
+          }
         }
       }
           """;

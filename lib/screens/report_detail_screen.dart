@@ -71,6 +71,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           endDate: _endDate,
           first: 2,
           page: _page);
+    } else if (_arguments['subVal'] == "itemCat-profit") {
+      Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: _page);
     }
   }
 
@@ -135,7 +142,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
     } else if (_arguments['subVal'] == "itemCat-profit") {
       Provider.of<Chart>(context)
-          .fetchItemCatProfitData(_filterText, _startDate, _endDate)
+          .fetchItemCatProfitData(
+              filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 2,
+              page: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -301,8 +313,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           first: 2,
           page: 1);
     } else if (_arguments['subVal'] == "itemCat-profit") {
-      Provider.of<Chart>(context, listen: false)
-          .fetchItemCatProfitData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: 1);
     } else if (_arguments['subVal'] == "bestSellingItem" ||
         _arguments['subVal'] == "bestSellingItemCat") {
       Provider.of<Chart>(context, listen: false)
@@ -573,6 +589,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   page: _page);
             } else if (_arguments['subVal'] == "item-profit") {
               Provider.of<Chart>(context, listen: false).fetchItemProfitData(
+                  filter: "m",
+                  startDate: "0",
+                  endDate: "0",
+                  first: 2,
+                  page: _page);
+            } else if (_arguments['subVal'] == "itemCat-profit") {
+              Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
