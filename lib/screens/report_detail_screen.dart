@@ -86,6 +86,21 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           endDate: _endDate,
           first: 2,
           page: _page);
+    } else if (_arguments['subVal'] == "worstSellingItem" ||
+        _arguments['subVal'] == "worstSellingItemCat") {
+      Provider.of<Chart>(context, listen: false).fetchWorstSellingItemData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: _page);
+    } else if (_arguments['subVal'] == "buy") {
+      Provider.of<Chart>(context, listen: false).fetchBuyData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: _page);
     }
   }
 
@@ -178,7 +193,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "worstSellingItem" ||
         _arguments['subVal'] == "worstSellingItemCat") {
       Provider.of<Chart>(context)
-          .fetchWorstSellingItemData(_filterText, _startDate, _endDate)
+          .fetchWorstSellingItemData(
+              filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 2,
+              page: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -186,7 +206,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
     } else if (_arguments['subVal'] == "buy") {
       Provider.of<Chart>(context)
-          .fetchBuyData(_filterText, _startDate, _endDate)
+          .fetchBuyData(filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 2,
+              page: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -342,11 +366,19 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           page: 1);
     } else if (_arguments['subVal'] == "worstSellingItem" ||
         _arguments['subVal'] == "worstSellingItemCat") {
-      Provider.of<Chart>(context, listen: false)
-          .fetchWorstSellingItemData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchWorstSellingItemData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: 1);
     } else if (_arguments['subVal'] == "buy") {
       Provider.of<Chart>(context, listen: false)
-          .fetchBuyData(_filterText, _startDate, _endDate);
+          .fetchBuyData(filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: 1);
     }
   }
 
@@ -572,8 +604,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           onRefresh: () async {
             setState(() {
               _page = 1;
-              perPage = 30;
-              present = 30;
+              perPage = 2;
+              present = 2;
+              _filterText = "m";
+              _startDate = "0";
+              _endDate = "0";
             });
 
             if (_arguments['subVal'] == "capital") {
@@ -622,6 +657,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 _arguments['subVal'] == "bestSellingItemCat") {
               Provider.of<Chart>(context, listen: false)
                   .fetchBestSellingItemData(
+                      filter: "m",
+                      startDate: "0",
+                      endDate: "0",
+                      first: 2,
+                      page: _page);
+            } else if (_arguments['subVal'] == "worstSellingItem" ||
+                _arguments['subVal'] == "worstSellingItemCat") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchWorstSellingItemData(
+                      filter: "m",
+                      startDate: "0",
+                      endDate: "0",
+                      first: 2,
+                      page: _page);
+            }else if (_arguments['subVal'] == "buy") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchBuyData(
                       filter: "m",
                       startDate: "0",
                       endDate: "0",

@@ -119,8 +119,9 @@ class _ManageCatsBodyState extends State<ManageCatsBody> {
             onRefresh: () async {
               setState(() {
                 _page = 1;
-                perPage = 30;
-                present = 30;
+                perPage = 15;
+                present = 15;
+                _searchText = "";
               });
 
               Provider.of<Categories>(context, listen: false)

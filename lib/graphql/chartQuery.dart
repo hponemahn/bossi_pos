@@ -90,7 +90,8 @@ class ChartQuery {
           """;
   }
 
-  String getBestSellingItem({String filter, String startDate, String endDate, int first, int page}) {
+  String getBestSellingItem(
+      {String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
         bestSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
@@ -110,32 +111,36 @@ class ChartQuery {
   }
 
   String getWorstSellingItem(
-      {String filter, String startDate, String endDate}) {
+      {String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
-        worstSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-          name
-          catName
-          qty
-          total
-          day
-          year
-          month
-          months
+        worstSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+          data {
+            name
+            catName
+            qty
+            total
+            day
+            year
+            month
+            months
+          }
         }
       }
           """;
   }
 
-  String getBuy({String filter, String startDate, String endDate}) {
+  String getBuy({String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
-  buyChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-    total
-    day
-    year
-    month
-    months
+  buyChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+    data {
+      total
+      day
+      year
+      month
+      months
+    }
   }
 }
     """;

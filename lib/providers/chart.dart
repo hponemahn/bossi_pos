@@ -404,37 +404,45 @@ class Chart with ChangeNotifier {
 
       if (!result.hasException) {
         if (page > 1) {
-          for (var i = 0; i < result.data["bestSellingItemChart"]["data"].length; i++) {
-          _bestSellingItem.add(
-            ChartModel(
-                name: result.data["bestSellingItemChart"]["data"][i]['name'],
-                catName: result.data["bestSellingItemChart"]["data"][i]['catName'],
-                qty: result.data["bestSellingItemChart"]["data"][i]['qty'],
-                total:
-                    result.data["bestSellingItemChart"]["data"][i]['total'].toString(),
-                day: result.data["bestSellingItemChart"]["data"][i]['day'],
-                month: result.data["bestSellingItemChart"]["data"][i]['month'],
-                year: result.data["bestSellingItemChart"]["data"][i]['year']),
-          );
-        }
-        notifyListeners();
+          for (var i = 0;
+              i < result.data["bestSellingItemChart"]["data"].length;
+              i++) {
+            _bestSellingItem.add(
+              ChartModel(
+                  name: result.data["bestSellingItemChart"]["data"][i]['name'],
+                  catName: result.data["bestSellingItemChart"]["data"][i]
+                      ['catName'],
+                  qty: result.data["bestSellingItemChart"]["data"][i]['qty'],
+                  total: result.data["bestSellingItemChart"]["data"][i]['total']
+                      .toString(),
+                  day: result.data["bestSellingItemChart"]["data"][i]['day'],
+                  month: result.data["bestSellingItemChart"]["data"][i]
+                      ['month'],
+                  year: result.data["bestSellingItemChart"]["data"][i]['year']),
+            );
+          }
+          notifyListeners();
         } else {
-          for (var i = 0; i < result.data["bestSellingItemChart"]["data"].length; i++) {
-          _loadedBestSellingItemData.add(
-            ChartModel(
-                name: result.data["bestSellingItemChart"]["data"][i]['name'],
-                catName: result.data["bestSellingItemChart"]["data"][i]['catName'],
-                qty: result.data["bestSellingItemChart"]["data"][i]['qty'],
-                total:
-                    result.data["bestSellingItemChart"]["data"][i]['total'].toString(),
-                day: result.data["bestSellingItemChart"]["data"][i]['day'],
-                month: result.data["bestSellingItemChart"]["data"][i]['month'],
-                year: result.data["bestSellingItemChart"]["data"][i]['year']),
-          );
-        }
-        _bestSellingItem = [];
-        _bestSellingItem = _loadedBestSellingItemData;
-        notifyListeners();
+          for (var i = 0;
+              i < result.data["bestSellingItemChart"]["data"].length;
+              i++) {
+            _loadedBestSellingItemData.add(
+              ChartModel(
+                  name: result.data["bestSellingItemChart"]["data"][i]['name'],
+                  catName: result.data["bestSellingItemChart"]["data"][i]
+                      ['catName'],
+                  qty: result.data["bestSellingItemChart"]["data"][i]['qty'],
+                  total: result.data["bestSellingItemChart"]["data"][i]['total']
+                      .toString(),
+                  day: result.data["bestSellingItemChart"]["data"][i]['day'],
+                  month: result.data["bestSellingItemChart"]["data"][i]
+                      ['month'],
+                  year: result.data["bestSellingItemChart"]["data"][i]['year']),
+            );
+          }
+          _bestSellingItem = [];
+          _bestSellingItem = _loadedBestSellingItemData;
+          notifyListeners();
         }
       } else {
         print('exception');
@@ -447,7 +455,11 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchWorstSellingItemData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedWorstSellingItemData = [];
 
@@ -455,27 +467,60 @@ class Chart with ChangeNotifier {
       QueryResult result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getWorstSellingItem(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["worstSellingItemChart"].length; i++) {
-          _loadedWorstSellingItemData.add(
-            ChartModel(
-                name: result.data["worstSellingItemChart"][i]['name'],
-                catName: result.data["worstSellingItemChart"][i]['catName'],
-                qty: result.data["worstSellingItemChart"][i]['qty'],
-                total:
-                    result.data["worstSellingItemChart"][i]['total'].toString(),
-                day: result.data["worstSellingItemChart"][i]['day'],
-                month: result.data["worstSellingItemChart"][i]['month'],
-                year: result.data["worstSellingItemChart"][i]['year']),
-          );
+        if (page > 1) {
+          for (var i = 0;
+              i < result.data["worstSellingItemChart"]["data"].length;
+              i++) {
+            _worstSellingItem.add(
+              ChartModel(
+                  name: result.data["worstSellingItemChart"]["data"][i]['name'],
+                  catName: result.data["worstSellingItemChart"]["data"][i]
+                      ['catName'],
+                  qty: result.data["worstSellingItemChart"]["data"][i]['qty'],
+                  total: result.data["worstSellingItemChart"]["data"][i]
+                          ['total']
+                      .toString(),
+                  day: result.data["worstSellingItemChart"]["data"][i]['day'],
+                  month: result.data["worstSellingItemChart"]["data"][i]
+                      ['month'],
+                  year: result.data["worstSellingItemChart"]["data"][i]
+                      ['year']),
+            );
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0;
+              i < result.data["worstSellingItemChart"]["data"].length;
+              i++) {
+            _loadedWorstSellingItemData.add(
+              ChartModel(
+                  name: result.data["worstSellingItemChart"]["data"][i]['name'],
+                  catName: result.data["worstSellingItemChart"]["data"][i]
+                      ['catName'],
+                  qty: result.data["worstSellingItemChart"]["data"][i]['qty'],
+                  total: result.data["worstSellingItemChart"]["data"][i]
+                          ['total']
+                      .toString(),
+                  day: result.data["worstSellingItemChart"]["data"][i]['day'],
+                  month: result.data["worstSellingItemChart"]["data"][i]
+                      ['month'],
+                  year: result.data["worstSellingItemChart"]["data"][i]
+                      ['year']),
+            );
+          }
+          _worstSellingItem = [];
+          _worstSellingItem = _loadedWorstSellingItemData;
+          notifyListeners();
         }
-
-        _worstSellingItem = _loadedWorstSellingItemData;
-        notifyListeners();
       } else {
         print('exception');
         print(result.exception);
@@ -487,7 +532,11 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchBuyData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedBuyData = [];
 
@@ -495,23 +544,42 @@ class Chart with ChangeNotifier {
       QueryResult result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getBuy(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["buyChart"].length; i++) {
-          _loadedBuyData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["buyChart"]["data"].length; i++) {
+          _buyData.add(
             ChartModel(
-                total: result.data["buyChart"][i]['total'].toString(),
-                day: result.data["buyChart"][i]['day'],
-                month: result.data["buyChart"][i]['month'],
-                year: result.data["buyChart"][i]['year']),
+                total: result.data["buyChart"]["data"][i]['total'].toString(),
+                day: result.data["buyChart"]["data"][i]['day'],
+                month: result.data["buyChart"]["data"][i]['month'],
+                year: result.data["buyChart"]["data"][i]['year']),
           );
         }
 
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["buyChart"]["data"].length; i++) {
+          _loadedBuyData.add(
+            ChartModel(
+                total: result.data["buyChart"]["data"][i]['total'].toString(),
+                day: result.data["buyChart"]["data"][i]['day'],
+                month: result.data["buyChart"]["data"][i]['month'],
+                year: result.data["buyChart"]["data"][i]['year']),
+          );
+        }
+
+        _buyData = [];
         _buyData = _loadedBuyData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);

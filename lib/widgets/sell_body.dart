@@ -190,6 +190,7 @@ class _SellBodyState extends State<SellBody> {
                 _page = 1;
                 perPage = 30;
                 present = 30;
+                _searchText = "";
               });
 
               Provider.of<Products>(context, listen: false)
