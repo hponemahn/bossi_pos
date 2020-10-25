@@ -337,33 +337,39 @@ class Chart with ChangeNotifier {
 
       if (!result.hasException) {
         if (page > 1) {
-          for (var i = 0; i < result.data["itemCatProfitChart"]["data"].length; i++) {
-          _itemCatProfitData.add(
-            ChartModel(
-                name: result.data["itemCatProfitChart"]["data"][i]['name'],
-                qty: result.data["itemCatProfitChart"]["data"][i]['qty'],
-                total: result.data["itemCatProfitChart"]["data"][i]['total'].toString(),
-                day: result.data["itemCatProfitChart"]["data"][i]['day'],
-                month: result.data["itemCatProfitChart"]["data"][i]['month'],
-                year: result.data["itemCatProfitChart"]["data"][i]['year']),
-          );
-        }
-        notifyListeners();
+          for (var i = 0;
+              i < result.data["itemCatProfitChart"]["data"].length;
+              i++) {
+            _itemCatProfitData.add(
+              ChartModel(
+                  name: result.data["itemCatProfitChart"]["data"][i]['name'],
+                  qty: result.data["itemCatProfitChart"]["data"][i]['qty'],
+                  total: result.data["itemCatProfitChart"]["data"][i]['total']
+                      .toString(),
+                  day: result.data["itemCatProfitChart"]["data"][i]['day'],
+                  month: result.data["itemCatProfitChart"]["data"][i]['month'],
+                  year: result.data["itemCatProfitChart"]["data"][i]['year']),
+            );
+          }
+          notifyListeners();
         } else {
-          for (var i = 0; i < result.data["itemCatProfitChart"]["data"].length; i++) {
-          _loadedItemCatProfitData.add(
-            ChartModel(
-                name: result.data["itemCatProfitChart"]["data"][i]['name'],
-                qty: result.data["itemCatProfitChart"]["data"][i]['qty'],
-                total: result.data["itemCatProfitChart"]["data"][i]['total'].toString(),
-                day: result.data["itemCatProfitChart"]["data"][i]['day'],
-                month: result.data["itemCatProfitChart"]["data"][i]['month'],
-                year: result.data["itemCatProfitChart"]["data"][i]['year']),
-          );
-        }
-        _itemCatProfitData = [];
-        _itemCatProfitData = _loadedItemCatProfitData;
-        notifyListeners();
+          for (var i = 0;
+              i < result.data["itemCatProfitChart"]["data"].length;
+              i++) {
+            _loadedItemCatProfitData.add(
+              ChartModel(
+                  name: result.data["itemCatProfitChart"]["data"][i]['name'],
+                  qty: result.data["itemCatProfitChart"]["data"][i]['qty'],
+                  total: result.data["itemCatProfitChart"]["data"][i]['total']
+                      .toString(),
+                  day: result.data["itemCatProfitChart"]["data"][i]['day'],
+                  month: result.data["itemCatProfitChart"]["data"][i]['month'],
+                  year: result.data["itemCatProfitChart"]["data"][i]['year']),
+            );
+          }
+          _itemCatProfitData = [];
+          _itemCatProfitData = _loadedItemCatProfitData;
+          notifyListeners();
         }
       } else {
         print('exception');
@@ -376,7 +382,11 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchBestSellingItemData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedBestSellingItemData = [];
 
@@ -384,27 +394,48 @@ class Chart with ChangeNotifier {
       QueryResult result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getBestSellingItem(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["bestSellingItemChart"].length; i++) {
-          _loadedBestSellingItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["bestSellingItemChart"]["data"].length; i++) {
+          _bestSellingItem.add(
             ChartModel(
-                name: result.data["bestSellingItemChart"][i]['name'],
-                catName: result.data["bestSellingItemChart"][i]['catName'],
-                qty: result.data["bestSellingItemChart"][i]['qty'],
+                name: result.data["bestSellingItemChart"]["data"][i]['name'],
+                catName: result.data["bestSellingItemChart"]["data"][i]['catName'],
+                qty: result.data["bestSellingItemChart"]["data"][i]['qty'],
                 total:
-                    result.data["bestSellingItemChart"][i]['total'].toString(),
-                day: result.data["bestSellingItemChart"][i]['day'],
-                month: result.data["bestSellingItemChart"][i]['month'],
-                year: result.data["bestSellingItemChart"][i]['year']),
+                    result.data["bestSellingItemChart"]["data"][i]['total'].toString(),
+                day: result.data["bestSellingItemChart"]["data"][i]['day'],
+                month: result.data["bestSellingItemChart"]["data"][i]['month'],
+                year: result.data["bestSellingItemChart"]["data"][i]['year']),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["bestSellingItemChart"]["data"].length; i++) {
+          _loadedBestSellingItemData.add(
+            ChartModel(
+                name: result.data["bestSellingItemChart"]["data"][i]['name'],
+                catName: result.data["bestSellingItemChart"]["data"][i]['catName'],
+                qty: result.data["bestSellingItemChart"]["data"][i]['qty'],
+                total:
+                    result.data["bestSellingItemChart"]["data"][i]['total'].toString(),
+                day: result.data["bestSellingItemChart"]["data"][i]['day'],
+                month: result.data["bestSellingItemChart"]["data"][i]['month'],
+                year: result.data["bestSellingItemChart"]["data"][i]['year']),
+          );
+        }
+        _bestSellingItem = [];
         _bestSellingItem = _loadedBestSellingItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);

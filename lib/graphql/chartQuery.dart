@@ -90,18 +90,20 @@ class ChartQuery {
           """;
   }
 
-  String getBestSellingItem({String filter, String startDate, String endDate}) {
+  String getBestSellingItem({String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
-        bestSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-          name
-          catName
-          qty
-          total
-          day
-          year
-          month
-          months
+        bestSellingItemChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+          data {
+            name
+            catName
+            qty
+            total
+            day
+            year
+            month
+            months
+          }
         }
       }
           """;

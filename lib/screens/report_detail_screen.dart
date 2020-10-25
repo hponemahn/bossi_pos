@@ -78,6 +78,14 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           endDate: _endDate,
           first: 2,
           page: _page);
+    } else if (_arguments['subVal'] == "bestSellingItem" ||
+        _arguments['subVal'] == "bestSellingItemCat") {
+      Provider.of<Chart>(context, listen: false).fetchBestSellingItemData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: _page);
     }
   }
 
@@ -156,7 +164,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     } else if (_arguments['subVal'] == "bestSellingItem" ||
         _arguments['subVal'] == "bestSellingItemCat") {
       Provider.of<Chart>(context)
-          .fetchBestSellingItemData(_filterText, _startDate, _endDate)
+          .fetchBestSellingItemData(
+              filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 2,
+              page: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -321,8 +334,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           page: 1);
     } else if (_arguments['subVal'] == "bestSellingItem" ||
         _arguments['subVal'] == "bestSellingItemCat") {
-      Provider.of<Chart>(context, listen: false)
-          .fetchBestSellingItemData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchBestSellingItemData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 2,
+          page: 1);
     } else if (_arguments['subVal'] == "worstSellingItem" ||
         _arguments['subVal'] == "worstSellingItemCat") {
       Provider.of<Chart>(context, listen: false)
@@ -601,6 +618,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   endDate: "0",
                   first: 2,
                   page: _page);
+            } else if (_arguments['subVal'] == "bestSellingItem" ||
+                _arguments['subVal'] == "bestSellingItemCat") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchBestSellingItemData(
+                      filter: "m",
+                      startDate: "0",
+                      endDate: "0",
+                      first: 2,
+                      page: _page);
             }
           },
         )
