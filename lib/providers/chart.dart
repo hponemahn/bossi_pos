@@ -245,7 +245,11 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchItemProfitData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedItemProfitData = [];
 
@@ -253,25 +257,53 @@ class Chart with ChangeNotifier {
       QueryResult result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getItemProfit(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["itemProfitChart"].length; i++) {
-          _loadedItemProfitData.add(
-            ChartModel(
-                name: result.data["itemProfitChart"][i]['name'],
-                qty: result.data["itemProfitChart"][i]['qty'],
-                total: result.data["itemProfitChart"][i]['total'].toString(),
-                day: result.data["itemProfitChart"][i]['day'],
-                month: result.data["itemProfitChart"][i]['month'],
-                year: result.data["itemProfitChart"][i]['year']),
-          );
+        if (page > 1) {
+          for (var i = 0;
+              i < result.data["itemProfitChart"]["data"].length;
+              i++) {
+            print(
+                'load more ${result.data["itemProfitChart"]["data"][i]['day']}');
+            _itemProfitData.add(
+              ChartModel(
+                  name: result.data["itemProfitChart"]["data"][i]['name'],
+                  qty: result.data["itemProfitChart"]["data"][i]['qty'],
+                  total: result.data["itemProfitChart"]["data"][i]['total']
+                      .toString(),
+                  day: result.data["itemProfitChart"]["data"][i]['day'],
+                  month: result.data["itemProfitChart"]["data"][i]['month'],
+                  year: result.data["itemProfitChart"]["data"][i]['year']),
+            );
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0;
+              i < result.data["itemProfitChart"]["data"].length;
+              i++) {
+            print('start ${result.data["itemProfitChart"]["data"][i]['day']}');
+            _loadedItemProfitData.add(
+              ChartModel(
+                  name: result.data["itemProfitChart"]["data"][i]['name'],
+                  qty: result.data["itemProfitChart"]["data"][i]['qty'],
+                  total: result.data["itemProfitChart"]["data"][i]['total']
+                      .toString(),
+                  day: result.data["itemProfitChart"]["data"][i]['day'],
+                  month: result.data["itemProfitChart"]["data"][i]['month'],
+                  year: result.data["itemProfitChart"]["data"][i]['year']),
+            );
+          }
+          _itemProfitData = [];
+          _itemProfitData = _loadedItemProfitData;
+          notifyListeners();
         }
-
-        _itemProfitData = _loadedItemProfitData;
-        notifyListeners();
       } else {
         print('exception');
         print(result.exception);

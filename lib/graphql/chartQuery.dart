@@ -19,7 +19,7 @@ class ChartQuery {
 
   String getSale(
       {String filter, String startDate, String endDate, int first, int page}) {
-        print("get sale graphQL page $page");
+    print("get sale graphQL page $page");
     return """
       {
   saleChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
@@ -52,17 +52,20 @@ class ChartQuery {
     """;
   }
 
-  String getItemProfit({String filter, String startDate, String endDate}) {
+  String getItemProfit(
+      {String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
-        itemProfitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-          name
-          qty
-          total
-          day
-          year
-          month
-          months
+        itemProfitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+          data {
+            name
+            qty
+            total
+            day
+            year
+            month
+            months
+          }
         }
       }
           """;
