@@ -57,6 +57,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           endDate: _endDate,
           first: 15,
           page: _page);
+    } else if (_arguments['subVal'] == "total-sell") {
+      Provider.of<Chart>(context, listen: false).fetchSaleData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: _page);
     }
   }
 
@@ -536,6 +543,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   page: _page);
 
               Provider.of<Chart>(context, listen: false).fetchProfitData(
+                  filter: "m",
+                  startDate: "0",
+                  endDate: "0",
+                  first: 15,
+                  page: _page);
+            } else if (_arguments['subVal'] == "total-sell") {
+              Provider.of<Chart>(context, listen: false).fetchSaleData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
