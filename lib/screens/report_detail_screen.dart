@@ -37,20 +37,44 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
     print("body page $_page");
 
-    Provider.of<Chart>(context, listen: false).fetchCapData(
-        filter: _filterText,
-        startDate: _startDate,
-        endDate: _endDate,
-        first: 15,
-        page: _page);
+    if (_arguments['subVal'] == "capital") {
+      Provider.of<Chart>(context, listen: false).fetchCapData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: _page);
+    } else if (_arguments['subVal'] == "sell&profit") {
+      Provider.of<Chart>(context, listen: false).fetchSaleData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: _page);
+      Provider.of<Chart>(context, listen: false).fetchProfitData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: _page);
+    }
   }
 
   void _fetchDataOnCondition() {
     if (_arguments['subVal'] == "sell&profit") {
+      Provider.of<Chart>(context).fetchSaleData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: 1);
       Provider.of<Chart>(context)
-          .fetchSaleData(_filterText, _startDate, _endDate);
-      Provider.of<Chart>(context)
-          .fetchProfitData(_filterText, _startDate, _endDate)
+          .fetchProfitData(
+              filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 15,
+              page: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -71,7 +95,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
     } else if (_arguments['subVal'] == "total-sell") {
       Provider.of<Chart>(context)
-          .fetchSaleData(_filterText, _startDate, _endDate)
+          .fetchSaleData(
+              filter: _filterText,
+              startDate: _startDate,
+              endDate: _endDate,
+              first: 15,
+              page: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -219,10 +248,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       present = 15;
     });
     if (_arguments['subVal'] == "sell&profit") {
-      Provider.of<Chart>(context, listen: false)
-          .fetchSaleData(_filterText, _startDate, _endDate);
-      Provider.of<Chart>(context, listen: false)
-          .fetchProfitData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchSaleData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: 1);
+      Provider.of<Chart>(context, listen: false).fetchProfitData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: 1);
     } else if (_arguments['subVal'] == "capital") {
       Provider.of<Chart>(context, listen: false).fetchCapData(
           filter: _filterText,
@@ -231,8 +268,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           first: 15,
           page: 1);
     } else if (_arguments['subVal'] == "total-sell") {
-      Provider.of<Chart>(context, listen: false)
-          .fetchSaleData(_filterText, _startDate, _endDate);
+      Provider.of<Chart>(context, listen: false).fetchSaleData(
+          filter: _filterText,
+          startDate: _startDate,
+          endDate: _endDate,
+          first: 15,
+          page: 1);
     } else if (_arguments['subVal'] == "item-profit") {
       Provider.of<Chart>(context, listen: false)
           .fetchItemProfitData(_filterText, _startDate, _endDate);
@@ -479,12 +520,28 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               present = 30;
             });
 
-            Provider.of<Chart>(context, listen: false).fetchCapData(
-                filter: "m",
-                startDate: "0",
-                endDate: "0",
-                first: 15,
-                page: _page);
+            if (_arguments['subVal'] == "capital") {
+              Provider.of<Chart>(context, listen: false).fetchCapData(
+                  filter: "m",
+                  startDate: "0",
+                  endDate: "0",
+                  first: 15,
+                  page: _page);
+            } else if (_arguments['subVal'] == "sell&profit") {
+              Provider.of<Chart>(context, listen: false).fetchSaleData(
+                  filter: "m",
+                  startDate: "0",
+                  endDate: "0",
+                  first: 15,
+                  page: _page);
+
+              Provider.of<Chart>(context, listen: false).fetchProfitData(
+                  filter: "m",
+                  startDate: "0",
+                  endDate: "0",
+                  first: 15,
+                  page: _page);
+            }
           },
         )
 

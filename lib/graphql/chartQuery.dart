@@ -1,7 +1,7 @@
 class ChartQuery {
   String getCapital(
       {String filter, String startDate, String endDate, int first, int page}) {
-        print("query $page");
+    print("query $page");
     return """
       {
   capital(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
@@ -17,29 +17,36 @@ class ChartQuery {
     """;
   }
 
-  String getSale({String filter, String startDate, String endDate}) {
+  String getSale(
+      {String filter, String startDate, String endDate, int first, int page}) {
+        print("get sale graphQL page $page");
     return """
       {
-  saleChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-    total
-    day
-    year
-    month
-    months
+  saleChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+    data {
+      total
+      day
+      year
+      month
+      months
+    }
   }
 }
     """;
   }
 
-  String getProfit({String filter, String startDate, String endDate}) {
+  String getProfit(
+      {String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
-  profitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate") {   
-    total
-    day
-    year
-    month
-    months
+  profitChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
+    data {
+      total
+      day
+      year
+      month
+      months
+    }
   }
 }
     """;

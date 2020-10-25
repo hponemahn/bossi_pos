@@ -46,9 +46,13 @@ class Chart with ChangeNotifier {
   List<ChartModel> get lostItem => [..._lostItemData];
   List<ChartModel> get expiredItem => [..._expiredItemData];
 
-  Future<void> fetchCapData({String filter, String startDate, String endDate,
-      int first, int page}) async {
-        print("fetch $page");
+  Future<void> fetchCapData(
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
+    print("fetch $page");
     try {
       final List<ChartModel> _loadedCapData = [];
 
@@ -77,7 +81,8 @@ class Chart with ChangeNotifier {
                   month: result.data["capital"]["data"][i]['month'],
                   year: result.data["capital"]["data"][i]['year']),
             );
-            print("year ${result.data["capital"]["data"][i]['year']} + month ${result.data["capital"]["data"][i]['month']}");
+            print(
+                "year ${result.data["capital"]["data"][i]['year']} + month ${result.data["capital"]["data"][i]['month']}");
           }
           notifyListeners();
         } else {
@@ -107,31 +112,65 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchSaleData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedSaleData = [];
 
+      print("sell first $first");
+      print("sell page $page");
+
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
-      QueryResult result = await _client.query(
+      QueryResult result;
+
+      result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getSale(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["saleChart"].length; i++) {
-          _loadedSaleData.add(
-            ChartModel(
-                total: result.data["saleChart"][i]['total'].toString(),
-                day: result.data["saleChart"][i]['day'],
-                month: result.data["saleChart"][i]['month'],
-                year: result.data["saleChart"][i]['year']),
-          );
-        }
+        if (page > 1) {
+          for (var i = 0; i < result.data["saleChart"]["data"].length; i++) {
+            print(
+                "load more sell ${result.data["saleChart"]["data"][i]['month']}");
+            _saleData.add(
+              ChartModel(
+                  total:
+                      result.data["saleChart"]["data"][i]['total'].toString(),
+                  day: result.data["saleChart"]["data"][i]['day'],
+                  month: result.data["saleChart"]["data"][i]['month'],
+                  year: result.data["saleChart"]["data"][i]['year']),
+            );
+          }
 
-        _saleData = _loadedSaleData;
-        notifyListeners();
+          notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["saleChart"]["data"].length; i++) {
+            print(
+                "first sell page  ${result.data["saleChart"]["data"][i]['month']}");
+            _loadedSaleData.add(
+              ChartModel(
+                  total:
+                      result.data["saleChart"]["data"][i]['total'].toString(),
+                  day: result.data["saleChart"]["data"][i]['day'],
+                  month: result.data["saleChart"]["data"][i]['month'],
+                  year: result.data["saleChart"]["data"][i]['year']),
+            );
+          }
+
+          _saleData = [];
+          _saleData = _loadedSaleData;
+          notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -143,7 +182,11 @@ class Chart with ChangeNotifier {
   }
 
   Future<void> fetchProfitData(
-      String filter, String startDate, String endDate) async {
+      {String filter,
+      String startDate,
+      String endDate,
+      int first,
+      int page}) async {
     try {
       final List<ChartModel> _loadedProfitData = [];
 
@@ -151,23 +194,46 @@ class Chart with ChangeNotifier {
       QueryResult result = await _client.query(
         QueryOptions(
           documentNode: gql(_query.getProfit(
-              filter: filter, startDate: startDate, endDate: endDate)),
+              filter: filter,
+              startDate: startDate,
+              endDate: endDate,
+              first: first,
+              page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["profitChart"].length; i++) {
-          _loadedProfitData.add(
-            ChartModel(
-                total: result.data["profitChart"][i]['total'].toString(),
-                day: result.data["profitChart"][i]['day'],
-                month: result.data["profitChart"][i]['month'],
-                year: result.data["profitChart"][i]['year']),
-          );
+        if (page > 1) {
+          for (var i = 0; i < result.data["profitChart"]["data"].length; i++) {
+            print(
+                "load more profit ${result.data["profitChart"]["data"][i]['month']}");
+            _profitData.add(
+              ChartModel(
+                  total:
+                      result.data["profitChart"]["data"][i]['total'].toString(),
+                  day: result.data["profitChart"]["data"][i]['day'],
+                  month: result.data["profitChart"]["data"][i]['month'],
+                  year: result.data["profitChart"]["data"][i]['year']),
+            );
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["profitChart"]["data"].length; i++) {
+            print(
+                "first page profit ${result.data["profitChart"]["data"][i]['month']}");
+            _loadedProfitData.add(
+              ChartModel(
+                  total:
+                      result.data["profitChart"]["data"][i]['total'].toString(),
+                  day: result.data["profitChart"]["data"][i]['day'],
+                  month: result.data["profitChart"]["data"][i]['month'],
+                  year: result.data["profitChart"]["data"][i]['year']),
+            );
+          }
+          _profitData = [];
+          _profitData = _loadedProfitData;
+          notifyListeners();
         }
-
-        _profitData = _loadedProfitData;
-        notifyListeners();
       } else {
         print('exception');
         print(result.exception);
