@@ -555,30 +555,30 @@ class Chart with ChangeNotifier {
       if (!result.hasException) {
         if (page > 1) {
           for (var i = 0; i < result.data["buyChart"]["data"].length; i++) {
-          _buyData.add(
-            ChartModel(
-                total: result.data["buyChart"]["data"][i]['total'].toString(),
-                day: result.data["buyChart"]["data"][i]['day'],
-                month: result.data["buyChart"]["data"][i]['month'],
-                year: result.data["buyChart"]["data"][i]['year']),
-          );
-        }
+            _buyData.add(
+              ChartModel(
+                  total: result.data["buyChart"]["data"][i]['total'].toString(),
+                  day: result.data["buyChart"]["data"][i]['day'],
+                  month: result.data["buyChart"]["data"][i]['month'],
+                  year: result.data["buyChart"]["data"][i]['year']),
+            );
+          }
 
-        notifyListeners();
+          notifyListeners();
         } else {
           for (var i = 0; i < result.data["buyChart"]["data"].length; i++) {
-          _loadedBuyData.add(
-            ChartModel(
-                total: result.data["buyChart"]["data"][i]['total'].toString(),
-                day: result.data["buyChart"]["data"][i]['day'],
-                month: result.data["buyChart"]["data"][i]['month'],
-                year: result.data["buyChart"]["data"][i]['year']),
-          );
-        }
+            _loadedBuyData.add(
+              ChartModel(
+                  total: result.data["buyChart"]["data"][i]['total'].toString(),
+                  day: result.data["buyChart"]["data"][i]['day'],
+                  month: result.data["buyChart"]["data"][i]['month'],
+                  year: result.data["buyChart"]["data"][i]['year']),
+            );
+          }
 
-        _buyData = [];
-        _buyData = _loadedBuyData;
-        notifyListeners();
+          _buyData = [];
+          _buyData = _loadedBuyData;
+          notifyListeners();
         }
       } else {
         print('exception');
@@ -590,30 +590,49 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchMostBuyingItemData() async {
+  Future<void> fetchMostBuyingItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedMostBuyingItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getMostBuyingItem()),
+          documentNode: gql(_query.getMostBuyingItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["mostBuyingItemChart"].length; i++) {
-          _loadedMostBuyingItemData.add(
-            ChartModel(
-              name: result.data["mostBuyingItemChart"][i]['name'],
-              qty: result.data["mostBuyingItemChart"][i]['qty'],
-              total: result.data["mostBuyingItemChart"][i]['total'].toString(),
-            ),
-          );
+        if (page > 1) {
+          for (var i = 0;
+              i < result.data["mostBuyingItemChart"]["data"].length;
+              i++) {
+            _mostBuyingItemData.add(
+              ChartModel(
+                name: result.data["mostBuyingItemChart"]["data"][i]['name'],
+                qty: result.data["mostBuyingItemChart"]["data"][i]['qty'],
+                total: result.data["mostBuyingItemChart"]["data"][i]['total']
+                    .toString(),
+              ),
+            );
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0;
+              i < result.data["mostBuyingItemChart"]["data"].length;
+              i++) {
+            _loadedMostBuyingItemData.add(
+              ChartModel(
+                name: result.data["mostBuyingItemChart"]["data"][i]['name'],
+                qty: result.data["mostBuyingItemChart"]["data"][i]['qty'],
+                total: result.data["mostBuyingItemChart"]["data"][i]['total']
+                    .toString(),
+              ),
+            );
+          }
+          _mostBuyingItemData = [];
+          _mostBuyingItemData = _loadedMostBuyingItemData;
+          notifyListeners();
         }
-
-        _mostBuyingItemData = _loadedMostBuyingItemData;
-        notifyListeners();
       } else {
         print('exception');
         print(result.exception);
@@ -624,31 +643,52 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchMostBuyingItemCatData() async {
+  Future<void> fetchMostBuyingItemCatData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedMostBuyingItemCatData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getMostBuyingItemCat()),
+          documentNode:
+              gql(_query.getMostBuyingItemCat(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["mostBuyingItemCatChart"].length; i++) {
-          _loadedMostBuyingItemCatData.add(
-            ChartModel(
-              catName: result.data["mostBuyingItemCatChart"][i]['catName'],
-              qty: result.data["mostBuyingItemCatChart"][i]['qty'],
-              total:
-                  result.data["mostBuyingItemCatChart"][i]['total'].toString(),
-            ),
-          );
+        if (page > 1) {
+          for (var i = 0;
+              i < result.data["mostBuyingItemCatChart"]["data"].length;
+              i++) {
+            _mostBuyingItemCatData.add(
+              ChartModel(
+                catName: result.data["mostBuyingItemCatChart"]["data"][i]
+                    ['catName'],
+                qty: result.data["mostBuyingItemCatChart"]["data"][i]['qty'],
+                total: result.data["mostBuyingItemCatChart"]["data"][i]['total']
+                    .toString(),
+              ),
+            );
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0;
+              i < result.data["mostBuyingItemCatChart"]["data"].length;
+              i++) {
+            _loadedMostBuyingItemCatData.add(
+              ChartModel(
+                catName: result.data["mostBuyingItemCatChart"]["data"][i]
+                    ['catName'],
+                qty: result.data["mostBuyingItemCatChart"]["data"][i]['qty'],
+                total: result.data["mostBuyingItemCatChart"]["data"][i]['total']
+                    .toString(),
+              ),
+            );
+          }
+          _mostBuyingItemCatData = [];
+          _mostBuyingItemCatData = _loadedMostBuyingItemCatData;
+          notifyListeners();
         }
-
-        _mostBuyingItemCatData = _loadedMostBuyingItemCatData;
-        notifyListeners();
       } else {
         print('exception');
         print(result.exception);
@@ -659,30 +699,50 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchLeastBuyingItemData() async {
+  Future<void> fetchLeastBuyingItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedLeastBuyingItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getLeastBuyingItem()),
+          documentNode:
+              gql(_query.getLeastBuyingItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["leastBuyingItemChart"].length; i++) {
-          _loadedLeastBuyingItemData.add(
-            ChartModel(
-              name: result.data["leastBuyingItemChart"][i]['name'],
-              qty: result.data["leastBuyingItemChart"][i]['qty'],
-              total: result.data["leastBuyingItemChart"][i]['total'].toString(),
-            ),
-          );
+        if (page > 1) {
+          for (var i = 0;
+              i < result.data["leastBuyingItemChart"]["data"].length;
+              i++) {
+            _leastBuyingItemData.add(
+              ChartModel(
+                name: result.data["leastBuyingItemChart"]["data"][i]['name'],
+                qty: result.data["leastBuyingItemChart"]["data"][i]['qty'],
+                total: result.data["leastBuyingItemChart"]["data"][i]['total']
+                    .toString(),
+              ),
+            );
+          }
+          notifyListeners();
+        } else {
+          for (var i = 0;
+              i < result.data["leastBuyingItemChart"]["data"].length;
+              i++) {
+            _loadedLeastBuyingItemData.add(
+              ChartModel(
+                name: result.data["leastBuyingItemChart"]["data"][i]['name'],
+                qty: result.data["leastBuyingItemChart"]["data"][i]['qty'],
+                total: result.data["leastBuyingItemChart"]["data"][i]['total']
+                    .toString(),
+              ),
+            );
+          }
+          _leastBuyingItemData = [];
+          _leastBuyingItemData = _loadedLeastBuyingItemData;
+          notifyListeners();
         }
-
-        _leastBuyingItemData = _loadedLeastBuyingItemData;
-        notifyListeners();
       } else {
         print('exception');
         print(result.exception);
@@ -693,33 +753,56 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchLeastBuyingItemCatData() async {
+  Future<void> fetchLeastBuyingItemCatData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedLeastBuyingItemCatData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getLeastBuyingItemCat()),
+          documentNode:
+              gql(_query.getLeastBuyingItemCat(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0;
-            i < result.data["leastBuyingItemCatChart"].length;
-            i++) {
-          _loadedLeastBuyingItemCatData.add(
-            ChartModel(
-              catName: result.data["leastBuyingItemCatChart"][i]['catName'],
-              qty: result.data["leastBuyingItemCatChart"][i]['qty'],
-              total:
-                  result.data["leastBuyingItemCatChart"][i]['total'].toString(),
-            ),
-          );
-        }
+        if (page > 1) {
+          for (var i = 0;
+              i < result.data["leastBuyingItemCatChart"]["data"].length;
+              i++) {
+            _leastBuyingItemCatData.add(
+              ChartModel(
+                catName: result.data["leastBuyingItemCatChart"]["data"][i]
+                    ['catName'],
+                qty: result.data["leastBuyingItemCatChart"]["data"][i]['qty'],
+                total: result.data["leastBuyingItemCatChart"]["data"][i]
+                        ['total']
+                    .toString(),
+              ),
+            );
+          }
 
-        _leastBuyingItemCatData = _loadedLeastBuyingItemCatData;
-        notifyListeners();
+          notifyListeners();
+        } else {
+          for (var i = 0;
+              i < result.data["leastBuyingItemCatChart"]["data"].length;
+              i++) {
+            _loadedLeastBuyingItemCatData.add(
+              ChartModel(
+                catName: result.data["leastBuyingItemCatChart"]["data"][i]
+                    ['catName'],
+                qty: result.data["leastBuyingItemCatChart"]["data"][i]['qty'],
+                total: result.data["leastBuyingItemCatChart"]["data"][i]
+                        ['total']
+                    .toString(),
+              ),
+            );
+          }
+
+          _leastBuyingItemCatData = [];
+          _leastBuyingItemCatData = _loadedLeastBuyingItemCatData;
+          notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -730,29 +813,41 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchTotalItemData() async {
+  Future<void> fetchTotalItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedTotalItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getTotalItem()),
+          documentNode: gql(_query.getTotalItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["totalItemChart"].length; i++) {
-          _loadedTotalItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["totalItemChart"]["data"].length; i++) {
+          _totalItemData.add(
             ChartModel(
-              name: result.data["totalItemChart"][i]['name'],
-              qty: result.data["totalItemChart"][i]['qty'],
+              name: result.data["totalItemChart"]["data"][i]['name'],
+              qty: result.data["totalItemChart"]["data"][i]['qty'],
             ),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["totalItemChart"]["data"].length; i++) {
+          _loadedTotalItemData.add(
+            ChartModel(
+              name: result.data["totalItemChart"]["data"][i]['name'],
+              qty: result.data["totalItemChart"]["data"][i]['qty'],
+            ),
+          );
+        }
+        _totalItemData = [];
         _totalItemData = _loadedTotalItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -763,29 +858,41 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchMostItemData() async {
+  Future<void> fetchMostItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedMostItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getMostItem()),
+          documentNode: gql(_query.getMostItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["mostItemChart"].length; i++) {
-          _loadedMostItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["mostItemChart"]["data"].length; i++) {
+          _mostItemData.add(
             ChartModel(
-              name: result.data["mostItemChart"][i]['name'],
-              qty: result.data["mostItemChart"][i]['qty'],
+              name: result.data["mostItemChart"]["data"][i]['name'],
+              qty: result.data["mostItemChart"]["data"][i]['qty'],
             ),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["mostItemChart"]["data"].length; i++) {
+          _loadedMostItemData.add(
+            ChartModel(
+              name: result.data["mostItemChart"]["data"][i]['name'],
+              qty: result.data["mostItemChart"]["data"][i]['qty'],
+            ),
+          );
+        }
+        _mostItemData = [];
         _mostItemData = _loadedMostItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -796,29 +903,41 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchLeastItemData() async {
+  Future<void> fetchLeastItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedLeastItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getLeastItem()),
+          documentNode: gql(_query.getLeastItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["leastItemChart"].length; i++) {
-          _loadedLeastItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["leastItemChart"]["data"].length; i++) {
+          _leastItemData.add(
             ChartModel(
-              name: result.data["leastItemChart"][i]['name'],
-              qty: result.data["leastItemChart"][i]['qty'],
+              name: result.data["leastItemChart"]["data"][i]['name'],
+              qty: result.data["leastItemChart"]["data"][i]['qty'],
             ),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["leastItemChart"]["data"].length; i++) {
+          _loadedLeastItemData.add(
+            ChartModel(
+              name: result.data["leastItemChart"]["data"][i]['name'],
+              qty: result.data["leastItemChart"]["data"][i]['qty'],
+            ),
+          );
+        }
+        _leastItemData = [];
         _leastItemData = _loadedLeastItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -829,29 +948,41 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchDamagedItemData() async {
+  Future<void> fetchDamagedItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedDamagedItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getDamagedItem()),
+          documentNode: gql(_query.getDamagedItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["damagedItemChart"].length; i++) {
-          _loadedDamagedItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["damagedItemChart"]["data"].length; i++) {
+          _damagedItemData.add(
             ChartModel(
-              name: result.data["damagedItemChart"][i]['name'],
-              qty: result.data["damagedItemChart"][i]['qty'],
+              name: result.data["damagedItemChart"]["data"][i]['name'],
+              qty: result.data["damagedItemChart"]["data"][i]['qty'],
             ),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["damagedItemChart"]["data"].length; i++) {
+          _loadedDamagedItemData.add(
+            ChartModel(
+              name: result.data["damagedItemChart"]["data"][i]['name'],
+              qty: result.data["damagedItemChart"]["data"][i]['qty'],
+            ),
+          );
+        }
+        _damagedItemData = [];
         _damagedItemData = _loadedDamagedItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -862,29 +993,41 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchLostItemData() async {
+  Future<void> fetchLostItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedLostItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getLostItem()),
+          documentNode: gql(_query.getLostItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["lostItemChart"].length; i++) {
-          _loadedLostItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["lostItemChart"]["data"].length; i++) {
+          _lostItemData.add(
             ChartModel(
-              name: result.data["lostItemChart"][i]['name'],
-              qty: result.data["lostItemChart"][i]['qty'],
+              name: result.data["lostItemChart"]["data"][i]['name'],
+              qty: result.data["lostItemChart"]["data"][i]['qty'],
             ),
           );
         }
-
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["lostItemChart"]["data"].length; i++) {
+          _loadedLostItemData.add(
+            ChartModel(
+              name: result.data["lostItemChart"]["data"][i]['name'],
+              qty: result.data["lostItemChart"]["data"][i]['qty'],
+            ),
+          );
+        }
+        _lostItemData = [];
         _lostItemData = _loadedLostItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);
@@ -895,29 +1038,43 @@ class Chart with ChangeNotifier {
     }
   }
 
-  Future<void> fetchExpiredItemData() async {
+  Future<void> fetchExpiredItemData({int first, int page}) async {
     try {
       final List<ChartModel> _loadedExpiredItemData = [];
 
       GraphQLClient _client = _graphQLConfiguration.clientToQuery();
       QueryResult result = await _client.query(
         QueryOptions(
-          documentNode: gql(_query.getExpiredItem()),
+          documentNode: gql(_query.getExpiredItem(first: first, page: page)),
         ),
       );
 
       if (!result.hasException) {
-        for (var i = 0; i < result.data["expiredItemChart"].length; i++) {
-          _loadedExpiredItemData.add(
+        if (page > 1) {
+          for (var i = 0; i < result.data["expiredItemChart"]["data"].length; i++) {
+          _expiredItemData.add(
             ChartModel(
-              name: result.data["expiredItemChart"][i]['name'],
-              qty: result.data["expiredItemChart"][i]['qty'],
+              name: result.data["expiredItemChart"]["data"][i]['name'],
+              qty: result.data["expiredItemChart"]["data"][i]['qty'],
             ),
           );
         }
 
+        notifyListeners();
+        } else {
+          for (var i = 0; i < result.data["expiredItemChart"]["data"].length; i++) {
+          _loadedExpiredItemData.add(
+            ChartModel(
+              name: result.data["expiredItemChart"]["data"][i]['name'],
+              qty: result.data["expiredItemChart"]["data"][i]['qty'],
+            ),
+          );
+        }
+
+        _expiredItemData = [];
         _expiredItemData = _loadedExpiredItemData;
         notifyListeners();
+        }
       } else {
         print('exception');
         print(result.exception);

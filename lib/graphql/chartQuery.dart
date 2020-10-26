@@ -130,7 +130,8 @@ class ChartQuery {
           """;
   }
 
-  String getBuy({String filter, String startDate, String endDate, int first, int page}) {
+  String getBuy(
+      {String filter, String startDate, String endDate, int first, int page}) {
     return """
       {
   buyChart(filter: "$filter", startDate: "$startDate", endDate: "$endDate", first: $first, page: $page) {   
@@ -146,115 +147,135 @@ class ChartQuery {
     """;
   }
 
-  String getMostBuyingItem() {
+  String getMostBuyingItem({int first, int page}) {
     return """
         {
-          mostBuyingItemChart { 
-            name
-            qty
-            total
+          mostBuyingItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+              total
+            }
           }
         }
     """;
   }
 
-  String getMostBuyingItemCat() {
+  String getMostBuyingItemCat({int first, int page}) {
     return """
         {
-          mostBuyingItemCatChart { 
-            catName
-            qty
-            total
+          mostBuyingItemCatChart (first: $first, page: $page) { 
+            data {
+              catName
+              qty
+              total
+            }
           }
         }
     """;
   }
 
-  String getLeastBuyingItem() {
+  String getLeastBuyingItem({int first, int page}) {
     return """
         {
-          leastBuyingItemChart { 
-            name
-            qty
-            total
+          leastBuyingItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+              total
+            }
           }
         }
     """;
   }
 
-  String getLeastBuyingItemCat() {
+  String getLeastBuyingItemCat({int first, int page}) {
     return """
         {
-          leastBuyingItemCatChart { 
-            catName
-            qty
-            total
+          leastBuyingItemCatChart (first: $first, page: $page) { 
+            data {
+              catName
+              qty
+              total
+            }
           }
         }
     """;
   }
 
-  String getTotalItem() {
+  String getTotalItem({int first, int page}) {
     return """
         {
-          totalItemChart { 
-            name
-            qty
+          totalItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+            }
           }
         }
     """;
   }
 
-  String getMostItem() {
+  String getMostItem({int first, int page}) {
     return """
         {
-          mostItemChart { 
-            name
-            qty
+          mostItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+            }
           }
         }
     """;
   }
 
-  String getLeastItem() {
+  String getLeastItem({int first, int page}) {
     return """
         {
-          leastItemChart { 
-            name
-            qty
+          leastItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+            }
           }
         }
     """;
   }
 
-  String getDamagedItem() {
+  String getDamagedItem({int first, int page}) {
     return """
         {
-          damagedItemChart { 
-            name
-            qty
+          damagedItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+            }
           }
         }
     """;
   }
 
-  String getLostItem() {
+  String getLostItem({int first, int page}) {
     return """
         {
-          lostItemChart { 
-            name
-            qty
+          lostItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+            }
           }
         }
     """;
   }
 
-  String getExpiredItem() {
+  String getExpiredItem({int first, int page}) {
     return """
         {
-          expiredItemChart { 
-            name
-            qty
+          expiredItemChart (first: $first, page: $page) { 
+            data {
+              name
+              qty
+            }
           }
         }
     """;

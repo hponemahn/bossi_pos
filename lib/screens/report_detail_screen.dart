@@ -25,9 +25,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _startDate = "0";
   String _endDate = "0";
   Map _arguments;
-  int perPage = 2;
-  int present = 2;
+  
+  final int _first = 15;
+  int perPage = 15;
+  int present = 15;
   int _page = 1;
+
 
   void loadMore() {
     setState(() {
@@ -42,41 +45,41 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "sell&profit") {
       Provider.of<Chart>(context, listen: false).fetchSaleData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
       Provider.of<Chart>(context, listen: false).fetchProfitData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "total-sell") {
       Provider.of<Chart>(context, listen: false).fetchSaleData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "item-profit") {
       Provider.of<Chart>(context, listen: false).fetchItemProfitData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "itemCat-profit") {
       Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "bestSellingItem" ||
         _arguments['subVal'] == "bestSellingItemCat") {
@@ -84,7 +87,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "worstSellingItem" ||
         _arguments['subVal'] == "worstSellingItemCat") {
@@ -92,15 +95,45 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
     } else if (_arguments['subVal'] == "buy") {
       Provider.of<Chart>(context, listen: false).fetchBuyData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: _page);
+    } else if (_arguments['subVal'] == "mostBuy-item") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchMostBuyingItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "mostBuy-itemCat") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchMostBuyingItemCatData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "leastBuy-item") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLeastBuyingItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "leastBuy-itemCat") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLeastBuyingItemCatData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "totalItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchTotalItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "mostItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchMostItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "leastItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLeastItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "damagedItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchDamagedItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "lostItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLostItemData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "expiredItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchExpiredItemData(first: _first, page: _page);
     }
   }
 
@@ -110,14 +143,14 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
       Provider.of<Chart>(context)
           .fetchProfitData(
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -130,7 +163,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -143,7 +176,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -156,7 +189,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -169,7 +202,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -183,7 +216,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -197,7 +230,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -206,10 +239,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
     } else if (_arguments['subVal'] == "buy") {
       Provider.of<Chart>(context)
-          .fetchBuyData(filter: _filterText,
+          .fetchBuyData(
+              filter: _filterText,
               startDate: _startDate,
               endDate: _endDate,
-              first: 2,
+              first: _first,
               page: 1)
           .then((_) {
         setState(() {
@@ -220,7 +254,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchMostBuyingItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchMostBuyingItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -229,7 +265,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchMostBuyingItemCatData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchMostBuyingItemCatData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -238,7 +276,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchLeastBuyingItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchLeastBuyingItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -247,7 +287,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchLeastBuyingItemCatData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchLeastBuyingItemCatData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -256,7 +298,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchTotalItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchTotalItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -265,7 +309,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchMostItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchMostItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -274,7 +320,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchLeastItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchLeastItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -283,7 +331,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchDamagedItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchDamagedItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -292,7 +342,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchLostItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchLostItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -301,7 +353,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _filterText = "none";
       });
-      Provider.of<Chart>(context).fetchExpiredItemData().then((_) {
+      Provider.of<Chart>(context)
+          .fetchExpiredItemData(first: _first, page: 1)
+          .then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -312,49 +366,49 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   void _fetchFilterData() {
     setState(() {
       _page = 1;
-      perPage = 2;
-      present = 2;
+      perPage = _first;
+      present = _first;
     });
     if (_arguments['subVal'] == "sell&profit") {
       Provider.of<Chart>(context, listen: false).fetchSaleData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
       Provider.of<Chart>(context, listen: false).fetchProfitData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "capital") {
       Provider.of<Chart>(context, listen: false).fetchCapData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "total-sell") {
       Provider.of<Chart>(context, listen: false).fetchSaleData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "item-profit") {
       Provider.of<Chart>(context, listen: false).fetchItemProfitData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "itemCat-profit") {
       Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "bestSellingItem" ||
         _arguments['subVal'] == "bestSellingItemCat") {
@@ -362,7 +416,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "worstSellingItem" ||
         _arguments['subVal'] == "worstSellingItemCat") {
@@ -370,15 +424,45 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
     } else if (_arguments['subVal'] == "buy") {
-      Provider.of<Chart>(context, listen: false)
-          .fetchBuyData(filter: _filterText,
+      Provider.of<Chart>(context, listen: false).fetchBuyData(
+          filter: _filterText,
           startDate: _startDate,
           endDate: _endDate,
-          first: 2,
+          first: _first,
           page: 1);
+    } else if (_arguments['subVal'] == "mostBuy-item") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchMostBuyingItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "mostBuy-itemCat") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchMostBuyingItemCatData(first: _first, page: _page);
+    } else if (_arguments['subVal'] == "leastBuy-item") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLeastBuyingItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "leastBuy-itemCat") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLeastBuyingItemCatData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "totalItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchTotalItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "mostItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchMostItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "leastItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLeastItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "damagedItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchDamagedItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "lostItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchLostItemData(first: _first, page: 1);
+    } else if (_arguments['subVal'] == "expiredItem") {
+      Provider.of<Chart>(context, listen: false)
+          .fetchExpiredItemData(first: _first, page: 1);
     }
   }
 
@@ -604,8 +688,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           onRefresh: () async {
             setState(() {
               _page = 1;
-              perPage = 2;
-              present = 2;
+              perPage = _first;
+              present = _first;
               _filterText = "m";
               _startDate = "0";
               _endDate = "0";
@@ -616,42 +700,42 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
-                  first: 2,
+                  first: _first,
                   page: _page);
             } else if (_arguments['subVal'] == "sell&profit") {
               Provider.of<Chart>(context, listen: false).fetchSaleData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
-                  first: 2,
+                  first: _first,
                   page: _page);
 
               Provider.of<Chart>(context, listen: false).fetchProfitData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
-                  first: 2,
+                  first: _first,
                   page: _page);
             } else if (_arguments['subVal'] == "total-sell") {
               Provider.of<Chart>(context, listen: false).fetchSaleData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
-                  first: 2,
+                  first: _first,
                   page: _page);
             } else if (_arguments['subVal'] == "item-profit") {
               Provider.of<Chart>(context, listen: false).fetchItemProfitData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
-                  first: 2,
+                  first: _first,
                   page: _page);
             } else if (_arguments['subVal'] == "itemCat-profit") {
               Provider.of<Chart>(context, listen: false).fetchItemCatProfitData(
                   filter: "m",
                   startDate: "0",
                   endDate: "0",
-                  first: 2,
+                  first: _first,
                   page: _page);
             } else if (_arguments['subVal'] == "bestSellingItem" ||
                 _arguments['subVal'] == "bestSellingItemCat") {
@@ -660,7 +744,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                       filter: "m",
                       startDate: "0",
                       endDate: "0",
-                      first: 2,
+                      first: _first,
                       page: _page);
             } else if (_arguments['subVal'] == "worstSellingItem" ||
                 _arguments['subVal'] == "worstSellingItemCat") {
@@ -669,16 +753,45 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                       filter: "m",
                       startDate: "0",
                       endDate: "0",
-                      first: 2,
+                      first: _first,
                       page: _page);
-            }else if (_arguments['subVal'] == "buy") {
+            } else if (_arguments['subVal'] == "buy") {
+              Provider.of<Chart>(context, listen: false).fetchBuyData(
+                  filter: "m",
+                  startDate: "0",
+                  endDate: "0",
+                  first: _first,
+                  page: _page);
+            } else if (_arguments['subVal'] == "mostBuy-item") {
               Provider.of<Chart>(context, listen: false)
-                  .fetchBuyData(
-                      filter: "m",
-                      startDate: "0",
-                      endDate: "0",
-                      first: 2,
-                      page: _page);
+                  .fetchMostBuyingItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "mostBuy-itemCat") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchMostBuyingItemCatData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "leastBuy-item") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchLeastBuyingItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "leastBuy-itemCat") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchLeastBuyingItemCatData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "totalItem") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchTotalItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "mostItem") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchMostItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "leastItem") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchLeastItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "damagedItem") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchDamagedItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "lostItem") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchLostItemData(first: _first, page: _page);
+            } else if (_arguments['subVal'] == "expiredItem") {
+              Provider.of<Chart>(context, listen: false)
+                  .fetchExpiredItemData(first: _first, page: _page);
             }
           },
         )
