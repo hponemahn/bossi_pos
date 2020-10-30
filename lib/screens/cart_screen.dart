@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:flutter/material.dart';
@@ -209,11 +211,21 @@ class CartScreen extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_cart.totalAmount == 0) {
                       Navigator.pop(context);
                     } else {
-                      Navigator.pushNamed(context, OrderScreen.routeName);
+                      dynamic _res = await _cart.confirm();
+                      print("received data");
+                      print(_res);
+                      print(jsonDecode(_res)['order_date']);
+                      // Map<String, dynamic> _res = await _cart.confirm();
+                      // print("receive data");
+                      // print(_res['order_date']);
+                      // .then((val) {
+                      //   print((val)['order_date']);
+                        Navigator.pushNamed(context, OrderScreen.routeName, arguments: _res);
+                      // });
                     }
                   },
                   textColor: Colors.white,

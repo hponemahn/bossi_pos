@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:bossi_pos/providers/cart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,15 +20,38 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final GlobalKey<State<StatefulWidget>> shareWidget = GlobalKey();
-  final int _curDay = DateTime.now().day;
-  final int _curMon = DateTime.now().month;
-  final int _curYear = DateTime.now().year;
-  final int _curHr = DateTime.now().hour;
-  final int _curMin = DateTime.now().minute;
+  // final int _curDay = DateTime.now().day;
+  // final int _curMon = DateTime.now().month;
+  // final int _curYear = DateTime.now().year;
+  // final int _curHr = DateTime.now().hour;
+  // final int _curMin = DateTime.now().minute;
 
   PrintingInfo printingInfo;
 
   Cart _cartForPrint;
+
+  String _orderID;
+  String _orderDate;
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
+      dynamic _orderInfo = ModalRoute.of(context).settings.arguments as dynamic;
+
+      var _date = DateFormat("yyyy-MM-dd hh:mm:ss", "en_US").parse(jsonDecode(_orderInfo)['order_date']);
+
+      setState(() {
+        _orderID = jsonDecode(_orderInfo)['id'].toString();
+        _orderDate = DateFormat('dd/MM/yyyy hh:mm').format(_date);
+      });
+    }
+    print("convert date");
+    print(_orderDate);
+    
+    _isInit = false;
+  }
 
   @override
   void initState() {
@@ -114,7 +139,7 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
             SizedBox(height: 20),
             Center(
-              child: Text("Sale Voucher"),
+              child: Text("အရောင်းပြေစာ"),
             ),
             Center(
               child: Text("43, David Shwe Nu Street, Mayangone, Yangon"),
@@ -131,13 +156,17 @@ class _OrderScreenState extends State<OrderScreen> {
                         children: [
                           TableRow(children: [
                             TableCell(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              child: Wrap(
+                                direction: Axis.horizontal,
+                                alignment: WrapAlignment.spaceBetween,
+                                // runAlignment: WrapAlignment.center,
+
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                verticalDirection: VerticalDirection.up,
+
                                 children: <Widget>[
-                                  new Text('အရောင်းပြေစာ: #A002'),
-                                  new Text(
-                                      "$_curDay/$_curMon/$_curYear - $_curHr:$_curMin"),
+                                  new Text('အရောင်းပြေစာအမှတ်:  #$_orderID'),
+                                  new Text(_orderDate),
                                 ],
                               ),
                             )
@@ -311,7 +340,8 @@ class _OrderScreenState extends State<OrderScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
                 onPressed: () {
-                  _cart.confirm().then((value) => _cart.clear());
+                  // _cart.confirm().then((value) => _cart.clear());
+                  _cart.clear();
                   Navigator.pushNamed(context, '/');
                 },
                 color: Theme.of(context).accentColor,

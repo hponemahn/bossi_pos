@@ -121,7 +121,7 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> confirm() async {
+  Future<dynamic> confirm() async {
     List _orderData = [];
 
     _cart.forEach((key, value) {
@@ -141,14 +141,13 @@ class Cart with ChangeNotifier {
       );
 
       print(result.exception);
+
+      return result.data["createOrder"];
     } catch (e) {
       print(e);
       throw (e);
     }
   }
-
-
-
 }
 
 class OrderItem {
