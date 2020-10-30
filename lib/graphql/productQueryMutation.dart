@@ -1,39 +1,12 @@
 class ProductQueryMutation {
-  String getAll({String search, int first, int page}) { 
-    if (search == "") {
-      return """ 
-      {
-        products (
-          search: null,
-          orderBy: [
-              {
-                field: "id"
-                order: DESC
-              }
-        ], first: $first, page: $page) {
-          data {
-            id
-            name
-            category_id
-            stock
-            buy_price
-            sell_price
-            discount_price
-            sku
-            barcode
-            is_damaged
-            is_lost
-            is_expired
-            remark
-          }
-        }
-      }
-    """;
-    } else {
-      return """ 
+  String getAll({String search, int isSell, int first, int page}) {
+    print("search $search");
+    print("issell $isSell");
+    return """ 
       {
         products (
           search: "$search",
+          isSell: $isSell,
           orderBy: [
               {
                 field: "id"
@@ -50,15 +23,10 @@ class ProductQueryMutation {
             discount_price
             sku
             barcode
-            is_damaged
-            is_lost
-            is_expired
-            remark
           }
         }
       }
     """;
-    }
   }
 
   String addProduct(

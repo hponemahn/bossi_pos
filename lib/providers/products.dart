@@ -128,7 +128,8 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts({int first, int page, String search}) async { 
+  Future<void> fetchProducts(
+      {int first, int page, String search, int isSell}) async {
     try {
       final List<Product> loadedProducts = [];
 
@@ -136,21 +137,12 @@ class Products with ChangeNotifier {
       GraphQLClient _client = graphQLConfiguration.clientToQuery();
       QueryResult result;
 
-      if (search.isEmpty) {
-        result = await _client.query(
-          QueryOptions(
-            documentNode: gql(queryMutation.getAll(search: "", first: first, page: page)),
-          ),
-        );
-      } else {
-        print("fetch with search");
-        result = await _client.query(
-          QueryOptions(
-            documentNode:
-                gql(queryMutation.getAll(search: search, first: first, page: page)),
-          ),
-        );
-      }
+      result = await _client.query(
+        QueryOptions(
+          documentNode: gql(queryMutation.getAll(
+              search: search, isSell: isSell, first: first, page: page)),
+        ),
+      );
 
       if (!result.hasException) {
         print('no exception');

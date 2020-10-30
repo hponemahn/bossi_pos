@@ -13,6 +13,7 @@ class ManageProductsBody extends StatefulWidget {
 
 class _ManageProductsBodyState extends State<ManageProductsBody> {
   String _searchText = "";
+  TextEditingController _searchController = TextEditingController();
   int perPage = 15;
   int present = 15;
   int _page = 1;
@@ -23,14 +24,8 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
       present = present + perPage;
     });
 
-    if (_searchText.isNotEmpty) {
-      Provider.of<Products>(context, listen: false)
-          .fetchProducts(first: 15, page: _page, search: _searchText);
-    } else {
-      print("load more $_page");
-      Provider.of<Products>(context, listen: false)
-          .fetchProducts(first: 15, page: _page, search: "");
-    }
+    Provider.of<Products>(context, listen: false)
+        .fetchProducts(first: 15, page: _page, search: _searchText, isSell: 0);
   }
 
   Widget _productListView(products) {
@@ -67,63 +62,59 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
           )
         : RefreshIndicator(
             child: NotificationListener<ScrollNotification>(
-            onNotification: (scrollState) {
-
-              if (scrollState is ScrollEndNotification &&
-                  scrollState.metrics.pixels != 160) {
-                print("end");
-                loadMore();
-              }
-
-              return false;
-            },
-            child: GestureDetector(
-              onTap: () {
-                FocusScopeNode currentFocus = FocusScope.of(context);
-
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
+              onNotification: (scrollState) {
+                if (scrollState is ScrollEndNotification &&
+                    scrollState.metrics.pixels != 160) {
+                  print("end");
+                  loadMore();
                 }
-              },
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: TextField(
-                      onChanged: (val) {
-                        setState(() {
-                          _searchText = val;
-                          _page = 1;
-                          perPage = 15;
-                          present = 15;
-                        });
 
-                        if (_searchText.isNotEmpty) {
-                          print("search");
+                return false;
+              },
+              child: GestureDetector(
+                onTap: () {
+                  FocusScopeNode currentFocus = FocusScope.of(context);
+
+                  if (!currentFocus.hasPrimaryFocus) {
+                    currentFocus.unfocus();
+                  }
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (val) {
+                          setState(() {
+                            _searchText = val;
+                            _page = 1;
+                            perPage = 15;
+                            present = 15;
+                          });
+
                           Provider.of<Products>(context, listen: false)
                               .fetchProducts(
-                                  first: 15, page: _page, search: _searchText);
-                        } else {
-                          Provider.of<Products>(context, listen: false)
-                              .fetchProducts(
-                                  first: 15, page: _page, search: "");
-                        }
-                      },
-                      decoration: new InputDecoration(
-                          prefixIcon: new Icon(Icons.search),
-                          hintText: 'အမည်ဖြင့် ရှာရန် ...'),
+                                  first: 15,
+                                  page: _page,
+                                  search: _searchText,
+                                  isSell: 0);
+                        },
+                        decoration: new InputDecoration(
+                            prefixIcon: new Icon(Icons.search),
+                            hintText: 'အမည် (သို့) Barcode ဖြင့်ရှာရန် ...'),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  _productListView(_products),
-                ],
+                    SizedBox(
+                      height: 30,
+                    ),
+                    _productListView(_products),
+                  ],
+                ),
               ),
             ),
-          ),
             onRefresh: () async {
-
+              _searchController.clear();
               setState(() {
                 _page = 1;
                 perPage = 15;
@@ -132,7 +123,7 @@ class _ManageProductsBodyState extends State<ManageProductsBody> {
               });
 
               Provider.of<Products>(context, listen: false)
-                  .fetchProducts(first: 15, page: _page, search: "");
+                  .fetchProducts(first: 15, page: _page, search: "", isSell: 0);
             },
           );
   }

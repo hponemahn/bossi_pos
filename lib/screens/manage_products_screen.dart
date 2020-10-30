@@ -25,7 +25,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<Products>(context).fetchProducts(first: 15, page: 1, search: "").then((_) { 
+      Provider.of<Products>(context).fetchProducts(first: 15, page: 1, search: "", isSell: 0).then((_) { 
         setState(() {
           _isLoading = false; 
         });
@@ -63,7 +63,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
     if (barcodeScanRes.isNotEmpty) {
       print("search by barcode");
       Provider.of<Products>(context, listen: false)
-          .fetchProducts(first: 15, page: 1, search: barcodeScanRes);
+          .fetchProducts(first: 15, page: 1, search: barcodeScanRes, isSell: 0);
     }
   }
 
@@ -94,7 +94,7 @@ class _ManageProductsScreenState extends State<ManageProductsScreen> {
             setState(() {
               _isLoading = true;
             });
-            Provider.of<Products>(context).fetchProducts(first: 15, page: 1, search: "").then((_) {
+            Provider.of<Products>(context).fetchProducts(first: 15, page: 1, search: "", isSell: 0).then((_) {
               setState(() {
                 _isLoading = false;
               });

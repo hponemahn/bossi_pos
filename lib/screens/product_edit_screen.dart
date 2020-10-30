@@ -139,7 +139,6 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
               child: Text("ထည့်မည်"),
               onPressed: () async {
                 if (_textFieldController.text.isNotEmpty) {
-                  
                   _newCat = Category(
                       id: _newCat.id, category: _textFieldController.text);
 
@@ -337,9 +336,20 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                       hintText: "ကုန်ပစ္စည်းအမည် ထည့်သွင်းပါ",
                       labelText: "ကုန်ပစ္စည်းအမည်",
                     ),
-                    validator: (val) => val.isEmpty
-                        ? "ကုန်ပစ္စည်းအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်"
-                        : null,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "ကုန်ပစ္စည်းအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်";
+                      }
+
+                      if (val.length > 33) {
+                        return "သက်မှတ်ထားသော စာလုံးအရေအတွက်ထပ် များနေပါသည်";
+                      }
+
+                      return null;
+                    },
+                    // val.isEmpty
+                    //     ? "ကုန်ပစ္စည်းအမည် ထည့်သွင်းရန် လိုအပ်ပါသည်"
+                    //     : null,
                     onSaved: (val) => _newProduct = Product(
                         id: _newProduct.id,
                         name: val,
@@ -594,6 +604,12 @@ class _ProductEditScreenState extends State<ProductEditScreen> {
                             isExpired: _newProduct.isExpired,
                             category: _newProduct.category);
                       }),
+                  Padding(
+                    padding: EdgeInsets.only(left: 40),
+                    child: Text(
+                        "ဥပမာ။   ။ရောင်းစျေးသည် ၂၀၀၀ ဖြစ်ပါက လျှော့စျေးကို ၁၅၀၀ သက်မှတ်မည်ဆိုလျှင် ၀ယ်ယူသူ ၀ယ်ယူသည့်အခါ ပစ္စည်းတန်ဖိုးသည် ၁၅၀၀ ဖြစ်ပါမည်။",
+                        style: TextStyle(fontSize: 12)),
+                  ),
                   TextFormField(
                     initialValue: _initVal['sku'],
                     decoration: InputDecoration(

@@ -47,12 +47,8 @@ class _SellScreenState extends State<SellScreen> {
     if (barcodeScanRes.isNotEmpty) {
       print("search by barcode");
       Provider.of<Products>(context, listen: false)
-          .fetchProducts(first: 30, page: 1, search: barcodeScanRes);
+          .fetchProducts(first: 30, page: 1, search: barcodeScanRes, isSell: 1);
     }
-    //  else {
-    //   Provider.of<Products>(context, listen: false)
-    //       .fetchProducts(first: 30, page: 1, search: "");
-    // }
   }
 
   @override
@@ -62,7 +58,7 @@ class _SellScreenState extends State<SellScreen> {
         _isLoading = true;
       });
       Provider.of<Products>(context)
-          .fetchProducts(first: 30, page: 1, search: "")
+          .fetchProducts(first: 30, page: 1, search: "", isSell: 1)
           .then((_) {
         setState(() {
           _isLoading = false;
