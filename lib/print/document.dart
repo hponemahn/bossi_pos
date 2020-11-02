@@ -68,7 +68,12 @@ Future<pw.Document> generateDocument(
                 ],
               ),
               pw.SizedBox(height: 20),
-              
+              pw.Row(
+                children: [
+                  pw.Text("---------------------------------------------------------------"),
+                  pw.Text("---------------------------------------------------------------"),
+                ],
+              ),
               pw.ListView(
                 children: _cartForPrint.cart.entries
                     .map(
@@ -76,17 +81,17 @@ Future<pw.Document> generateDocument(
                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                         children: [
                           // flex: 4,
-                          pw.Text(cart.value.name,
+                          pw.Text("${cart.value.name} (${cart.value.qty.toString()} x ${cart.value.price.toString()})",
                               style: pw.TextStyle(font: ttf)),
 
                           // flex: 2,
-                          pw.Text(cart.value.qty.toString(),
-                              textAlign: pw.TextAlign.center),
+                          // pw.Text(cart.value.qty.toString(),
+                          //     textAlign: pw.TextAlign.center),
 
                           // flex: 2,
-                          pw.Text(
-                            cart.value.price.toString(),
-                          ),
+                          // pw.Text(
+                          //   cart.value.price.toString(),
+                          // ),
 
                           // flex: 2,
                           pw.Text("${cart.value.qty * cart.value.price}",
@@ -96,8 +101,15 @@ Future<pw.Document> generateDocument(
                     )
                     .toList(),
               ),
-
-              pw.SizedBox(height: 20),
+              // pw.SizedBox(height: 20),
+              pw.Row(
+                children: [
+                  pw.Text(
+                      "---------------------------------------------------------------"),
+                  pw.Text(
+                      "---------------------------------------------------------------"),
+                ],
+              ),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -136,6 +148,14 @@ Future<pw.Document> generateDocument(
                 children: [
                   pw.Text("Change  :"),
                   pw.Text(_cartForPrint.getChangedMoney.toString()),
+                ],
+              ),
+              pw.Row(
+                children: [
+                  pw.Text(
+                      "---------------------------------------------------------------"),
+                  pw.Text(
+                      "---------------------------------------------------------------"),
                 ],
               ),
               pw.SizedBox(height: 40),
