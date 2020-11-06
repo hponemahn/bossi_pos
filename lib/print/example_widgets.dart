@@ -10,9 +10,9 @@ const PdfColor lightGreen = PdfColor.fromInt(0xffffff);
 pw.PageTheme myPageTheme(PdfPageFormat format) {
   return pw.PageTheme(
     pageFormat: format.applyMargin(
-        left: 2.0 * PdfPageFormat.cm,
+        left: 0.2 * PdfPageFormat.cm,
         top: 4.0 * PdfPageFormat.cm,
-        right: 2.0 * PdfPageFormat.cm,
+        right: 0.2 * PdfPageFormat.cm,
         bottom: 2.0 * PdfPageFormat.cm),
     buildBackground: (pw.Context context) {
       return pw.FullPage(
