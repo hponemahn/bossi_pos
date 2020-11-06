@@ -140,7 +140,11 @@ class Cart with ChangeNotifier {
         ),
       );
 
+      _changedMoney = 0;
+
       print(result.exception);
+
+      notifyListeners();
 
       return result.data["createOrder"];
     } catch (e) {

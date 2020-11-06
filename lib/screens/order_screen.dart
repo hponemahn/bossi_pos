@@ -20,11 +20,6 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final GlobalKey<State<StatefulWidget>> shareWidget = GlobalKey();
-  // final int _curDay = DateTime.now().day;
-  // final int _curMon = DateTime.now().month;
-  // final int _curYear = DateTime.now().year;
-  // final int _curHr = DateTime.now().hour;
-  // final int _curMin = DateTime.now().minute;
 
   PrintingInfo printingInfo;
 
