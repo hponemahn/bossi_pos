@@ -57,7 +57,7 @@ class _SellBodyState extends State<SellBody> {
               alignment: Alignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTapDown: (TapDownDetails details) {
                     _cart.add(products[index].id, products[index].name,
                         products[index].price);
                   },

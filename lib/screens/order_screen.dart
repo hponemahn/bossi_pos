@@ -233,12 +233,24 @@ class _OrderScreenState extends State<OrderScreen> {
                             )
                           ]),
                           TableRow(children: [
+                              TableCell(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    new Text('အခွန်  :'),
+                                    new Text("0"),
+                                  ],
+                                ),
+                              )
+                            ]),
+                          TableRow(children: [
                             TableCell(
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  new Text('Discount  :'),
+                                  new Text('လျှော့ပေးငွေ  :'),
                                   new Text("-"),
                                 ],
                               ),

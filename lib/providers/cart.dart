@@ -121,6 +121,10 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> checkDevice() async {
+    return true;
+  }
+
   Future<dynamic> confirm() async {
     List _orderData = [];
 

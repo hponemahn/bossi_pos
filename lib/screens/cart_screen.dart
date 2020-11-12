@@ -128,7 +128,19 @@ class CartScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    new Text('Discount  :'),
+                                    new Text('အခွန်  :'),
+                                    new Text("0"),
+                                  ],
+                                ),
+                              )
+                            ]),
+                            TableRow(children: [
+                              TableCell(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    new Text('လျှော့ပေးငွေ  :'),
                                     new Text("-"),
                                   ],
                                 ),

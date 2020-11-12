@@ -129,6 +129,13 @@ Future<pw.Document> generateDocument(
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
+            pw.Text("Tax  :"),
+            pw.Text("0"),
+          ],
+        ),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
             pw.Text("Discount  :"),
             pw.Text("-"),
           ],
