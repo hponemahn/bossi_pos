@@ -2,6 +2,7 @@ import 'package:bossi_pos/providers/cart.dart';
 import 'package:bossi_pos/providers/categories.dart';
 import 'package:bossi_pos/providers/chart.dart';
 import 'package:bossi_pos/providers/products.dart';
+import 'package:bossi_pos/screens/auth_screen.dart';
 import 'package:bossi_pos/screens/cart_screen.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
@@ -10,7 +11,7 @@ import 'package:bossi_pos/screens/order_screen.dart';
 import 'package:bossi_pos/screens/product_edit_screen.dart';
 import 'package:bossi_pos/screens/report_detail_screen.dart';
 import 'package:bossi_pos/screens/report_screen.dart';
-import 'package:bossi_pos/screens/sell_screen.dart';
+// import 'package:bossi_pos/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,8 +40,8 @@ class MyApp extends StatelessWidget {
             button: TextStyle(color: Colors.black, fontSize: 14),
           ),
         ),
-        // home: Principal(),
-        home: SellScreen(),
+        // home: SellScreen(),
+        home: AuthScreen(),
         debugShowCheckedModeBanner: false,
         routes: {
           CartScreen.routeName: (ctx) => CartScreen(),
