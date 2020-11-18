@@ -38,6 +38,7 @@ dependencies:
   date_range_picker: ^1.0.5
   barcode_scan: ^3.0.1
   shared_preferences: ^0.5.12+4
+  image_picker: ^0.6.7+14
   
 dev_dependencies:
   flutter_test:
