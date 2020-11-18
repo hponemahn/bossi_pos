@@ -1,7 +1,9 @@
+import 'package:bossi_pos/providers/auth.dart';
 import 'package:bossi_pos/screens/manage_category_screen.dart';
 import 'package:bossi_pos/screens/manage_products_screen.dart';
 import 'package:bossi_pos/screens/report_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Drawlet extends StatelessWidget {
   const Drawlet({Key key}) : super(key: key);
@@ -75,6 +77,16 @@ class Drawlet extends StatelessWidget {
             },
           ),
           Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text("ထွက်မည်"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+
+              Provider.of<Auth>(context, listen: false).logout();
+            },
+          ),
         ],
       ),
     );

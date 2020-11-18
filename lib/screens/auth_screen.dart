@@ -15,8 +15,13 @@ class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Signup;
   Map<String, String> _authData = {
+    'name': '',
+    'phone': '',
     'email': '',
     'password': '',
+    'bType': '',
+    'state': '',
+    'township': ''
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -51,16 +56,26 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       if (_authMode == AuthMode.Login) {
         // Log user in
-        await Provider.of<Auth>(context, listen: false).login(
-          _authData['email'],
-          _authData['password'],
-        );
+        await Provider.of<Auth>(context, listen: false).authenticate(
+            name: _authData['name'],
+            email: _authData['email'],
+            password: _authData['password'],
+            urlSegment: "login");
       } else {
+        print("register");
+        print("name: ${_authData['name']}");
+        print("email: ${_authData['email']}");
+        print("password: ${_authData['password']}");
+
         // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
-          _authData['email'],
-          _authData['password'],
-        );
+        await Provider.of<Auth>(context, listen: false).authenticate(
+            name: _authData['name'],
+            email: _authData['email'],
+            password: _authData['password'],
+            bType: 1,
+            state: 1,
+            township: 1,
+            urlSegment: "register");
       }
     }
     // on HttpException catch (error) {
@@ -103,7 +118,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -122,7 +136,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.fromLTRB(20, _authMode == AuthMode.Signup ? 35 : 150, 20, 0),
+                      padding: EdgeInsets.fromLTRB(
+                          20, _authMode == AuthMode.Signup ? 35 : 150, 20, 0),
                       child: Image.asset(
                         "assets/logo.png",
                         height: 100,
@@ -137,6 +152,15 @@ class _AuthScreenState extends State<AuthScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(40))),
                         child: TextFormField(
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Invalid business name!';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _authData['name'] = value;
+                          },
                           decoration: InputDecoration(
                               prefixIcon: Icon(
                                 Icons.person,
@@ -146,7 +170,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               //   Icons.check_circle,
                               //   color: Colors.black26,
                               // ),
-                              hintText: "Username",
+                              hintText: "Business Name",
                               hintStyle: TextStyle(color: Colors.black26),
                               filled: true,
                               fillColor: Colors.white,
@@ -159,7 +183,47 @@ class _AuthScreenState extends State<AuthScreen> {
                                   horizontal: 20.0, vertical: 16.0)),
                         ),
                       ),
-                    // email
+                    // phone
+                    // if (_authMode == AuthMode.Signup)
+                    //   Card(
+                    //     margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                    //     elevation: 11,
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius:
+                    //             BorderRadius.all(Radius.circular(40))),
+                    //     child: TextFormField(
+                    //       keyboardType: TextInputType.phone,
+                    //       validator: (value) {
+                    //         if (value.isEmpty) {
+                    //           return 'Invalid phone!';
+                    //         }
+                    //         return null;
+                    //       },
+                    //       onSaved: (value) {
+                    //         _authData['phone'] = value;
+                    //       },
+                    //       decoration: InputDecoration(
+                    //           prefixIcon: Icon(
+                    //             Icons.phone,
+                    //             color: Colors.black26,
+                    //           ),
+                    //           // prefixIcon: Padding(padding: EdgeInsets.all(15), child: Text('09 -')),
+                    //           hintText: "Phone",
+                    //           hintStyle: TextStyle(
+                    //             color: Colors.black26,
+                    //           ),
+                    //           filled: true,
+                    //           fillColor: Colors.white,
+                    //           border: OutlineInputBorder(
+                    //             borderSide: BorderSide.none,
+                    //             borderRadius:
+                    //                 BorderRadius.all(Radius.circular(40.0)),
+                    //           ),
+                    //           contentPadding: EdgeInsets.symmetric(
+                    //               horizontal: 20.0, vertical: 16.0)),
+                    //     ),
+                    //   ),
+                    // email (or) phone
                     Card(
                       margin: EdgeInsets.only(left: 30, right: 30, top: 20),
                       elevation: 11,
@@ -168,8 +232,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
-                          if (value.isEmpty || !value.contains('@')) {
-                            return 'Invalid email!';
+                          if (value.isEmpty) {
+                            return 'Invalid Phone! (or) Email!';
                           }
                           return null;
                         },
@@ -178,10 +242,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         },
                         decoration: InputDecoration(
                             prefixIcon: Icon(
-                              Icons.email,
+                              Icons.security,
                               color: Colors.black26,
                             ),
-                            hintText: "Email",
+                            hintText: "Phone (or) Email",
                             hintStyle: TextStyle(
                               color: Colors.black26,
                             ),
@@ -207,7 +271,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         controller: _passwordController,
                         validator: (value) {
                           if (value.isEmpty || value.length < 5) {
-                            return 'Password is too short!';
+                            return 'Password is too short! (or) invalid';
                           }
                           return null;
                         },
@@ -236,162 +300,147 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     // confirm password
                     if (_authMode == AuthMode.Signup)
-                    Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-                      elevation: 11,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      child: TextFormField(
-                        enabled: _authMode == AuthMode.Signup,
-                        obscureText: true,
-                        validator: _authMode == AuthMode.Signup
-                        ? (value) {
-                            if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
-                            }
-                            return null;
-                          }
-                        : null,
-                        // validator: (value) {
-                        //   if (_authMode == AuthMode.Signup) {
-                        //     if (value != _passwordController.text) {
-                        //       return 'Passwords do not match!';
-                        //     }
-                        //     return null;
-                        //   }
-                        // },
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Colors.black26,
-                            ),
-                            hintText: "Confirm Password",
-                            hintStyle: TextStyle(
-                              color: Colors.black26,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 16.0)),
+                      Card(
+                        margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                        elevation: 11,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40))),
+                        child: TextFormField(
+                          enabled: _authMode == AuthMode.Signup,
+                          obscureText: true,
+                          validator: _authMode == AuthMode.Signup
+                              ? (value) {
+                                  if (value != _passwordController.text) {
+                                    return 'Passwords do not match!';
+                                  }
+                                  return null;
+                                }
+                              : null,
+                          // validator: (value) {
+                          //   if (_authMode == AuthMode.Signup) {
+                          //     if (value != _passwordController.text) {
+                          //       return 'Passwords do not match!';
+                          //     }
+                          //     return null;
+                          //   }
+                          // },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Colors.black26,
+                              ),
+                              hintText: "Confirm Password",
+                              hintStyle: TextStyle(
+                                color: Colors.black26,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(40.0)),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 16.0)),
+                        ),
                       ),
-                    ),
                     // business type
                     if (_authMode == AuthMode.Signup)
-                    Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-                      elevation: 11,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Colors.black26,
-                            ),
-                            hintText: "Business Type",
-                            hintStyle: TextStyle(
-                              color: Colors.black26,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 16.0)),
+                      Card(
+                        margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                        elevation: 11,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40))),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            _authData['bType'] = value;
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Colors.black26,
+                              ),
+                              hintText: "Business Type",
+                              hintStyle: TextStyle(
+                                color: Colors.black26,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(40.0)),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 16.0)),
+                        ),
                       ),
-                    ),
-                    // phone
-                    if (_authMode == AuthMode.Signup)
-                    Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-                      elevation: 11,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.phone,
-                              color: Colors.black26,
-                            ),
-                            hintText: "Phone",
-                            hintStyle: TextStyle(
-                              color: Colors.black26,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 16.0)),
-                      ),
-                    ),
                     // state
                     if (_authMode == AuthMode.Signup)
-                    Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-                      elevation: 11,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.place,
-                              color: Colors.black26,
-                            ),
-                            hintText: "State",
-                            hintStyle: TextStyle(
-                              color: Colors.black26,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 16.0)),
+                      Card(
+                        margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                        elevation: 11,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40))),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            _authData['state'] = value;
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.place,
+                                color: Colors.black26,
+                              ),
+                              hintText: "State",
+                              hintStyle: TextStyle(
+                                color: Colors.black26,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(40.0)),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 16.0)),
+                        ),
                       ),
-                    ),
                     // township
                     if (_authMode == AuthMode.Signup)
-                    Card(
-                      margin: EdgeInsets.only(left: 30, right: 30, top: 20),
-                      elevation: 11,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.place,
-                              color: Colors.black26,
-                            ),
-                            hintText: "Township",
-                            hintStyle: TextStyle(
-                              color: Colors.black26,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 16.0)),
+                      Card(
+                        margin: EdgeInsets.only(left: 30, right: 30, top: 20),
+                        elevation: 11,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(40))),
+                        child: TextFormField(
+                          onSaved: (value) {
+                            _authData['township'] = value;
+                          },
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.place,
+                                color: Colors.black26,
+                              ),
+                              hintText: "Township",
+                              hintStyle: TextStyle(
+                                color: Colors.black26,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(40.0)),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 16.0)),
+                        ),
                       ),
-                    ),
 
                     if (_isLoading)
                       CircularProgressIndicator()

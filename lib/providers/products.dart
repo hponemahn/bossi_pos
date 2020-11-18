@@ -26,7 +26,7 @@ class Products with ChangeNotifier {
   }
 
   void add(Product _pr) async {
-    String _id = await _addGraphQL(_pr);
+    String _id = await _addGraphQL(_pr); 
     var product = Product(
       id: _id,
       name: _pr.name,

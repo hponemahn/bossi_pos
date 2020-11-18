@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:bossi_pos/graphql/authQueryMutation.dart';
+import 'package:bossi_pos/graphql/graphqlConf.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
+  GraphQLConfiguration _graphQLConfiguration = GraphQLConfiguration();
+  AuthQueryMutation _authQueryMutation = AuthQueryMutation();
+
   String _token;
   DateTime _expiryDate;
   String _userId;
@@ -16,68 +21,105 @@ class Auth with ChangeNotifier {
   }
 
   String get token {
-    if (_expiryDate != null &&
-        _expiryDate.isAfter(DateTime.now()) &&
-        _token != null) {
-      return _token;
-    }
-    return null;
+    // if (_expiryDate != null &&
+    //     _expiryDate.isAfter(DateTime.now()) &&
+    //     _token != null) {
+    return _token;
+    // }
+    // return null;
   }
 
   String get userId {
     return _userId;
   }
 
-  Future<void> _authenticate(
-      String email, String password, String urlSegment) async {
-    final url =
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$urlSegment?key=AIzaSyC13spCwP_f_SalxEbkB-wjedoF8iYENlQ';
+  Future<void> authenticate(
+      {String name,
+      String email,
+      String password,
+      int bType,
+      int state,
+      int township,
+      String urlSegment}) async {
+    print("authenticate received data");
+    print("name: $name");
+    print("email: $email");
+    print("password: $password");
+    print(bType);
+    print("bType");
     try {
-      final response = await http.post(
-        url,
-        body: json.encode(
-          {
-            'email': email,
-            'password': password,
-            'returnSecureToken': true,
-          },
-        ),
-      );
-      final responseData = json.decode(response.body);
-      if (responseData['error'] != null) {
-        // throw HttpException(responseData['error']['message']);
-      }
-      _token = responseData['idToken'];
-      _userId = responseData['localId'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(
-            responseData['expiresIn'],
+      GraphQLClient _client = _graphQLConfiguration.clientToQuery();
+      QueryResult result;
+      String _authToken = "";
+
+      if (urlSegment == 'register') {
+        print("register");
+        result = await _client.mutate(
+          MutationOptions(
+            documentNode: gql(_authQueryMutation.register(
+                name: name,
+                email: email,
+                password: password,
+                bType: bType,
+                state: state,
+                township: township)),
           ),
-        ),
-      );
-      _autoLogout();
+        );
+
+        print("register result token: ${result.data['register']}");
+
+        _authToken = result.data['register'];
+      } else {
+        print("login");
+
+        result = await _client.mutate(
+          MutationOptions(
+            documentNode: gql(_authQueryMutation.login(
+              phoneEmail: email,
+              password: password,
+            )),
+          ),
+        );
+
+        print("login result token: ${result.data['login']}");
+        _authToken = result.data['login'];
+      }
+
+      print(result.exception);
+      print("data: ${result.data}");
+
+      print("register token: $_authToken");
+      _graphQLConfiguration.setToken(_authToken);
+      // GraphQLConfiguration().setToken();
+
+      _token = _authToken;
+      print("token: $_token");
+      // _userId = responseData['localId'];
+      _userId = "deviceID-1";
+
+      // _expiryDate = DateTime.now().add(
+      //   Duration(
+      //     seconds: int.parse(
+      //       responseData['expiresIn'],
+      //     ),
+      //   ),
+      // );
+
+      // _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode(
         {
           'token': _token,
           'userId': _userId,
-          'expiryDate': _expiryDate.toIso8601String(),
+          // 'expiryDate': _expiryDate.toIso8601String(),
         },
       );
       prefs.setString('userData', userData);
-    } catch (error) {
-      throw error;
+    } catch (e) {
+      print(e);
+      throw (e);
     }
-  }
-
-  Future<void> signup(String email, String password) async {
-    return _authenticate(email, password, 'signupNewUser');
-  }
-
-  Future<void> login(String email, String password) async {
-    return _authenticate(email, password, 'verifyPassword');
   }
 
   Future<bool> tryAutoLogin() async {
@@ -85,15 +127,19 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extractedUserData = json.decode(prefs.getString('userData')) as Map<String, Object>;
-    final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
+    final extractedUserData =
+        json.decode(prefs.getString('userData')) as Map<String, Object>;
+    // final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
 
-    if (expiryDate.isBefore(DateTime.now())) {
-      return false;
-    }
+    // if (expiryDate.isBefore(DateTime.now())) {
+    //   return false;
+    // }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
-    _expiryDate = expiryDate;
+    // _expiryDate = expiryDate;
+    print("try auto login token: $token");
+    _graphQLConfiguration.setToken(_token);
+
     notifyListeners();
     _autoLogout();
     return true;
@@ -107,6 +153,8 @@ class Auth with ChangeNotifier {
       _authTimer.cancel();
       _authTimer = null;
     }
+
+    _graphQLConfiguration.removeToken();
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     // prefs.remove('userData');
@@ -119,5 +167,7 @@ class Auth with ChangeNotifier {
     }
     final timeToExpiry = _expiryDate.difference(DateTime.now()).inSeconds;
     _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
+
+    _graphQLConfiguration.removeToken();
   }
 }
